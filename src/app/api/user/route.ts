@@ -7,43 +7,6 @@ import {
 } from "@/services/User.service";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  const { email, password } = await request.json();
-
-  if (!email || !password) {
-    return NextResponse.json(
-      { ok: false, messsage: "Fill all the blanks" },
-      { status: 400 }
-    );
-  }
-
-  const existingEmail = await ExistingUserEmail(email);
-
-  if (existingEmail) {
-    return NextResponse.json(
-      { ok: false, message: "This email is already registered" },
-      { status: 409 }
-    );
-  }
-
-  const data = await CreateUser({ email, password });
-
-  if (!data) {
-    return NextResponse.json(
-      { ok: false, messsage: "Post Error" },
-      { status: 400 }
-    );
-  }
-
-  return NextResponse.json(
-    {
-      ok: true,
-      data,
-    },
-    { status: 200 }
-  );
-}
-
 export async function DELETE(request: Request) {
   const { id } = await request.json();
 
@@ -105,6 +68,43 @@ export async function PUT(request: Request) {
 
   return NextResponse.json(
     { ok: true, message: "Changed password" },
+    { status: 200 }
+  );
+}
+
+export async function POST(request: Request) {
+  const { email, password } = await request.json();
+
+  if (!email || !password) {
+    return NextResponse.json(
+      { ok: false, messsage: "Fill all the blanks" },
+      { status: 400 }
+    );
+  }
+
+  const existingEmail = await ExistingUserEmail(email);
+
+  if (existingEmail) {
+    return NextResponse.json(
+      { ok: false, message: "This email is already registered" },
+      { status: 409 }
+    );
+  }
+
+  const data = await CreateUser({ email, password });
+
+  if (!data) {
+    return NextResponse.json(
+      { ok: false, messsage: "Post Error" },
+      { status: 400 }
+    );
+  }
+
+  return NextResponse.json(
+    {
+      ok: true,
+      data,
+    },
     { status: 200 }
   );
 }

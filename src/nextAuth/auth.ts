@@ -7,9 +7,6 @@ export const BASE_PATH = "/api/auth";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET,
-  pages: {
-    signIn: "/auth",
-  },
   session: {
     strategy: "jwt",
   },
@@ -29,8 +26,8 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials): Promise<any> {
         try {
           if (!credentials?.email || !credentials?.password) return null;
-          const user = await LoginUser(credentials.email, credentials.password);
 
+          const user = await LoginUser(credentials.email, credentials.password);
           return { ...user, error: null };
         } catch (error) {
           throw error;
@@ -38,6 +35,28 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    jwt: async ({ user, token }) => {
+      if (user) {
+        return {
+          ...token,
+          id: user.id,
+          email: user.email,
+        };
+      }
+      return token;
+    },
+    session: async ({ session, token }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          email: token.email,
+        },
+      };
+    },
+  },
 };
 
 export const handler = NextAuth(authOptions);

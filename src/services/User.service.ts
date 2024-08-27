@@ -22,7 +22,7 @@ export const FindUserByID = async (id: number) => {
 
 export const CreateUser = async (newUser: IUser) => {
   try {
-    const hashPWD = await hash(newUser.email, 10);
+    const hashPWD = await hash(newUser.password, 10);
 
     const data = await prisma.user.create({
       data: { ...newUser, password: hashPWD },
