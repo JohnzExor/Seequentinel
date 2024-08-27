@@ -1,0 +1,43 @@
+import { LoginUser } from "@/services/User.service";
+import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth/next";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+export const BASE_PATH = "/api/auth";
+
+export const authOptions: NextAuthOptions = {
+  secret: process.env.AUTH_SECRET,
+  pages: {
+    signIn: "/auth",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+        },
+      },
+      async authorize(credentials): Promise<any> {
+        try {
+          if (!credentials?.email || !credentials?.password) return null;
+          const user = await LoginUser(credentials.email, credentials.password);
+
+          return { ...user, error: null };
+        } catch (error) {
+          throw error;
+        }
+      },
+    }),
+  ],
+};
+
+export const handler = NextAuth(authOptions);
