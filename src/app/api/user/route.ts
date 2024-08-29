@@ -4,7 +4,7 @@ import {
   ExistingUserEmail,
   FindUserByID,
   UpdatePassword,
-} from "@/services/User.service";
+} from "@/data-access/user";
 import { NextResponse } from "next/server";
 
 export async function DELETE(request: Request) {

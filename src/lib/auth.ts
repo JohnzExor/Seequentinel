@@ -1,6 +1,5 @@
-import { LoginUser } from "@/services/User.service";
+import { LoginUser } from "@/data-access/user";
 import { NextAuthOptions } from "next-auth";
-import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const BASE_PATH = "/api/auth";
@@ -58,5 +57,3 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
-
-export const handler = NextAuth(authOptions);
