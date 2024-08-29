@@ -1,4 +1,4 @@
-import CurrentLoggedin from "./current-loggedin";
+import CurrentLoggedin from "@/components/current-loggedin";
 
 const page = () => {
   return (
