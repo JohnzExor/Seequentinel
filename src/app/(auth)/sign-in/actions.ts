@@ -1,6 +1,6 @@
 import { createServerAction } from "zsa";
-import { LoginSchema } from "./schema";
 import { signIn } from "next-auth/react";
+import { LoginSchema } from "@/lib/zod";
 
 const loginUserAction = createServerAction()
   .input(LoginSchema)
