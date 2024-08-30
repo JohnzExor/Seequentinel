@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id                      Int                @id @default(autoincrement())
+  id                      String             @id @default(cuid())
   createdAt               DateTime           @default(now()) @db.Date
   email                   String             @unique
   password                String
@@ -19,40 +19,40 @@ model User {
 }
 
 model FaultyFacilities {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @db.Date
   type      String
   media     String?
   location  String
   user      User?    @relation(name: "FaultyFacilitiesToUser", fields: [userId], references: [id])
-  userId    Int?
+  userId    String?
   status    String
 }
 
 model Emergencies {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @db.Date
   type      String
   media     String?
   location  String
-  userId    Int?
+  userId    String?
   user      User?    @relation(name: "EmergenciesToUser", fields: [userId], references: [id])
   status    String
 }
 
 model Behaviors {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   location  String
   createdAt DateTime @default(now()) @db.Date
   evidence  String?
   violation Int
-  userId    Int?
+  userId    String?
   user      User?    @relation(name: "BehaviorsToUser", fields: [userId], references: [id])
   status    String
 }
 
 model Administrator {
-  id       Int     @id @default(autoincrement())
+  id       String  @id @default(cuid())
   email    String
   password String
   actions  String?

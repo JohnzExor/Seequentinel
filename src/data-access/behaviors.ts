@@ -6,7 +6,7 @@ export const CreateReport = async (newReport: IBehaviors) => {
   return data;
 };
 
-export const UpdateReport = async (id: number, updatedReport: IBehaviors) => {
+export const UpdateReport = async (id: string, updatedReport: IBehaviors) => {
   const data = await prisma.behaviors.update({
     where: { id },
     data: updatedReport,
@@ -14,7 +14,7 @@ export const UpdateReport = async (id: number, updatedReport: IBehaviors) => {
   return data;
 };
 
-export const DeleteReport = async (id: number) => {
+export const DeleteReport = async (id: string) => {
   const data = await prisma.behaviors.delete({ where: { id } });
   return data;
 };
@@ -24,12 +24,12 @@ export const FindAllReports = async () => {
   return data;
 };
 
-export const FindUserReports = async (userId: number) => {
+export const FindUserReports = async (userId: string) => {
   const data = await prisma.behaviors.findMany({ where: { userId } });
   return data;
 };
 
-export const SetStatus = async (id: number, newStatus: string) => {
+export const SetStatus = async (id: string, newStatus: string) => {
   const data = await prisma.behaviors.update({
     where: { id },
     data: { status: newStatus },

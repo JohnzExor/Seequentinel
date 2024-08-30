@@ -7,7 +7,7 @@ export const ExistingUserEmail = async (email: string) => {
   return data;
 };
 
-export const FindUserByID = async (id: number) => {
+export const FindUserByID = async (id: string) => {
   const data = await prisma.user.findUnique({ where: { id } });
   return data;
 };
@@ -22,12 +22,12 @@ export const CreateUser = async (newUser: IUser) => {
   return data;
 };
 
-export const DeleteUser = async (id: number) => {
+export const DeleteUser = async (id: string) => {
   const data = await prisma.user.delete({ where: { id } });
   return data;
 };
 
-export const UpdatePassword = async (id: number, password: string) => {
+export const UpdatePassword = async (id: string, password: string) => {
   const hashPWD = await hash(password, 10);
   const newPassword = await prisma.user.update({
     where: { id },

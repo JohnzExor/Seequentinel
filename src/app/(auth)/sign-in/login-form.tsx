@@ -1,7 +1,7 @@
 "use client";
 
 import { useServerAction } from "zsa-react";
-import loginUserAction from "./action";
+import loginUserAction from "./actions";
 import { useState } from "react";
 
 const LoginForm = () => {

@@ -1,13 +1,17 @@
 import prisma from "@/lib/db";
+import { faultyFacilitiesSchema } from "@/lib/zod";
 import { IFaultyFacilities } from "@/types/definitions";
+import { z } from "zod";
 
-export const CreateReport = async (newReport: IFaultyFacilities) => {
+export const CreateReport = async (
+  newReport: z.infer<typeof faultyFacilitiesSchema>
+) => {
   const data = await prisma.faultyFacilities.create({ data: newReport });
   return data;
 };
 
 export const UpdateReport = async (
-  id: number,
+  id: string,
   updatedReport: IFaultyFacilities
 ) => {
   const data = await prisma.faultyFacilities.update({
@@ -17,7 +21,7 @@ export const UpdateReport = async (
   return data;
 };
 
-export const DeleteReport = async (id: number) => {
+export const DeleteReport = async (id: string) => {
   const data = await prisma.faultyFacilities.delete({ where: { id } });
   return data;
 };
@@ -27,12 +31,12 @@ export const FindAllReports = async () => {
   return data;
 };
 
-export const FindUserReports = async (userId: number) => {
+export const FindUserReports = async (userId: string) => {
   const data = await prisma.faultyFacilities.findMany({ where: { userId } });
   return data;
 };
 
-export const SetStatus = async (id: number, newStatus: string) => {
+export const SetStatus = async (id: string, newStatus: string) => {
   const data = await prisma.faultyFacilities.update({
     where: { id },
     data: { status: newStatus },
