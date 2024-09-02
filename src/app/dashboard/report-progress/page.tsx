@@ -10,8 +10,8 @@ const page = async () => {
   );
   return (
     <div>
-      {data.map(({ type, status }) => (
-        <div>
+      {data.map(({ type, status }, index) => (
+        <div key={index}>
           <h1>{type}</h1>
           <p>{status}</p>
         </div>

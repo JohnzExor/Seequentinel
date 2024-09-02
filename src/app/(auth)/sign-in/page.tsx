@@ -1,7 +1,8 @@
 import { getServerSession } from "next-auth";
-import LoginForm from "./login-form";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import LoginText from "./login-text";
+import EmailForm from "./email-form";
 
 const page = async () => {
   const session = await getServerSession(authOptions);
@@ -10,7 +11,8 @@ const page = async () => {
   }
   return (
     <div>
-      <LoginForm />
+      <LoginText />
+      <EmailForm />
     </div>
   );
 };

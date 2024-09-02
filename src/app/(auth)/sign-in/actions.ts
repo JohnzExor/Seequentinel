@@ -1,16 +1,12 @@
 import { createServerAction } from "zsa";
-import { signIn } from "next-auth/react";
-import { LoginSchema } from "@/lib/zod";
+import { emailSchema } from "@/lib/zod";
+import { checkExistingEmailUseCase } from "@/use-cases/user";
 
-const loginUserAction = createServerAction()
-  .input(LoginSchema)
+const checkUserEmailAction = createServerAction()
+  .input(emailSchema)
   .handler(async ({ input }) => {
-    const data = signIn("credentials", {
-      email: input.email,
-      password: input.password,
-      redirect: false,
-    });
+    const data = await checkExistingEmailUseCase(input.email);
     return data;
   });
 
-export default loginUserAction;
+export default checkUserEmailAction;
