@@ -4,6 +4,7 @@ import { compare, hash } from "bcryptjs";
 
 export const ExistingUserEmail = async (email: string) => {
   const data = await prisma.user.findUnique({ where: { email } });
+  console.log(data);
   return data;
 };
 
