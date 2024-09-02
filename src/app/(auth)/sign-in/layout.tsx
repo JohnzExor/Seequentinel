@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
-import SideBarToggle from "./sidebar-toggle";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import AuthDesign from "./auth-design";
 
 export default async function RootLayout({
   children,
@@ -9,8 +9,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/");
+  if (session?.user) {
+    redirect("/dashboard");
   }
-  return <SideBarToggle>{children}</SideBarToggle>;
+  return <AuthDesign>{children}</AuthDesign>;
 }
