@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import checkUserEmailAction from "./actions";
 import { emailSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
-import { Loader } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 
 const EmailForm = () => {
   const router = useRouter();
@@ -46,16 +45,21 @@ const EmailForm = () => {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="p-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="px-6">
+        <div className="flex flex-col space-y-2 text-center mb-5">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Sign in your account
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Make sure your account is validated and registered.
+          </p>
+        </div>
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Corporate Email</FormLabel>
-              <FormDescription>
-                Make sure that the corporate email is validated and existing.
-              </FormDescription>
               <FormControl>
                 <Input
                   type="email"
@@ -69,9 +73,8 @@ const EmailForm = () => {
             </FormItem>
           )}
         />
-        <p className=" text-sm pt-2">Forgot Email?</p>
         <Button type="submit" className="w-full mt-3" disabled={isPending}>
-          {isPending ? <Loader /> : "Next"}
+          {isPending ? <LoaderCircle className=" animate-spin" /> : "Next"}
         </Button>
       </form>
     </Form>

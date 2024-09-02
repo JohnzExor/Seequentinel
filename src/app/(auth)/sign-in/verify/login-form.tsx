@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginSchema } from "@/lib/zod";
 import loginUserAction from "./actions";
-import { Loader } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
@@ -51,16 +50,21 @@ const LoginForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="p-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="px-6">
+        <div className="flex flex-col space-y-2 text-center mb-5">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Enter your password
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            We make sure that your password is secured and encrypted
+          </p>
+        </div>
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
-              <FormDescription>
-                We encrypt your password so that we can secure your security.
-              </FormDescription>
               <FormControl>
                 <Input
                   type="password"
@@ -75,7 +79,7 @@ const LoginForm = () => {
           )}
         />
         <Button type="submit" className="w-full mt-3" disabled={isPending}>
-          {isPending ? <Loader /> : "Login"}
+          {isPending ? <LoaderCircle className=" animate-spin" /> : "Login"}
         </Button>
       </form>
     </Form>
