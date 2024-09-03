@@ -20,15 +20,16 @@ import { Separator } from "@/components/ui/separator";
 
 const navigations = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: <LayoutDashboard />,
-  },
-  {
     path: "/dashboard/account",
     name: "Account",
     icon: <CircleUser />,
   },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: <LayoutDashboard />,
+  },
+
   {
     path: "/dashboard/report-progress",
     name: "Report progress",
@@ -86,7 +87,7 @@ const SideBar = () => {
         ))}
       </div>
 
-      <div className=" mt-auto flex items-center justify-between text-sm px-4">
+      <div className=" mt-auto flex items-center justify-between">
         <Logout />
         <ModeToggle />
       </div>
