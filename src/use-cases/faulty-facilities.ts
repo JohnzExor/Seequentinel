@@ -1,8 +1,5 @@
 import { CreateReport, FindUserReports } from "@/data-access/faulty-facilities";
 import { faultyFacilitiesSchema } from "@/lib/zod";
-import { IFaultyFacilities } from "@/types/definitions";
-import { FaultyFacilities } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { z } from "zod";
 
 export const postReportUseCase = async (
