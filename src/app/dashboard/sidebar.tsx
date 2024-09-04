@@ -72,8 +72,9 @@ const SideBar = () => {
       <Separator />
       <div className="flex flex-col gap-2 text-sm">
         <span className=" text-sm text-muted-foreground">Navigations</span>
-        {navigations.map(({ path, name, icon }) => (
+        {navigations.map(({ path, name, icon }, index) => (
           <Link
+            key={index}
             href={path}
             className={clsx("flex gap-2 p-2 items-center rounded-2xl", {
               "bg-primary w-full text-white ": pathname === path,
