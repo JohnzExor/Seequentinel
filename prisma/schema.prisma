@@ -49,6 +49,8 @@ model Behaviors {
   userId    String?
   user      User?    @relation(name: "BehaviorsToUser", fields: [userId], references: [id])
   status    String
+  violationDate DateTime
+  violationDetails String
 }
 
 model Administrator {

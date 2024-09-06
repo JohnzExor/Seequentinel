@@ -16,3 +16,16 @@ export const faultyFacilitiesSchema = z.object({
   userId: z.string().min(1, "UserID is required").max(50).optional(),
   status: z.enum(["Request" || "Reviewing" || "Accepted" || "Completed"]),
 });
+
+export const behavioralViolationsSchema = z.object({
+  violation: z.number().min(1, "Specify violation").max(255),
+  evidence: z.string().optional(),
+  location: z.string().min(1, "Location is required").max(255),
+  // violationDate: z.date({
+  //   required_error: "Please select a date and time",
+  //   invalid_type_error: "That's not a date",
+  // }),
+  violationDetails: z.string().min(1, "Specify details").max(255),
+  userId: z.string().optional(),
+  status: z.enum(["Request" || "Reviewing" || "Accepted" || "Completed"]),
+})
