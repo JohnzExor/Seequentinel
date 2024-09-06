@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textArea";
 
 // date picker imports
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -32,10 +32,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popOver";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const ReportForm = () => {
-  const session = useSession();
+  const { data } = useSession();
   const router = useRouter();
+  const toast = useToast();
   const { execute, isError, error, isPending } = useServerAction(
     behavioralViolationsAction
   );
@@ -43,12 +45,12 @@ const ReportForm = () => {
   const form = useForm<z.infer<typeof behavioralViolationsSchema>>({
     resolver: zodResolver(behavioralViolationsSchema),
     defaultValues: {
-      violation: 0,
+      violation: "",
       evidence: "",
-      // violationDate: "" as unknown as Date,
+      violationDate: "" as unknown as Date,
       location: "",
       violationDetails: "",
-      userId: "121221",
+      userId: data?.user.id,
       status: "Request",
     },
   });
@@ -56,13 +58,17 @@ const ReportForm = () => {
   const onSubmit = async (
     values: z.infer<typeof behavioralViolationsSchema>
   ) => {
-    const res = await execute(values);
-    console.log(values);
+    const res = await execute({
+      ...values,
+      violationDate: values.violationDate,
+      userId: data?.user.id,
+    });
+    console.log(res);
   };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="px-6">
-        {/* <FormField
+        <FormField
           control={form.control}
           name="violationDate"
           render={({ field }) => (
@@ -102,7 +108,7 @@ const ReportForm = () => {
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        />
         <FormField
           control={form.control}
           name="violation"
@@ -111,7 +117,7 @@ const ReportForm = () => {
               <FormLabel>Violation</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  type="text"
                   placeholder="Violation"
                   {...field}
                   disabled={isPending}

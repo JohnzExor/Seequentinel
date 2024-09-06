@@ -1,10 +1,18 @@
 import prisma from "@/lib/db";
 import { behavioralViolationsSchema } from "@/lib/zod";
 import { IBehaviors } from "@/types/definitions";
-import { z } from "zod"
+import { formatISO } from "date-fns";
+import { z } from "zod";
 
-export const CreateReport = async (newReport: z.infer<typeof behavioralViolationsSchema>) => {
-  const data = await prisma.behaviors.create({ data: newReport });
+export const CreateReport = async (
+  newReport: z.infer<typeof behavioralViolationsSchema>
+) => {
+  const data = await prisma.behaviors.create({
+    data: {
+      ...newReport,
+      violation: parseInt(newReport.violation),
+    },
+  });
   return data;
 };
 

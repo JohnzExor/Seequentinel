@@ -68,7 +68,7 @@ const ReportCard = async ({
           data.map(({ id, type, status, createdAt }, index) => (
             <Dialog key={index}>
               <DialogTrigger className="text-start space-y-2 border rounded-xl p-4 cursor-pointer hover:shadow-md duration-300">
-                <p className="flex justify-between text-sm">
+                <p className="flex justify-between text -sm">
                   <span>{createdAt.toDateString()}</span>
                   <span className="flex items-center gap-1">
                     <CircleFadingArrowUp size={20} />
