@@ -43,7 +43,7 @@ const LoginForm = () => {
         type: "manual",
         message: res[0]?.error as string,
       });
-      // return;
+      return;
     }
     router.push("/dashboard");
   };

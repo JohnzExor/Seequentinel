@@ -6,7 +6,7 @@ import {
   BringToFront,
   CircleUser,
   Flag,
-  LayoutDashboard,
+  ClipboardPlus,
   Settings,
 } from "lucide-react";
 import Link from "next/link";
@@ -20,28 +20,28 @@ import { Separator } from "@/components/ui/separator";
 
 const navigations = [
   {
-    path: "/dashboard/account",
+    path: "/report/account",
     name: "Account",
     icon: <CircleUser />,
   },
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: <LayoutDashboard />,
+    path: "/report",
+    name: "Report",
+    icon: <ClipboardPlus />,
   },
 
   {
-    path: "/dashboard/report-progress",
+    path: "/report/report-progress",
     name: "Report progress",
     icon: <Flag />,
   },
   {
-    path: "/dashboard/handbook",
+    path: "/report/handbook",
     name: "Student Handbook",
     icon: <Book />,
   },
   {
-    path: "/dashboard/settings",
+    path: "/report/settings",
     name: "Settings",
     icon: <Settings />,
   },
@@ -77,9 +77,11 @@ const SideBar = () => {
             key={index}
             href={path}
             className={clsx("flex gap-2 p-2 items-center rounded-2xl", {
-              "bg-primary w-full text-white ": pathname === path,
-              "hover:bg-black hover:bg-opacity-5 duration-100":
-                pathname !== path,
+              "bg-primary w-full text-white ":
+                pathname === path ||
+                (path !== "/report" && pathname.startsWith(path)),
+              "hover:bg-black hover:bg-opacity-5 dark:hover:bg-white dark:hover:text-black duration-100":
+                pathname !== path && !pathname.startsWith(path),
             })}
           >
             {icon}

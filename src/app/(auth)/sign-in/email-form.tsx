@@ -40,7 +40,7 @@ const EmailForm = () => {
         type: "manual",
         message: res[0].message,
       });
-      // return;
+      return;
     }
     router.push(`/sign-in/verify/?email=${encodeURIComponent(email)}`);
   };
