@@ -34,12 +34,13 @@ const EmailForm = () => {
 
   const onSubmit = async ({ email }: z.infer<typeof emailSchema>) => {
     const res = await execute({ email });
+    console.log(res);
     if (res && res[0].ok !== true) {
       form.setError("email", {
         type: "manual",
         message: res[0].message,
       });
-      return;
+      // return;
     }
     router.push(`/sign-in/verify/?email=${encodeURIComponent(email)}`);
   };

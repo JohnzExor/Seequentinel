@@ -1,7 +1,9 @@
 import prisma from "@/lib/db";
+import { behavioralViolationsSchema } from "@/lib/zod";
 import { IBehaviors } from "@/types/definitions";
+import { z } from "zod"
 
-export const CreateReport = async (newReport: IBehaviors) => {
+export const CreateReport = async (newReport: z.infer<typeof behavioralViolationsSchema>) => {
   const data = await prisma.behaviors.create({ data: newReport });
   return data;
 };

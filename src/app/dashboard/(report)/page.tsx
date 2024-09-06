@@ -1,4 +1,10 @@
-import { Airplay, Book, ConstructionIcon, Siren } from "lucide-react";
+import {
+  Airplay,
+  Book,
+  ConstructionIcon,
+  Fullscreen,
+  Siren,
+} from "lucide-react";
 import Link from "next/link";
 import {
   Card,
@@ -14,19 +20,16 @@ const reportOptions = [
     name: "Faulty Facilities",
     link: "/dashboard/faulty-facilities",
     icon: <ConstructionIcon />,
-    image: "",
   },
   {
     name: "Behavioral",
     link: "/dashboard/behavioral",
     icon: <Book />,
-    image: "",
   },
   {
     name: "Emergency",
     link: "/dashboard/emergency",
     icon: <Siren />,
-    image: "",
   },
 ];
 
