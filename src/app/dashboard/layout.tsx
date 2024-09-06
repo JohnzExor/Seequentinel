@@ -9,8 +9,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/");
-  }
+  // if (!session?.user) {
+  //   redirect("/");
+  // }
   return <SideBarToggle>{children}</SideBarToggle>;
 }
