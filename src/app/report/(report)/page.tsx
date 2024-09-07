@@ -46,7 +46,12 @@ const page = () => {
             {image ? (
               <div className="absolute w-full h-full">
                 <div className="relative w-full h-full">
-                  <Image src={image} alt={name} fill className="object-cover" />
+                  <Image
+                    src={image}
+                    alt={name}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
                 </div>
               </div>
             ) : null}
