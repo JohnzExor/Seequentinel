@@ -3,6 +3,7 @@ import { getUserReportsUseCase } from "@/use-cases/faulty-facilities";
 import { getServerSession } from "next-auth";
 import ReportCard from "./report-card";
 import { TriangleAlert, Users, Warehouse } from "lucide-react";
+import { Suspense } from "react";
 
 const page = async () => {
   const session = await getServerSession(authOptions);
