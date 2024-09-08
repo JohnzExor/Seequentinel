@@ -2,7 +2,7 @@ import ReportForm from "./report-form";
 
 const page = () => {
   return (
-    <div>
+    <div className="flex justify-center w-full items-center">
       <ReportForm />
     </div>
   );
