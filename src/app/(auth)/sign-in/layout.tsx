@@ -3,9 +3,6 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import AuthDesign from "./auth-design";
 
-// import Sidebar from "./sidebar";
-// import Header from "./header";
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -17,7 +14,6 @@ export default async function RootLayout({
   }
   return (
     <>
-      {/* <Header /> */}
       <AuthDesign>{children}</AuthDesign>
     </>
   );

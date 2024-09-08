@@ -10,6 +10,8 @@ datasource db {
 
 model User {
   id                      String             @id @default(cuid())
+  type                    String
+  status                  String
   createdAt               DateTime           @default(now()) @db.Date
   email                   String             @unique
   password                String
@@ -41,15 +43,15 @@ model Emergencies {
 }
 
 model Behaviors {
-  id        String   @id @default(cuid())
-  location  String
-  createdAt DateTime @default(now()) @db.Date
-  evidence  String?
-  violation Int
-  userId    String?
-  user      User?    @relation(name: "BehaviorsToUser", fields: [userId], references: [id])
-  status    String
-  violationDate DateTime
+  id               String   @id @default(cuid())
+  location         String
+  createdAt        DateTime @default(now()) @db.Date
+  evidence         String?
+  violation        Int
+  userId           String?
+  user             User?    @relation(name: "BehaviorsToUser", fields: [userId], references: [id])
+  status           String
+  violationDate    DateTime
   violationDetails String
 }
 

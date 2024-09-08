@@ -4,6 +4,8 @@ import {
   FindUserByID,
   UpdatePassword,
 } from "@/data-access/user";
+import { createUserSchema } from "@/lib/zod";
+import { createUserUseCase } from "@/use-cases/user";
 import { NextResponse } from "next/server";
 
 export async function PUT(request: Request) {
@@ -39,9 +41,9 @@ export async function PUT(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const { email, password } = await request.json();
+  const { email, password, type } = await request.json();
 
-  if (!email || !password) {
+  if (!email || !password || !type) {
     return NextResponse.json(
       { ok: false, messsage: "Fill all the blanks" },
       { status: 400 }
@@ -57,7 +59,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const data = await CreateUser({ email, password });
+  const data = await createUserUseCase({ email, password, type });
 
   if (!data) {
     return NextResponse.json(

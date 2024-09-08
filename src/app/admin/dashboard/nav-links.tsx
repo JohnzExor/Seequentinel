@@ -9,11 +9,12 @@ import {
   Scroll,
   Settings,
   Shield,
+  User,
   UserPen,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import { Dispatch, SetStateAction } from "react";
 
 const links = [
   {
@@ -47,6 +48,11 @@ const links = [
     icon: <Shield />,
   },
   {
+    name: "Users",
+    path: "/admin/dashboard/users",
+    icon: <User />,
+  },
+  {
     name: "Notifications",
     path: "/admin/dashboard/notifications",
     icon: <Bell />,
@@ -58,8 +64,21 @@ const links = [
   },
 ];
 
-const NavLinks = () => {
+const NavLinks = ({
+  open,
+  setOpen,
+}: {
+  open?: boolean;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
+}) => {
   const pathname = usePathname();
+
+  const handleClick = () => {
+    if (open && setOpen) {
+      setOpen(!open);
+    }
+  };
+
   return (
     <div className=" space-y-1">
       <p className=" text-muted-foreground text-sm mb-2">Navigations</p>
@@ -67,6 +86,7 @@ const NavLinks = () => {
         <Link
           href={path}
           key={index}
+          onClick={handleClick}
           className={clsx("flex items-center p-2 gap-2 rounded-2xl text-sm", {
             "bg-primary text-white": pathname === path,
           })}
