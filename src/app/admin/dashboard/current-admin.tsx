@@ -1,13 +1,11 @@
-"use client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { BringToFront } from "lucide-react";
 import React from "react";
-import { useSession } from "next-auth/react";
-import { Separator } from "@/components/ui/separator";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-const CurrentAdmin = () => {
-  const { data } = useSession();
-
+const CurrentAdmin = async () => {
+  const session = await getServerSession(authOptions);
   return (
     <div className=" space-y-2">
       <label className="flex items-center gap-1">
@@ -20,13 +18,13 @@ const CurrentAdmin = () => {
       <div className="flex items-center gap-2">
         <Avatar>
           <AvatarFallback>
-            {data?.user.email?.slice(0, 2).toUpperCase()}
+            {session?.user.email?.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <label className=" font-medium text-sm">{data?.user.email}</label>
+          <label className=" font-medium text-sm">{session?.user.email}</label>
           <span className=" text-muted-foreground text-xs">
-            ID: {data?.user.id}
+            ID: {session?.user.id}
           </span>
         </div>
       </div>

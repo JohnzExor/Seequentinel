@@ -9,10 +9,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const session = await getServerSession(authOptions);
-  // if (session?.user) {
-  //   redirect("/report");
-  // }
+  const session = await getServerSession(authOptions);
+  console.log(session);
+
+  if (session?.user && session.user.type !== "admin") {
+    redirect("/report");
+  }
   return (
     <>
       <Header />

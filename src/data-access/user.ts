@@ -1,10 +1,16 @@
 import prisma from "@/lib/db";
+import { createUserSchema } from "@/lib/zod";
 import { IUser } from "@/types/definitions";
 import { compare, hash } from "bcryptjs";
+import { z } from "zod";
+
+export const FindAllUser = async (type: string) => {
+  const data = await prisma.user.findMany({ where: { type } });
+  return data;
+};
 
 export const ExistingUserEmail = async (email: string) => {
   const data = await prisma.user.findUnique({ where: { email } });
-  console.log(data);
   return data;
 };
 
@@ -13,7 +19,7 @@ export const FindUserByID = async (id: string) => {
   return data;
 };
 
-export const CreateUser = async (newUser: IUser) => {
+export const CreateUser = async (newUser: z.infer<typeof createUserSchema>) => {
   const hashPWD = await hash(newUser.password, 10);
 
   const data = await prisma.user.create({
