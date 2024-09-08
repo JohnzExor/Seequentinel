@@ -35,10 +35,10 @@ const EmailForm = () => {
   const onSubmit = async ({ email }: z.infer<typeof emailSchema>) => {
     const res = await execute({ email });
     console.log(res);
-    if (res && res[0].ok !== true) {
+    if (res[1]) {
       form.setError("email", {
         type: "manual",
-        message: res[0].message,
+        message: res[1].message,
       });
       return;
     }

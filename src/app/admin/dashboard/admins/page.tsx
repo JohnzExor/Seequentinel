@@ -8,7 +8,7 @@ const page = async () => {
   return (
     <>
       <div>
-        <h1 className=" text-xl font-bold">List of Users</h1>
+        <h1 className=" text-xl font-bold">List of Admins</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>
       </div>
       <AddUser />

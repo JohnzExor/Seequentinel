@@ -2,16 +2,16 @@
 
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
-
+import { Button } from "./ui/button";
 const Logout = () => {
   const handleLogout = async () => {
     await signOut();
   };
   return (
-    <button onClick={handleLogout} className="text-sm flex items-center gap-2">
+    <Button onClick={handleLogout} className="flex items-center gap-1">
       <LogOut />
       Logout
-    </button>
+    </Button>
   );
 };
 
