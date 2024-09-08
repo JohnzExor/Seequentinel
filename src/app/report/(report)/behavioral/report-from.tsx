@@ -95,6 +95,9 @@ const ReportForm = () => {
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
+                    captionLayout="dropdown-buttons"
+                    fromYear={1990}
+                    toYear={2024}
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}

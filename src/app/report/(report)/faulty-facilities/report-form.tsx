@@ -3,46 +3,127 @@
 import { useServerAction } from "zsa-react";
 import faultyFacilitiesAction from "./actions";
 import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { faultyFacilitiesSchema } from "@/lib/zod";
+import { z } from "zod";
+import { LoaderCircle, Router } from "lucide-react";
+import { Textarea } from "@/components/ui/textArea";
+
+// date picker imports
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format, formatISO } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popOver";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const ReportForm = () => {
-  const session = useSession();
+  const { data } = useSession();
+  const router = useRouter();
+  const toast = useToast();
   const { execute, isError, error, isPending } = useServerAction(
     faultyFacilitiesAction
   );
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const form = useForm<z.infer<typeof faultyFacilitiesSchema>>({
+    resolver: zodResolver(faultyFacilitiesSchema),
+    defaultValues: {
+      type: "",
+      media: "",
+      location: "",
+      userId: data?.user.id,
+      status: "Request",
+    },
+  });
 
-    const formData = new FormData(e.currentTarget);
-
-    const type = formData.get("type") as string;
-    const media = formData.get("media") as string;
-    const location = formData.get("location") as string;
-    const status = "Request";
-    const userId = session.data?.user.id.toString();
-    const data = await execute({ type, media, location, status, userId });
-    console.log(data);
+  const onSubmit = async (values: z.infer<typeof faultyFacilitiesSchema>) => {
+    const res = await execute({
+      ...values,
+      userId: data?.user.id,
+    });
+    console.log(res);
   };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Faulty facilities</h1>
-      <input type="text" name="type" placeholder="type" />
-      {isError ? (error.fieldErrors ? error.fieldErrors["type"] : null) : null}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="px-6">
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Type</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Type"
+                  {...field}
+                  disabled={isPending}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <input type="text" name="media" placeholder="enter images/videos" />
-      {isError ? (error.fieldErrors ? error.fieldErrors["media"] : null) : null}
-
-      <input type="text" name="location" placeholder="location" />
-      {isError
-        ? error.fieldErrors
-          ? error.fieldErrors["location"]
-          : null
-        : null}
-
-      <button type="submit" disabled={isPending}>
-        Submit Report
-      </button>
-    </form>
+        <FormField
+          control={form.control}
+          name="media"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Evidence</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Select media files"
+                  {...field}
+                  disabled={isPending}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location of the Problem</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Location details"
+                  {...field}
+                  disabled={isPending}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="w-full mt-3" disabled={isPending}>
+          {isPending ? <LoaderCircle className=" animate-spin" /> : "Submit"}
+        </Button>
+      </form>
+    </Form>
   );
 };
 
