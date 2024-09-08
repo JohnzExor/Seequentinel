@@ -53,7 +53,10 @@ const ReportForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="px-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col justify-center px-6 h-full"
+      >
         <FormField
           control={form.control}
           name="type"
