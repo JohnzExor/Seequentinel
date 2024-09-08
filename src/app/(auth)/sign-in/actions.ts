@@ -1,3 +1,5 @@
+"use server";
+
 import { createServerAction } from "zsa";
 import { emailSchema } from "@/lib/zod";
 import { checkExistingEmailUseCase } from "@/use-cases/user";

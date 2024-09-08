@@ -87,9 +87,13 @@ const NavLinks = ({
           href={path}
           key={index}
           onClick={handleClick}
-          className={clsx("flex items-center p-2 gap-2 rounded-2xl text-sm", {
-            "bg-primary text-white": pathname === path,
-          })}
+          className={clsx(
+            "flex items-center p-2 gap-2 rounded-2xl text-sm hover:bg-black hover:bg-opacity-5 dark:hover:bg-white dark:hover:bg-opacity-5",
+            {
+              "bg-primary text-white hover:bg-primary dark:hover:bg-primary":
+                pathname === path,
+            }
+          )}
         >
           {icon}
           {name}
