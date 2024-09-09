@@ -1,7 +1,6 @@
 "use client";
 
 import { useServerAction } from "zsa-react";
-import faultyFacilitiesAction from "./actions";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,44 +15,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { faultyFacilitiesSchema } from "@/lib/zod";
+import { emergencyResponseFeedbackSchema } from "@/lib/zod";
 import { z } from "zod";
 import { LoaderCircle, Router } from "lucide-react";
 import { Textarea } from "@/components/ui/textArea";
-
-// date picker imports
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format, formatISO } from "date-fns";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popOver";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import emergencyResponseFeedbackAction from "./actions";
 
 const ReportForm = () => {
   const { data } = useSession();
   const router = useRouter();
   const toast = useToast();
   const { execute, isError, error, isPending } = useServerAction(
-    faultyFacilitiesAction
+    emergencyResponseFeedbackAction
   );
 
-  const form = useForm<z.infer<typeof faultyFacilitiesSchema>>({
-    resolver: zodResolver(faultyFacilitiesSchema),
+  const form = useForm<z.infer<typeof emergencyResponseFeedbackSchema>>({
+    resolver: zodResolver(emergencyResponseFeedbackSchema),
     defaultValues: {
       type: "",
-      media: "",
-      location: "",
+      details: "",
       userId: data?.user.id,
       status: "Request",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof faultyFacilitiesSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof emergencyResponseFeedbackSchema>
+  ) => {
     const res = await execute({
       ...values,
       userId: data?.user.id,
@@ -72,13 +62,12 @@ const ReportForm = () => {
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type</FormLabel>
+              <FormLabel>Emergency Description</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Type"
+                <Textarea
+                  placeholder="Nature of the Emergency"
                   {...field}
-                  disabled={isPending}
+                  className="resize-none"
                 />
               </FormControl>
               <FormMessage />
@@ -88,34 +77,15 @@ const ReportForm = () => {
 
         <FormField
           control={form.control}
-          name="media"
+          name="details"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Evidence</FormLabel>
+              <FormLabel>Help Us Improve</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Select media files"
+                <Textarea
+                  placeholder="Specify"
                   {...field}
-                  disabled={isPending}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location of the Problem</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Location details"
-                  {...field}
-                  disabled={isPending}
+                  className="resize-none"
                 />
               </FormControl>
               <FormMessage />
