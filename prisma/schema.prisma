@@ -35,8 +35,7 @@ model Emergencies {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @db.Date
   type      String
-  media     String?
-  location  String
+  details   String
   userId    String?
   user      User?    @relation(name: "EmergenciesToUser", fields: [userId], references: [id])
   status    String
