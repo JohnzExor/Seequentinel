@@ -42,4 +42,17 @@ export const emergencyResponseFeedbackSchema = z.object({
   details: z.string().min(1, "Specify feedback").max(255),
   userId: z.string().min(1, "UserID is required").max(50).optional(),
   status: z.enum(["Request", "Reviewing", "Accepted", "Completed"]),
-})
+});
+
+export const auditLogSchema = z.object({
+  eventType: z.enum(["update", "delete", "create"]),
+  userId: z.string().min(1),
+  ipAddress: z.string().min(1),
+  objectType: z.string().min(1),
+  objectId: z.string().min(1),
+  previousState: z.any().optional(),
+  newState: z.any().optional(),
+  status: z.string().min(1, "Status is required"),
+  description: z.string().optional(),
+  source: z.string().optional(),
+});
