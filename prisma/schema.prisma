@@ -55,8 +55,22 @@ model Behaviors {
 }
 
 model Administrator {
-  id       String  @id @default(cuid())
+  id       String @id @default(cuid())
   email    String
   password String
-  actions  String?
+}
+
+model AuditLog {
+  id            Int      @id @default(autoincrement())
+  timestamp     DateTime @default(now())
+  eventType     String
+  userId        String
+  ipAddress     String
+  objectType    String
+  objectId      String
+  previousState Json? // Optional: to store the previous state as JSON
+  newState      Json? // Optional: to store the new state as JSON
+  status        String
+  description   String?
+  source        String?
 }

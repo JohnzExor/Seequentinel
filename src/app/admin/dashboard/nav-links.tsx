@@ -23,17 +23,17 @@ const links = [
     icon: <LayoutDashboard />,
   },
   {
-    name: "Faulty Facilities Reports",
+    name: "Campus Maintenance Request",
     path: "/admin/dashboard/faulty-facilities",
     icon: <HousePlug />,
   },
   {
-    name: "Behavior Reports",
+    name: "Handbook Violation Report",
     path: "/admin/dashboard/behavior",
     icon: <UserPen />,
   },
   {
-    name: "Emergencies Reports",
+    name: "Emergencies",
     path: "/admin/dashboard/emergencies",
     icon: <Flag />,
   },
@@ -88,10 +88,11 @@ const NavLinks = ({
           key={index}
           onClick={handleClick}
           className={clsx(
-            "flex items-center p-2 gap-2 rounded-2xl text-sm hover:bg-black hover:bg-opacity-5 dark:hover:bg-white dark:hover:bg-opacity-5",
+            "flex items-center p-2 gap-2 rounded-2xl text-sm", // Common classes
+            "hover:bg-black hover:bg-opacity-5 dark:hover:bg-opacity-5", // Common hover classes
             {
-              "bg-primary text-white hover:bg-primary dark:hover:bg-primary":
-                pathname === path,
+              "bg-primary hover:bg-primary text-white": pathname === path, // Active link state
+              "dark:hover:bg-white dark:hover:bg-primary": pathname !== path, // Dark mode hover only for non-active links
             }
           )}
         >

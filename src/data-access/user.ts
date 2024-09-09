@@ -1,6 +1,5 @@
 import prisma from "@/lib/db";
 import { createUserSchema } from "@/lib/zod";
-import { IUser } from "@/types/definitions";
 import { compare, hash } from "bcryptjs";
 import { z } from "zod";
 
