@@ -29,7 +29,7 @@ const links = [
   },
   {
     name: "Handbook Violation Report",
-    path: "/admin/dashboard/behavior",
+    path: "/admin/dashboard/behavioral",
     icon: <UserPen />,
   },
   {

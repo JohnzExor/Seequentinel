@@ -1,7 +1,7 @@
 import { getAllUserUseCase } from "@/use-cases/user";
 import { columns } from "./columns";
-import { DataTable } from "./data-table";
 import AddUser from "./add-user";
+import { DataTable } from "../data-table";
 
 const page = async () => {
   const data = await getAllUserUseCase();

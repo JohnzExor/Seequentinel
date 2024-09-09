@@ -14,18 +14,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Behaviors, FaultyFacilities } from "@prisma/client";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export type User = {
-  id: string;
-  email: string;
-  createdAt: Date;
-  status: string;
-};
-
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Behaviors>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -50,31 +44,20 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "id",
-    header: "ID",
+    header: "Document Id",
   },
   {
     accessorKey: "status",
     header: "Status",
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "type",
+    header: "Report Type",
   },
   {
     accessorKey: "createdAt",
-    header: "Account created",
+    header: "Created",
   },
-
   {
     id: "actions",
     header: "Actions",
@@ -92,7 +75,7 @@ export const columns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+            // onClick={() => navigator.clipboard.writeText(payment.id)}
             >
               Copy payment ID
             </DropdownMenuItem>
