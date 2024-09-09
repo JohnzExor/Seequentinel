@@ -1,4 +1,8 @@
-import { CreateReport, FindUserReports } from "@/data-access/faulty-facilities";
+import {
+  CreateReport,
+  FindAllReports,
+  FindUserReports,
+} from "@/data-access/faulty-facilities";
 import { faultyFacilitiesSchema } from "@/lib/zod";
 import { z } from "zod";
 
@@ -13,5 +17,11 @@ export const postReportUseCase = async (
 export const getUserReportsUseCase = async (userId: string) => {
   const data = await FindUserReports(userId);
   if (!data) throw new Error("Finding user reports failed");
+  return data;
+};
+
+export const getAllReportsUseCase = async () => {
+  const data = await FindAllReports();
+  if (!data) throw new Error("Finding all reports failed");
   return data;
 };
