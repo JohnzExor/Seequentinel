@@ -53,6 +53,10 @@ export const columns: ColumnDef<User>[] = [
     header: "ID",
   },
   {
+    accessorKey: "status",
+    header: "Status",
+  },
+  {
     accessorKey: "email",
     header: ({ column }) => {
       return (
@@ -70,10 +74,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "createdAt",
     header: "Account created",
   },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
+
   {
     id: "actions",
     header: "Actions",

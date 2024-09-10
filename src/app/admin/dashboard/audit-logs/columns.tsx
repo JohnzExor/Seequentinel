@@ -60,18 +60,16 @@ export const columns: ColumnDef<AuditLog>[] = [
       );
     },
   },
+
   {
     accessorKey: "eventType",
     header: "Event",
   },
   {
-    accessorKey: "userId",
-    header: "Action by Id",
+    accessorKey: "description",
+    header: "Description",
   },
-  {
-    accessorKey: "ipAddress",
-    header: "IpAddress",
-  },
+
   {
     accessorKey: "objectType",
     header: "objectType",
@@ -84,9 +82,14 @@ export const columns: ColumnDef<AuditLog>[] = [
     accessorKey: "status",
     header: "Status",
   },
+
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "userId",
+    header: "Action by",
+  },
+  {
+    accessorKey: "ipAddress",
+    header: "IpAddress",
   },
   {
     accessorKey: "source",
