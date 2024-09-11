@@ -1,4 +1,11 @@
 import { z } from "zod";
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 export const emailSchema = z.object({
   email: z.string().min(1, "Corporate email is required").max(50),

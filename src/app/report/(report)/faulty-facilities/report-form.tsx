@@ -1,5 +1,8 @@
 "use client";
 
+import supabase from "@/lib/storage";
+import { v4 as uuidv4 } from "uuid";
+
 import { useServerAction } from "zsa-react";
 import faultyFacilitiesAction from "./actions";
 import { useSession } from "next-auth/react";
@@ -7,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,37 +21,36 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { faultyFacilitiesSchema } from "@/lib/zod";
 import { z } from "zod";
 import {
-  ImageUp,
-  ListCheck,
+  ChevronLeft,
+  ChevronRight,
   LoaderCircle,
-  MapPinned,
-  Router,
+  UploadCloudIcon,
 } from "lucide-react";
-import { Textarea } from "@/components/ui/textArea";
-
-// date picker imports
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format, formatISO } from "date-fns";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popOver";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import clsx from "clsx";
-import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
+import Stepper from "./stepper";
+import { Label } from "@/components/ui/label";
+
+export const UploadMedia = async (file: File) => {
+  const { data, error } = await supabase.storage
+    .from("evidences")
+    .upload(`/${uuidv4()}.jpg`, file, {
+      cacheControl: "3600",
+      upsert: true,
+    });
+  return data;
+};
 
 const ReportForm = () => {
   const { data } = useSession();
   const router = useRouter();
-  const toast = useToast();
+  const { toast } = useToast();
   const { execute, isError, error, isPending } = useServerAction(
     faultyFacilitiesAction
   );
+
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof faultyFacilitiesSchema>>({
     resolver: zodResolver(faultyFacilitiesSchema),
@@ -62,178 +63,153 @@ const ReportForm = () => {
     },
   });
 
+  const handleFileOnchange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    console.log(file);
+    if (file) {
+      setIsUploading(true);
+      const upload = await UploadMedia(file);
+      if (upload) form.setValue("media", upload.path);
+    }
+    setIsUploading(false);
+  };
+
   const onSubmit = async (values: z.infer<typeof faultyFacilitiesSchema>) => {
     const res = await execute({
       ...values,
       userId: data?.user.id,
     });
-    console.log(res);
-  };
 
-  const steps = [
-    {
-      name: "Details",
-      description: "Give the details of the problem",
-      icon: <ListCheck />,
-      step: 0,
-    },
-    {
-      name: "Photo",
-      description: "Provide media files for proof",
-      icon: <ImageUp />,
-      step: 1,
-    },
-    {
-      name: "Location",
-      description: "Place where maintenance is needed",
-      icon: <MapPinned />,
-      step: 2,
-    },
-  ];
+    if (!res[0]) {
+      toast({
+        description: "Submission failed",
+      });
+      return;
+    }
+
+    toast({
+      title: "Submited Successfully",
+      description: "your submission is now on request page",
+    });
+    router.push("/report/report-progress");
+    form.reset();
+  };
 
   const [currentStep, setCurrentStep] = useState(0);
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
-  return (
-    <>
-      <div className="flex flex-col items-center h-full justify-between">
-        <div className="flex items-start py-4 justify-center w-full">
-          {steps.map(({ name, description, icon }, index) => (
-            <div
-              key={index}
-              className={clsx("flex items-start gap-4", {
-                " text-muted-foreground":
-                  index > steps.findIndex((obj) => obj.step === currentStep),
-              })}
-            >
-              <div className="flex flex-col">
-                <div className="flex items-center">
-                  <div
-                    className={clsx(
-                      " w-fit p-3 rounded-full text-white self-center",
-                      {
-                        " bg-primary": currentStep === index,
-                        " bg-muted": currentStep !== index,
-                        " text-current":
-                          index <=
-                          steps.findIndex((obj) => obj.step === currentStep) -
-                            1,
-                      }
-                    )}
-                  >
-                    {icon}
-                  </div>
-                  <Separator
-                    className={clsx("w-28", {
-                      hidden: index >= steps.length - 1,
-                    })}
-                  />
-                </div>
-                <div className="w-28">
-                  <p className=" font-semibold text-left flex flex-col">
-                    {name}
-                    <span className=" text-sm text-muted-foreground font-normal">
-                      {description}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col justify-center px-6 h-full w-2/4"
-          >
-            {currentStep === 0 ? (
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Type"
-                        {...field}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ) : null}
+  const disableButton = (index: number) => {
+    const fields: Array<"type" | "media" | "location" | "userId" | "status"> = [
+      "type",
+      "media",
+      "location",
+      "userId",
+      "status",
+    ];
 
-            {currentStep === 1 ? (
-              <FormField
-                control={form.control}
-                name="media"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Evidence</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Select media files"
-                        {...field}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+    const check = form.getValues(fields[index]);
+    return check ? false : true;
+  };
+
+  return (
+    <div className="flex flex-col">
+      <Stepper currentStep={currentStep} />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-4">
+          {currentStep === 0 ? (
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Type"
+                      {...field}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : null}
+
+          {currentStep === 1 ? (
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <Label htmlFor="picture">Picture</Label>
+              <Input
+                onChange={handleFileOnchange}
+                id="file"
+                disabled={isUploading || isPending}
+                type="file"
               />
+              {isUploading ? (
+                <span className="text-xs flex items-center gap-1 ml-auto text-muted-foreground animate-pulse">
+                  <UploadCloudIcon />
+                  Uploading
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+          {currentStep === 2 ? (
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location of the Problem</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Location details"
+                      {...field}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : null}
+
+          <div className="flex items-center justify-between">
+            {currentStep > 0 ? (
+              <Button
+                disabled={isPending}
+                type="button"
+                variant={"secondary"}
+                onClick={prevStep}
+              >
+                <ChevronLeft />
+              </Button>
+            ) : null}
+            {currentStep < 2 ? (
+              <Button
+                disabled={disableButton(currentStep)}
+                type="button"
+                onClick={nextStep}
+                className=" ml-auto"
+              >
+                <ChevronRight />
+              </Button>
             ) : null}
             {currentStep === 2 ? (
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location of the Problem</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Location details"
-                        {...field}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+              <Button type="submit" className="w-2/4" disabled={isPending}>
+                {isPending ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  "Submit"
                 )}
-              />
+              </Button>
             ) : null}
-
-            <div className="flex justify-between mt-4">
-              {currentStep > 0 ? (
-                <Button type="button" onClick={prevStep}>
-                  Previous
-                </Button>
-              ) : null}
-              {currentStep < 2 ? (
-                <Button type="button" onClick={nextStep} className="self-end">
-                  Next
-                </Button>
-              ) : null}
-              {currentStep === 2 ? (
-                <Button type="submit" className="w-2/4" disabled={isPending}>
-                  {isPending ? (
-                    <LoaderCircle className="animate-spin" />
-                  ) : (
-                    "Submit"
-                  )}
-                </Button>
-              ) : null}
-            </div>
-          </form>
-        </Form>
-      </div>
-    </>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 };
 

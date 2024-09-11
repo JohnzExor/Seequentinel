@@ -48,7 +48,7 @@ const steps = [
   },
 ];
 
-const ReportCard = async ({
+const CampusRequestCard = async ({
   title,
   data,
   icon,
@@ -65,7 +65,7 @@ const ReportCard = async ({
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {data.length > 0 ? (
-          data.map(({ id, type, status, createdAt }, index) => (
+          data.map(({ id, type, status, createdAt, media }, index) => (
             <Dialog key={index}>
               <DialogTrigger className="text-start space-y-2 border rounded-xl p-4 cursor-pointer hover:shadow-md duration-300">
                 <p className="flex justify-between text -sm">
@@ -148,7 +148,7 @@ const ReportCard = async ({
                       </span>
                       <div className=" w-full h-[300px] relative mt-1">
                         <Image
-                          src={"/images/drug.webp"}
+                          src={`https://mefpvvgnqqvpbqcxloyx.supabase.co/storage/v1/object/public/evidences/${media}`}
                           alt={id}
                           fill
                           className=" rounded-xl object-cover"
@@ -168,4 +168,4 @@ const ReportCard = async ({
   );
 };
 
-export default ReportCard;
+export default CampusRequestCard;

@@ -43,10 +43,11 @@ model Emergencies {
 
 model Behaviors {
   id               String   @id @default(cuid())
+  violatorName     String?
   location         String
   createdAt        DateTime @default(now()) @db.Date
   evidence         String?
-  violation        Int
+  violation        String
   userId           String?
   user             User?    @relation(name: "BehaviorsToUser", fields: [userId], references: [id])
   status           String

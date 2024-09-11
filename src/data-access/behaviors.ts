@@ -10,7 +10,6 @@ export const CreateReport = async (
   const data = await prisma.behaviors.create({
     data: {
       ...newReport,
-      violation: parseInt(newReport.violation),
     },
   });
   return data;

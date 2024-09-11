@@ -1,4 +1,4 @@
-import ReportForm from "./report-from";
+import ReportForm from "./report-form";
 
 const page = () => {
   return (

@@ -1,16 +1,26 @@
 import { authOptions } from "@/lib/auth";
-import { getUserReportsUseCase } from "@/use-cases/faulty-facilities";
+import { getUserReportsUseCase as getHandbookRequestData } from "@/use-cases/faulty-facilities";
+import { getUserReportsUseCase as getBehavioralData } from "@/use-cases/behaviors";
+import { getUserReportsUseCase as getEmergenciesData } from "@/use-cases/emergencies";
+
 import { getServerSession } from "next-auth";
-import ReportCard from "./report-card";
 import { TriangleAlert, Users, Warehouse } from "lucide-react";
 import { Suspense } from "react";
+import CampusRequestCard from "./campus-request-card";
+import BehavioralCard from "./behavioral-card";
+import EmergenciesCard from "./emergencies-card";
 
 const page = async () => {
   const session = await getServerSession(authOptions);
 
-  const faultyFacilities = await getUserReportsUseCase(
-    session?.user.id.toString() as string
-  );
+  const userId = session?.user.id.toString() as string;
+
+  const handbookRequestData = await getHandbookRequestData(userId);
+
+  const behavioralData = await getBehavioralData(userId);
+
+  const emergenciesData = await getEmergenciesData(userId);
+
   return (
     <div className="p-8 space-y-4 w-full">
       <div>
@@ -18,20 +28,20 @@ const page = async () => {
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>
       </div>
       <div className=" space-y-8">
-        <ReportCard
+        <CampusRequestCard
           title="Faulty Facilities"
           icon={<Warehouse />}
-          data={faultyFacilities}
+          data={handbookRequestData}
         />
-        <ReportCard
+        <BehavioralCard
           title="Behaviors"
           icon={<Users />}
-          data={faultyFacilities}
+          data={behavioralData}
         />
-        <ReportCard
+        <EmergenciesCard
           title="Emergencies"
           icon={<TriangleAlert />}
-          data={faultyFacilities}
+          data={emergenciesData}
         />
       </div>
     </div>

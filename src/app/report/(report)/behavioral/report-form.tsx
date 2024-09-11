@@ -40,15 +40,84 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popOver";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
 import clsx from "clsx";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+
+const behaviors = [
+  // Substance Use and Abuse Violations
+  {
+    id: 1,
+    name: "Intoxication",
+  },
+  {
+    id: 2,
+    name: "Drug Possession",
+  },
+
+  // Behavioral Conduct Violations
+  {
+    id: 3,
+    name: "Discourtesy",
+  },
+  {
+    id: 4,
+    name: "Disorderly Conduct",
+  },
+  {
+    id: 5,
+    name: "Indecent Conduct",
+  },
+  {
+    id: 6,
+    name: "Unlawful Activities",
+  },
+  {
+    id: 7,
+    name: "Threatening Behavior",
+  },
+  {
+    id: 8,
+    name: "Defamation",
+  },
+  {
+    id: 9,
+    name: "Hazing",
+  },
+
+  // Campus Rules and Regulations Violations
+  {
+    id: 10,
+    name: "Smoking",
+  },
+  {
+    id: 11,
+    name: "Vandalism",
+  },
+  {
+    id: 12,
+    name: "Property Destruction",
+  },
+
+  // Legal Violation
+  {
+    id: 13,
+    name: "Criminal Offense",
+  },
+];
 
 const ReportForm = () => {
   const { data } = useSession();
   const router = useRouter();
-  const toast = useToast();
+  const { toast } = useToast();
   const { execute, isError, error, isPending } = useServerAction(
     behavioralViolationsAction
   );
@@ -69,12 +138,27 @@ const ReportForm = () => {
   const onSubmit = async (
     values: z.infer<typeof behavioralViolationsSchema>
   ) => {
-    const res = await execute({
+    const validatedInput = behavioralViolationsSchema.parse({
       ...values,
       violationDate: values.violationDate,
       userId: data?.user.id,
     });
+    console.log(validatedInput);
+    const res = await execute(validatedInput);
     console.log(res);
+
+    if (!res[0]) {
+      toast({
+        description: "Submission failed",
+      });
+    }
+
+    toast({
+      title: "Submited Successfully",
+      description: "your submission is now on request page",
+    });
+    router.push("/report/report-progress");
+    form.reset();
   };
   const steps = [
     {
@@ -171,15 +255,24 @@ const ReportForm = () => {
                 name="violation"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Violation</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Violation"
-                        {...field}
-                        disabled={isPending}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={isPending}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Violation" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {behaviors.map((data, index) => (
+                          <SelectItem key={index} value={data.name}>
+                            {data.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

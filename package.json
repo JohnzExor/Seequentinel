@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev && set PORT=3006",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -23,6 +23,7 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
+    "@supabase/supabase-js": "^2.45.4",
     "@tanstack/react-table": "^8.20.5",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
@@ -39,6 +40,7 @@
     "recharts": "^2.12.7",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "uuidv4": "^6.2.13",
     "zod": "^3.23.8",
     "zsa": "^0.6.0",
     "zsa-react": "^0.2.2"
