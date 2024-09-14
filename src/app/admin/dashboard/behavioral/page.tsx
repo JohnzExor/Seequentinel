@@ -1,6 +1,6 @@
 import { DataTable } from "../data-table";
 import { columns } from "./columns";
-import { getAllReportsUseCase } from "@/use-cases/behaviors";
+import { getAllReportsUseCase } from "@/use-cases/handbook-violation";
 
 const page = async () => {
   const data = await getAllReportsUseCase();

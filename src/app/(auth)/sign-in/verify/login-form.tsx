@@ -45,7 +45,7 @@ const LoginForm = () => {
       });
       return;
     }
-    router.push("/report");
+    router.push("/");
   };
 
   return (

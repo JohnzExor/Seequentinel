@@ -1,7 +1,7 @@
 "use server";
 
 import { behavioralViolationsSchema } from "@/lib/zod";
-import { postReportUseCase } from "@/use-cases/behaviors";
+import { postReportUseCase } from "@/use-cases/handbook-violation";
 import { createServerAction } from "zsa";
 
 const behavioralViolationsAction = createServerAction()

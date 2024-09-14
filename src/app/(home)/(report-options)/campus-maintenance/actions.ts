@@ -1,7 +1,7 @@
 "use server";
 
 import { faultyFacilitiesSchema } from "@/lib/zod";
-import { postReportUseCase } from "@/use-cases/faulty-facilities";
+import { postReportUseCase } from "@/use-cases/campus-maintenance";
 import { createServerAction } from "zsa";
 
 const faultyFacilitiesAction = createServerAction()

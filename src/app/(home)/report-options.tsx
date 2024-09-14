@@ -1,10 +1,5 @@
-import {
-  Airplay,
-  Book,
-  ConstructionIcon,
-  Fullscreen,
-  Siren,
-} from "lucide-react";
+import { Book, ConstructionIcon, Siren } from "lucide-react";
+
 import Link from "next/link";
 import {
   Card,
@@ -17,10 +12,10 @@ import {
 import Image from "next/image";
 import clsx from "clsx";
 
-const reportOptions = [
+const options = [
   {
     name: "Campus Maintenance Request",
-    link: "/report/faulty-facilities",
+    link: "/campus-maintenance",
     icon: <ConstructionIcon />,
     image: "/images/psu-front.webp",
     description:
@@ -28,7 +23,7 @@ const reportOptions = [
   },
   {
     name: "Handbook Violation Report",
-    link: "/report/behavioral",
+    link: "/handbook-violation",
     icon: <Book />,
     image: "/images/students.jpg",
     description:
@@ -36,17 +31,17 @@ const reportOptions = [
   },
   {
     name: "Emergency",
-    link: "/report/emergency",
+    link: "/emergency",
     icon: <Siren />,
   },
 ];
 
-const page = () => {
+const ReportingOptions = () => {
   return (
-    <div className="flex flex-col p-2 justify-start w-full">
-      {reportOptions.map(({ name, link, icon, image, description }, index) => (
+    <div className="w-full grid grid-cols-1 md:grid-cols-3 h-screen">
+      {options.map(({ name, link, icon, image, description }, index) => (
         <Link href={link} key={index}>
-          <Card className="h-48 m-[10px] relative">
+          <Card className=" h-full relative">
             {image ? (
               <div className="absolute w-full h-full">
                 <div className="relative w-full h-full">
@@ -54,13 +49,13 @@ const page = () => {
                     src={image}
                     alt={name}
                     fill
-                    className="object-cover rounded-lg"
+                    className="object-cover brightness-50 hover:brightness-75 duration-150"
                   />
                 </div>
               </div>
             ) : null}
             <CardHeader>
-              <CardTitle className="flex items-center p-4 z-10">
+              <CardTitle className="flex items-center p-4">
                 <p
                   className={clsx(
                     " z-20 flex items-center gap-2 text-2xl font-semibold",
@@ -89,4 +84,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ReportingOptions;

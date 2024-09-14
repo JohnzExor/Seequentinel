@@ -157,7 +157,7 @@ const ReportForm = () => {
       title: "Submited Successfully",
       description: "your submission is now on request page",
     });
-    router.push("/report/report-progress");
+    router.push("/report-progress");
     form.reset();
   };
   const steps = [

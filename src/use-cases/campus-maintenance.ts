@@ -2,12 +2,12 @@ import {
   CreateReport,
   FindAllReports,
   FindUserReports,
-} from "@/data-access/behaviors";
-import { behavioralViolationsSchema } from "@/lib/zod";
+} from "@/data-access/campus-maintenance";
+import { faultyFacilitiesSchema } from "@/lib/zod";
 import { z } from "zod";
 
 export const postReportUseCase = async (
-  newReport: z.infer<typeof behavioralViolationsSchema>
+  newReport: z.infer<typeof faultyFacilitiesSchema>
 ) => {
   const data = await CreateReport(newReport);
   if (!data) throw new Error("Report creation failed");

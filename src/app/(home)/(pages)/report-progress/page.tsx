@@ -1,6 +1,6 @@
 import { authOptions } from "@/lib/auth";
-import { getUserReportsUseCase as getHandbookRequestData } from "@/use-cases/faulty-facilities";
-import { getUserReportsUseCase as getBehavioralData } from "@/use-cases/behaviors";
+import { getUserReportsUseCase as getHandbookRequestData } from "@/use-cases/campus-maintenance";
+import { getUserReportsUseCase as getBehavioralData } from "@/use-cases/handbook-violation";
 import { getUserReportsUseCase as getEmergenciesData } from "@/use-cases/emergencies";
 
 import { getServerSession } from "next-auth";
