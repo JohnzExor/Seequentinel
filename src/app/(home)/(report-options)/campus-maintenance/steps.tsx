@@ -1,10 +1,4 @@
-import {
-  ClipboardCheck,
-  ImageUp,
-  ListCheck,
-  LucideProps,
-  MapPinned,
-} from "lucide-react";
+import { ClipboardCheck, ImageUp, ListCheck, MapPinned } from "lucide-react";
 import { ReactNode } from "react";
 
 export type ISteps = {

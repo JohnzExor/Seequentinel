@@ -172,11 +172,10 @@ const ReportForm = ({
   };
 
   const disableButton = (index: number) => {
-    const fields: Array<"type" | "media" | "location" | "userId" | "status"> = [
+    const fields: Array<"type" | "media" | "location" | "status"> = [
       "type",
       "media",
       "location",
-      "userId",
       "status",
     ];
 
