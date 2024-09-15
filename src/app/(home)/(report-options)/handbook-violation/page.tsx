@@ -18,7 +18,7 @@ const page = () => {
     <div className="p-6 space-y-4">
       <PageDetails />
       <Separator className=" w-full" />
-      <div className=" space-y-4 md:flex gap-8 md:pt-10">
+      <div className=" space-y-4 md:flex gap-8 md:pt-10 justify-center">
         <Stepper currentStep={currentStep} stepDetails={steps} />
         <div className=" space-y-4 w-full max-w-[800px]">
           <StepsText currentStep={currentStep} stepDetails={steps} />

@@ -1,5 +1,5 @@
 import { BringToFront } from "lucide-react";
-import SidebarToggle from "./sidebar-toggle";
+import SideNavToggle from "./side-nav-toggle";
 
 const Header = () => {
   return (
@@ -8,7 +8,7 @@ const Header = () => {
         <BringToFront size={20} className="text-primary" />
         Seequentinel
       </label>
-      <SidebarToggle />
+      <SideNavToggle />
     </div>
   );
 };

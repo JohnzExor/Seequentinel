@@ -5,7 +5,7 @@ import { Menu } from "lucide-react";
 import NavLinks from "./nav-links";
 import React, { useState } from "react";
 
-const SidebarToggle = () => {
+const SideNavToggle = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -20,4 +20,4 @@ const SidebarToggle = () => {
   );
 };
 
-export default SidebarToggle;
+export default SideNavToggle;

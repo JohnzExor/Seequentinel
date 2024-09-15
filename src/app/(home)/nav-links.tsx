@@ -1,4 +1,5 @@
 "use client";
+import { easeInOut, motion } from "framer-motion";
 
 import clsx from "clsx";
 import {
@@ -55,9 +56,11 @@ const links = [
 ];
 
 const NavLinks = ({
+  isMinimized,
   open,
   setOpen,
 }: {
+  isMinimized?: boolean;
   open?: boolean;
   setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -69,28 +72,48 @@ const NavLinks = ({
     }
   };
 
+  const isActive = (path: string, children?: { path: string }[]) => {
+    if (pathname === path) return true;
+    if (children) {
+      return children.some((child) => pathname === child.path);
+    }
+    return false;
+  };
+
   return (
-    <div className=" space-y-1">
-      <p className=" text-muted-foreground text-sm mb-2">Navigations</p>
+    <>
       {links.map(({ name, path, icon, children }, index) => (
         <Link
           href={path}
           key={index}
           onClick={handleClick}
           className={clsx(
-            "flex items-center p-2 gap-2 rounded-2xl text-sm", // Common classes
-            "hover:bg-black hover:bg-opacity-5 dark:hover:bg-opacity-5", // Common hover classes
+            "flex items-center gap-3 text-sm p-3 pr-9 rounded-lg duration-200",
             {
-              "bg-primary hover:bg-primary text-white": pathname === path, // Active link state
-              "dark:hover:bg-white dark:hover:bg-primary": pathname !== path, // Dark mode hover only for non-active links
+              " bg-primary-foreground text-primary font-medium shadow-sm":
+                isActive(path, children),
+              "hover:bg-muted": pathname !== path,
             }
           )}
         >
-          {icon}
-          {name}
+          <div>{icon}</div>
+          <motion.div
+            initial={{
+              width: isMinimized ? 0 : 200,
+              opacity: isMinimized ? 0 : 1,
+            }}
+            animate={{
+              width: isMinimized ? 0 : 200,
+              opacity: isMinimized ? 0 : 1,
+            }}
+            transition={{ delay: 0.2, ease: easeInOut }}
+            className=" overflow-hidden text-nowrap"
+          >
+            {name}
+          </motion.div>
         </Link>
       ))}
-    </div>
+    </>
   );
 };
 
