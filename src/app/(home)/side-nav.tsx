@@ -10,6 +10,8 @@ import { ModeToggle } from "@/components/theme/mode-toggle";
 import Logout from "@/components/logout";
 import { Session } from "next-auth";
 
+import { useLocalStorage } from "usehooks-ts";
+
 const MotionDiv = [
   {
     logo: "Account and Settings",
@@ -29,21 +31,15 @@ const MotionDiv = [
 
 const SideNavigations = ({ session }: { session: Session | null }) => {
   const user = session?.user;
-  const [isMinimized, setisMinimized] = useState<boolean>(false);
+  // const [isMinimized, setisMinimized] = useState<boolean>(false);
+
+  const [isMinimized, setisMinimized] = useLocalStorage("isMinimized", false);
 
   const sidebarWidth = { width: isMinimized ? 100 : 400 };
-
-  useEffect(() => {
-    const storedValue = localStorage.getItem("isMinimized");
-    if (storedValue !== null) {
-      setisMinimized(storedValue === "true");
-    }
-  }, []);
 
   const HandleMinimize = () => {
     const newValue = !isMinimized;
     setisMinimized(newValue);
-    localStorage.setItem("isMinimized", newValue.toString());
   };
 
   return (
@@ -73,7 +69,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
           {isMinimized ? <PanelRightClose /> : <PanelLeftDashed />}
         </motion.button>
       </div>
-      <div className="flex flex-col w-full gap-6">
+      <div className="flex flex-col w-full gap-3">
         <span className="text-sm font-semibold text-muted-foreground pl-3 text-nowrap">
           <motion.div
             initial={{

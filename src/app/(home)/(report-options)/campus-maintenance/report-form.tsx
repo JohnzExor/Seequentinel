@@ -141,7 +141,6 @@ const ReportForm = ({
 
   const handleFileOnchange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
-    console.log(file);
     if (file) {
       setIsUploading(true);
       const upload = await UploadMedia(file);

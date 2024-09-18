@@ -1,49 +1,83 @@
 import { authOptions } from "@/lib/auth";
-import { getUserReportsUseCase as getHandbookRequestData } from "@/use-cases/campus-maintenance";
-import { getUserReportsUseCase as getBehavioralData } from "@/use-cases/handbook-violation";
-import { getUserReportsUseCase as getEmergenciesData } from "@/use-cases/emergencies";
+import { getUserReportsUseCase as getHandbookRequest } from "@/use-cases/campus-maintenance";
+import { getUserReportsUseCase as getBehavioral } from "@/use-cases/handbook-violation";
+import { getUserReportsUseCase as getEmergencies } from "@/use-cases/emergencies";
 
 import { getServerSession } from "next-auth";
-import { TriangleAlert, Users, Warehouse } from "lucide-react";
-import { Suspense } from "react";
-import CampusRequestCard from "./campus-request-card";
-import BehavioralCard from "./behavioral-card";
-import EmergenciesCard from "./emergencies-card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import ReportsCard from "./reports-card";
 
 const page = async () => {
   const session = await getServerSession(authOptions);
 
   const userId = session?.user.id.toString() as string;
 
-  const handbookRequestData = await getHandbookRequestData(userId);
+  const campusMaintenanceData = await getHandbookRequest(userId);
 
-  const behavioralData = await getBehavioralData(userId);
+  const behavioralData = await getBehavioral(userId);
 
-  const emergenciesData = await getEmergenciesData(userId);
+  const emergenciesData = await getEmergencies(userId);
+
+  const AllReportData = [
+    ...campusMaintenanceData.map(({ id, type, status, createdAt }) => ({
+      id,
+      reportType: "Campus Maintenance Request",
+      type: type,
+      status,
+      createdAt: new Date(createdAt),
+    })),
+    ...behavioralData.map(({ id, violation, status, createdAt }) => ({
+      id,
+      reportType: "Handbook Violation Report",
+      type: violation,
+      status,
+      createdAt: new Date(createdAt),
+    })),
+    ...emergenciesData.map(({ id, type, status, createdAt }) => ({
+      id,
+      reportType: "Emergencies",
+      type: type,
+      status,
+      createdAt: new Date(createdAt),
+    })),
+  ];
 
   return (
-    <div className="p-8 space-y-4 w-full">
+    <div className=" p-4 md:p-8 space-y-4 w-full">
       <div>
         <h1 className=" text-xl font-bold">Report Progress</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>
       </div>
-      <div className=" space-y-8">
-        <CampusRequestCard
-          title="Faulty Facilities"
-          icon={<Warehouse />}
-          data={handbookRequestData}
-        />
-        <BehavioralCard
-          title="Behaviors"
-          icon={<Users />}
-          data={behavioralData}
-        />
-        <EmergenciesCard
-          title="Emergencies"
-          icon={<TriangleAlert />}
-          data={emergenciesData}
-        />
-      </div>
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList>
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+          <TabsTrigger value="violations">Violations</TabsTrigger>
+          <TabsTrigger value="emergencies">Emergencies</TabsTrigger>
+        </TabsList>
+        <TabsContent value="all">
+          <ReportsCard data={AllReportData} />
+        </TabsContent>
+        <TabsContent value="maintenance">
+          <ReportsCard
+            data={campusMaintenanceData}
+            reportTypeInput="Campus Maintenance Request"
+          />
+        </TabsContent>
+        <TabsContent value="violations">
+          <ReportsCard
+            data={behavioralData}
+            reportTypeInput="Handbook Violation Report"
+          />
+        </TabsContent>
+        <TabsContent value="emergencies">
+          <ReportsCard
+            data={emergenciesData}
+            reportTypeInput="Emergencies Log"
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

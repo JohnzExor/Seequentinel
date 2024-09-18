@@ -90,7 +90,7 @@ const NavLinks = ({
           className={clsx(
             "flex items-center gap-3 text-sm p-3 pr-9 rounded-lg duration-200",
             {
-              " bg-primary-foreground text-primary font-medium shadow-sm":
+              " bg-primary-foreground text-primary font-medium shadow-sm dark:text-white":
                 isActive(path, children),
               "hover:bg-muted": pathname !== path,
             }

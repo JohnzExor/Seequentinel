@@ -1,6 +1,11 @@
 "use client";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import NavLinks from "./nav-links";
 import React, { useState } from "react";
@@ -13,7 +18,8 @@ const SideNavToggle = () => {
       <SheetTrigger>
         <Menu />
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="space-y-4">
+        <SheetTitle>Seequentinel</SheetTitle>
         <NavLinks open={isOpen} setOpen={setIsOpen} />
       </SheetContent>
     </Sheet>
