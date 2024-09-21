@@ -1,6 +1,7 @@
 import {
   CreateReport,
   FindAllReports,
+  FindReportById,
   FindUserReports,
 } from "@/data-access/campus-maintenance";
 import { faultyFacilitiesSchema } from "@/lib/zod";
@@ -29,5 +30,11 @@ export const getUserReportsUseCase = async (userId: string) => {
 export const getAllReportsUseCase = async () => {
   const data = await FindAllReports();
   if (!data) throw new Error("Finding all reports failed");
+  return data;
+};
+
+export const getUserReportByIdUseCase = async (id: string) => {
+  const data = await FindReportById(id);
+  if (!data) throw new Error("error getting report");
   return data;
 };

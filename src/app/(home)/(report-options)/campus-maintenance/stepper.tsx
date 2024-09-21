@@ -14,7 +14,12 @@ const Stepper = ({
       {stepDetails.map(({ name, short, icon }, index) => (
         <li key={index} className="w-full">
           <div className=" md:flex justify-between gap-4">
-            <p className="hidden md:block w-full font-semibold text-sm text-right">
+            <p
+              className={clsx(
+                "hidden md:block w-full font-semibold text-sm text-right",
+                { " text-muted-foreground": currentStep < index }
+              )}
+            >
               {name} <br />{" "}
               <span className=" font-normal text-sm text-muted-foreground">
                 {short}
