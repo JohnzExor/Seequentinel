@@ -31,7 +31,6 @@ const MotionDiv = [
 
 const SideNavigations = ({ session }: { session: Session | null }) => {
   const user = session?.user;
-  // const [isMinimized, setisMinimized] = useState<boolean>(false);
 
   const [isMinimized, setisMinimized] = useLocalStorage("isMinimized", false);
 

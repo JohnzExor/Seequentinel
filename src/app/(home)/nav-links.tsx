@@ -44,7 +44,7 @@ const links = [
     icon: <Flag />,
   },
   {
-    path: "/handbook",
+    path: "/handbook-overview",
     name: "Student Handbook",
     icon: <Book />,
   },
@@ -73,7 +73,11 @@ const NavLinks = ({
   };
 
   const isActive = (path: string, children?: { path: string }[]) => {
-    if (pathname === path) return true;
+    if (
+      (pathname === "/" && pathname.startsWith(path)) ||
+      (path !== "/" && pathname.startsWith(path))
+    )
+      return true;
     if (children) {
       return children.some((child) => pathname === child.path);
     }

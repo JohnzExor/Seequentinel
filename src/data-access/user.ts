@@ -1,10 +1,23 @@
 import prisma from "@/lib/db";
 import { createUserSchema } from "@/lib/zod";
 import { compare, hash } from "bcryptjs";
+import Email from "next-auth/providers/email";
 import { z } from "zod";
 
 export const FindAllUser = async (type: string) => {
   const data = await prisma.user.findMany({ where: { type } });
+  return data;
+};
+
+export const FindAllUserReports = async (id: string) => {
+  const data = await prisma.user.findUnique({
+    where: { id },
+    include: {
+      faultyFacilitiesReports: true,
+      behaviorsReports: true,
+      emergencyReports: true,
+    },
+  });
   return data;
 };
 

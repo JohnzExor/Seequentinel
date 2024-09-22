@@ -3,9 +3,7 @@ import { Book, ConstructionIcon, Siren } from "lucide-react";
 import Link from "next/link";
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -17,7 +15,7 @@ const options = [
     name: "Campus Maintenance Request",
     link: "/campus-maintenance",
     icon: <ConstructionIcon />,
-    image: "/images/psu-front.webp",
+    image: "/images/cmr.jpg",
     description:
       "This allows students, faculty, and staff to report faulty utilities, broken equipment, or hazardous conditions on campus.",
   },
@@ -25,7 +23,7 @@ const options = [
     name: "Handbook Violation Report",
     link: "/handbook-violation",
     icon: <Book />,
-    image: "/images/students.jpg",
+    image: "/images/hvr.jpg",
     description:
       "This allows students, faculty, and staff to report a violation against the University guidelines or student handbook on campus.",
   },
@@ -33,12 +31,13 @@ const options = [
     name: "Emergency",
     link: "/emergency",
     icon: <Siren />,
+    image: "/images/erl.jpg",
   },
 ];
 
 const ReportingOptions = () => {
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-3 h-screen">
+    <div className="w-full grid grid-cols-1 md:grid-cols-3 h-screen  gap-3 md:gap-0">
       {options.map(({ name, link, icon, image, description }, index) => (
         <Link href={link} key={index}>
           <Card className=" h-full relative">
@@ -49,7 +48,7 @@ const ReportingOptions = () => {
                     src={image}
                     alt={name}
                     fill
-                    className="object-cover brightness-50 hover:brightness-75 duration-150"
+                    className="object-cover brightness-50 dark:brightness-[0.2] hover:brightness-75 dark:hover:brightness-50 duration-500 rounded-xl md:rounded-none"
                   />
                 </div>
               </div>

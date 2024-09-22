@@ -6,7 +6,7 @@ import {
 } from "@/data-access/campus-maintenance";
 import { faultyFacilitiesSchema } from "@/lib/zod";
 import { z } from "zod";
-import { sendEmail } from "./send-email";
+import { ReportResponse } from "./send-email";
 
 export const postReportUseCase = async (
   newReport: z.infer<typeof faultyFacilitiesSchema>
@@ -14,7 +14,7 @@ export const postReportUseCase = async (
   const data = await CreateReport(newReport);
   if (!data) throw new Error("Report creation failed");
 
-  const emailResponse = await sendEmail();
+  const emailResponse = await ReportResponse();
   if (!emailResponse) {
     throw new Error("Email not send");
   }

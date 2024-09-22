@@ -1,4 +1,4 @@
-import { ExistingUserEmail } from "@/data-access/user";
+import { ExistingUserEmail, FindAllUserReports } from "@/data-access/user";
 
 import { CreateUser, FindAllUser } from "@/data-access/user";
 import { createUserSchema } from "@/lib/zod";
@@ -6,6 +6,11 @@ import { z } from "zod";
 import { createAuditLogsUseCase } from "./audit-logs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+
+export const getAllUserReportsUseCase = async (id: string) => {
+  const data = await FindAllUserReports(id);
+  return data;
+};
 
 export const getAllUserUseCase = async () => {
   const data = await FindAllUser("user");

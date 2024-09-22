@@ -2,17 +2,22 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider  = "postgresql"
+//   url       = env("DATABASE_URL")
+//   directUrl = env("DIRECT_URL")
+// }
+
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id                      String             @id @default(cuid())
   type                    String
   status                  String
-  createdAt               DateTime           @default(now()) @db.Date
+  createdAt               DateTime           @default(now())
   email                   String             @unique
   password                String
   faultyFacilitiesReports FaultyFacilities[] @relation(name: "FaultyFacilitiesToUser")
@@ -22,7 +27,7 @@ model User {
 
 model FaultyFacilities {
   id        String   @id @default(cuid())
-  createdAt DateTime @default(now()) @db.Date
+  createdAt DateTime @default(now())
   type      String
   media     String?
   location  String
@@ -33,7 +38,7 @@ model FaultyFacilities {
 
 model Emergencies {
   id        String   @id @default(cuid())
-  createdAt DateTime @default(now()) @db.Date
+  createdAt DateTime @default(now())
   type      String
   details   String
   userId    String?
@@ -45,7 +50,7 @@ model Behaviors {
   id               String   @id @default(cuid())
   violatorName     String?
   location         String
-  createdAt        DateTime @default(now()) @db.Date
+  createdAt        DateTime @default(now())
   evidence         String?
   violation        String
   userId           String?
@@ -62,16 +67,14 @@ model Administrator {
 }
 
 model AuditLog {
-  id            Int      @id @default(autoincrement())
-  timestamp     DateTime @default(now())
-  eventType     String
-  userId        String
-  ipAddress     String
-  objectType    String
-  objectId      String
-  previousState Json? // Optional: to store the previous state as JSON
-  newState      Json? // Optional: to store the new state as JSON
-  status        String
-  description   String?
-  source        String?
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime @default(now())
+  eventType   String
+  userId      String
+  ipAddress   String
+  objectType  String
+  objectId    String
+  status      String
+  description String?
+  source      String?
 }

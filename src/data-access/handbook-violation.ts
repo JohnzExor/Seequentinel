@@ -37,6 +37,11 @@ export const FindUserReports = async (userId: string) => {
   return data;
 };
 
+export const FindReportById = async (id: string) => {
+  const data = await prisma.behaviors.findUnique({ where: { id } });
+  return data;
+};
+
 export const SetStatus = async (id: string, newStatus: string) => {
   const data = await prisma.behaviors.update({
     where: { id },

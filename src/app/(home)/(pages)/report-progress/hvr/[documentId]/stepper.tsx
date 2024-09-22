@@ -1,0 +1,53 @@
+import { Separator } from "@/components/ui/separator";
+import clsx from "clsx";
+import { ISteps } from "./steps";
+
+const Stepper = ({
+  currentStep,
+  stepDetails,
+}: {
+  currentStep: number;
+  stepDetails: ISteps[];
+}) => {
+  return (
+    <ul className="flex gap-10">
+      {stepDetails.map(({ name, description, icon }, index) => (
+        <li key={index} className=" w-full">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center">
+              <div
+                className={clsx(
+                  " bg-muted rounded-full p-2 md:p-3 text-white",
+                  {
+                    " bg-primary": currentStep >= index,
+                  }
+                )}
+              >
+                {icon}
+              </div>
+              <Separator
+                className={clsx(" h-1 bg-muted", {
+                  hidden: index >= stepDetails.length - 1,
+                  " bg-primary": currentStep > index,
+                })}
+              />
+            </div>
+            <p
+              className={clsx(
+                "hidden md:block w-[100px] font-semibold text-sm",
+                { " text-muted-foreground": currentStep < index }
+              )}
+            >
+              {name} <br />{" "}
+              <span className=" font-normal text-sm text-muted-foreground">
+                {description}
+              </span>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default Stepper;
