@@ -25,7 +25,7 @@ const MotionDiv = [
   },
   {
     logo: <Logout />,
-    name: "Signout",
+    name: "Sign out",
   },
 ];
 

@@ -52,28 +52,25 @@ const page = async ({ params }: { params: Params }) => {
         </div>
         <div className=" space-y-2">
           <h1 className=" text-lg font-semibold mt-8">Media</h1>
-          <div className=" space-y-2">
-            <h1 className=" text-lg font-semibold mt-8">Media</h1>
-            <span className="text-sm">
-              No. of uploaded files:{" "}
-              <span className=" font-bold">{evidence.length}</span>
-            </span>
-            <div className=" grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
-              {evidence.length > 0
-                ? evidence.map((path, index) => (
-                    <div className="border w-full h-[300px]" key={index}>
-                      <div className=" w-full h-full relative">
-                        <Image
-                          src={`${fileUrl}${path}`}
-                          alt={path}
-                          fill
-                          className=" object-cover rounded-xl"
-                        />
-                      </div>
+          <span className="text-sm">
+            No. of uploaded files:{" "}
+            <span className=" font-bold">{evidence.length}</span>
+          </span>
+          <div className=" grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
+            {evidence.length > 0
+              ? evidence.map((path, index) => (
+                  <div className="border w-full h-[300px]" key={index}>
+                    <div className=" w-full h-full relative">
+                      <Image
+                        src={`${fileUrl}${path}`}
+                        alt={path}
+                        fill
+                        className=" object-cover rounded-xl"
+                      />
                     </div>
-                  ))
-                : null}
-            </div>
+                  </div>
+                ))
+              : null}
           </div>
         </div>
       </div>

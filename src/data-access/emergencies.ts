@@ -1,6 +1,5 @@
 import prisma from "@/lib/db";
 import { emergencyResponseFeedbackSchema } from "@/lib/zod";
-import { IEmergencyResponseFeedback } from "@/types/definitions";
 import { z } from "zod";
 
 export const CreateReport = async (
@@ -12,7 +11,7 @@ export const CreateReport = async (
 
 export const UpdateReport = async (
   id: string,
-  updatedReport: IEmergencyResponseFeedback
+  updatedReport: z.infer<typeof emergencyResponseFeedbackSchema>
 ) => {
   const data = await prisma.emergencies.update({
     where: { id },

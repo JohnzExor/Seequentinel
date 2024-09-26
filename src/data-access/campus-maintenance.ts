@@ -1,6 +1,5 @@
 import prisma from "@/lib/db";
 import { campusMaintenanceSchema } from "@/lib/zod";
-import { IFaultyFacilities } from "@/types/definitions";
 import { z } from "zod";
 
 export const CreateReport = async (
@@ -12,7 +11,7 @@ export const CreateReport = async (
 
 export const UpdateReport = async (
   id: string,
-  updatedReport: IFaultyFacilities
+  updatedReport: z.infer<typeof campusMaintenanceSchema>
 ) => {
   const data = await prisma.campusMaintenance.update({
     where: { id },

@@ -33,7 +33,7 @@ const ReportsCard = ({
             index
           ) => (
             <Link href={path} key={index}>
-              <Card className="mb-2 w-full hover:bg-primary-foreground duration-500">
+              <Card className="mb-2 w-full hover:bg-muted duration-500">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="">{type ? type : violation}</CardTitle>
                   <Badge>{status}</Badge>

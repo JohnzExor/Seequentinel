@@ -1,6 +1,5 @@
 import prisma from "@/lib/db";
 import { handbookViolationSchema } from "@/lib/zod";
-import { IBehaviors } from "@/types/definitions";
 import { z } from "zod";
 
 export const CreateReport = async (
@@ -14,7 +13,10 @@ export const CreateReport = async (
   return data;
 };
 
-export const UpdateReport = async (id: string, updatedReport: IBehaviors) => {
+export const UpdateReport = async (
+  id: string,
+  updatedReport: z.infer<typeof handbookViolationSchema>
+) => {
   const data = await prisma.handbookViolation.update({
     where: { id },
     data: updatedReport,
