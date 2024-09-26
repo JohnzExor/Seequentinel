@@ -1,6 +1,6 @@
 "use client";
 
-import supabase from "@/lib/storage";
+import supabase, { fileUrl } from "@/lib/storage";
 import { v4 as uuidv4 } from "uuid";
 
 import { useServerAction } from "zsa-react";
@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { faultyFacilitiesSchema } from "@/lib/zod";
+import { campusMaintenanceSchema } from "@/lib/zod";
 import { z } from "zod";
 import {
   ChevronLeft,
@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
 
 const options = [
   // Electrical Issues
@@ -127,12 +128,13 @@ const ReportForm = ({
   );
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
-  const form = useForm<z.infer<typeof faultyFacilitiesSchema>>({
-    resolver: zodResolver(faultyFacilitiesSchema),
+  const form = useForm<z.infer<typeof campusMaintenanceSchema>>({
+    resolver: zodResolver(campusMaintenanceSchema),
     defaultValues: {
       type: "",
-      media: "",
+      media: [],
       location: "",
       userId: data?.user.id,
       status: "Request",
@@ -144,16 +146,20 @@ const ReportForm = ({
     if (file) {
       setIsUploading(true);
       const upload = await UploadMedia(file);
-      if (upload) form.setValue("media", upload.path);
+      if (upload) {
+        setUploadedFiles((prev) => [...prev, upload.path]);
+      }
     }
     setIsUploading(false);
   };
 
-  const onSubmit = async (values: z.infer<typeof faultyFacilitiesSchema>) => {
+  const onSubmit = async (values: z.infer<typeof campusMaintenanceSchema>) => {
     const res = await execute({
       ...values,
       userId: data?.user.id,
+      media: uploadedFiles,
     });
+    console.log(res);
 
     if (!res[0]) {
       toast({
@@ -224,6 +230,28 @@ const ReportForm = ({
 
         {currentStep === 1 ? (
           <div className="grid w-full items-center gap-1.5">
+            <div className=" space-y-4 mb-4">
+              <span className="text-sm">
+                No. of uploaded files:{" "}
+                <span className=" font-bold">{uploadedFiles.length}</span>
+              </span>
+              <div className=" grid grid-cols-4 gap-4">
+                {uploadedFiles.length > 0
+                  ? uploadedFiles.map((path, index) => (
+                      <div className="border w-20 h-20" key={index}>
+                        <div className=" w-full h-full relative">
+                          <Image
+                            src={`${fileUrl}${path}`}
+                            alt={path}
+                            fill
+                            className=" object-cover rounded-xl"
+                          />
+                        </div>
+                      </div>
+                    ))
+                  : null}
+              </div>
+            </div>
             <Input
               onChange={handleFileOnchange}
               id="file"
@@ -264,7 +292,7 @@ const ReportForm = ({
               Type: <span>{form.getValues("type")}</span>
             </p>
             <p>
-              Media: <span>{form.getValues("media")}</span>
+              No. of uploaded files: <span>{uploadedFiles.length}</span>
             </p>
             <p>
               location: <span>{form.getValues("location")}</span>

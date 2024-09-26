@@ -23,17 +23,17 @@ export const createUserSchema = z.object({
   type: z.enum(["user", "admin"]),
 });
 
-export const faultyFacilitiesSchema = z.object({
+export const campusMaintenanceSchema = z.object({
   type: z.string().min(1, "type is required").max(255),
-  media: z.string().optional(),
+  media: z.array(z.string()),
   location: z.string().min(1, "Location is required").max(255),
   userId: z.string().min(1, "UserID is required").max(50).optional(),
   status: z.enum(["Request", "Reviewing", "Accepted", "Completed"]),
 });
 
-export const behavioralViolationsSchema = z.object({
+export const handbookViolationSchema = z.object({
   violation: z.string().min(1, "Specify violation").max(255),
-  evidence: z.string().optional(),
+  evidence: z.array(z.string()),
   location: z.string().min(1, "Location is required").max(255),
   violationDate: z.date({
     required_error: "Please select a date and time",

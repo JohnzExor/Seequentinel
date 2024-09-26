@@ -18,9 +18,13 @@ const ReportsTab = async () => {
     notFound();
   }
 
-  const { behaviorsReports, faultyFacilitiesReports, emergencyReports } = data;
+  const {
+    handbookViolationReports,
+    campusMaintenanceReports,
+    emergencyReports,
+  } = data;
 
-  const cmrData = faultyFacilitiesReports
+  const cmrData = campusMaintenanceReports
     .map((report) => ({
       ...report,
       reportType: "Campus Maintenance Request",
@@ -29,7 +33,7 @@ const ReportsTab = async () => {
     }))
     .reverse();
 
-  const hvrData = behaviorsReports
+  const hvrData = handbookViolationReports
     .map((report) => ({
       ...report,
       reportType: "Handbook Violation Report",

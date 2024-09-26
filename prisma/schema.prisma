@@ -2,36 +2,36 @@ generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
 // datasource db {
-//   provider  = "postgresql"
-//   url       = env("DATABASE_URL")
-//   directUrl = env("DIRECT_URL")
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
 // }
 
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
 model User {
-  id                      String             @id @default(cuid())
-  type                    String
-  status                  String
-  createdAt               DateTime           @default(now())
-  email                   String             @unique
-  password                String
-  faultyFacilitiesReports FaultyFacilities[] @relation(name: "FaultyFacilitiesToUser")
-  behaviorsReports        Behaviors[]        @relation(name: "BehaviorsToUser")
-  emergencyReports        Emergencies[]      @relation(name: "EmergenciesToUser")
+  id                       String              @id @default(cuid())
+  type                     String
+  status                   String
+  createdAt                DateTime            @default(now())
+  email                    String              @unique
+  password                 String
+  campusMaintenanceReports CampusMaintenance[] @relation(name: "CampusMaintenance")
+  handbookViolationReports HandbookViolation[] @relation(name: "HandbookViolation")
+  emergencyReports         Emergencies[]       @relation(name: "EmergenciesToUser")
 }
 
-model FaultyFacilities {
+model CampusMaintenance {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   type      String
-  media     String?
+  media     String[]
   location  String
-  user      User?    @relation(name: "FaultyFacilitiesToUser", fields: [userId], references: [id])
+  user      User?    @relation(name: "CampusMaintenance", fields: [userId], references: [id])
   userId    String?
   status    String
 }
@@ -46,15 +46,15 @@ model Emergencies {
   status    String
 }
 
-model Behaviors {
+model HandbookViolation {
   id               String   @id @default(cuid())
   violatorName     String?
   location         String
   createdAt        DateTime @default(now())
-  evidence         String?
+  evidence         String[]
   violation        String
   userId           String?
-  user             User?    @relation(name: "BehaviorsToUser", fields: [userId], references: [id])
+  user             User?    @relation(name: "HandbookViolation", fields: [userId], references: [id])
   status           String
   violationDate    DateTime
   violationDetails String

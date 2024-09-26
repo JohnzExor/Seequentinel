@@ -7,13 +7,18 @@ import { steps } from "./steps";
 import { CalendarDays, FileText, User } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { fileUrl } from "@/lib/storage";
 
 const page = async ({ params }: { params: Params }) => {
   const { documentId } = params;
-  const { status, type, media, location, id, createdAt } =
+  const { status, type, location, media, id, createdAt } =
     await getUserReportByIdUseCase(documentId);
+
+  const currentStep = steps.findIndex(
+    (step) => step.name.toLowerCase() === status.toLowerCase()
+  );
   return (
-    <Card className="md:m-6 m-1 p-6">
+    <div className="p-4 md:p-8">
       <header className="flex items-center justify-between">
         <div className="flex flex-col items-start gap-4">
           <h1 className="text-4xl font-semibold">{type}</h1>
@@ -28,7 +33,7 @@ const page = async ({ params }: { params: Params }) => {
       <div className=" mt-10 space-y-4">
         <div className=" space-y-4">
           <h1 className=" text-lg font-semibold">Timeline</h1>
-          <Stepper currentStep={2} stepDetails={steps} />
+          <Stepper currentStep={currentStep} stepDetails={steps} />
         </div>
         <div className="flex items-center gap-1 text-sm text-muted-foreground">
           <CalendarDays />
@@ -47,19 +52,29 @@ const page = async ({ params }: { params: Params }) => {
         </div>
         <div className=" space-y-2">
           <h1 className=" text-lg font-semibold mt-8">Media</h1>
-          {media ? (
-            <div className=" w-full md:w-[400px] h-[400px] relative">
-              <Image
-                src={`https://mefpvvgnqqvpbqcxloyx.supabase.co/storage/v1/object/public/evidences/${media}`}
-                alt={media}
-                fill
-                className=" object-cover rounded-xl"
-              />
-            </div>
-          ) : null}
+          <span className="text-sm">
+            No. of uploaded files:{" "}
+            <span className=" font-bold">{media.length}</span>
+          </span>
+          <div className=" grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
+            {media.length > 0
+              ? media.map((path, index) => (
+                  <div className="border w-full h-[300px]" key={index}>
+                    <div className=" w-full h-full relative">
+                      <Image
+                        src={`${fileUrl}${path}`}
+                        alt={path}
+                        fill
+                        className=" object-cover rounded-xl"
+                      />
+                    </div>
+                  </div>
+                ))
+              : null}
+          </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

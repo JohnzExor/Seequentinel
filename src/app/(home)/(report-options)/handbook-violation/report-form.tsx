@@ -1,6 +1,6 @@
 "use client";
 
-import supabase from "@/lib/storage";
+import supabase, { fileUrl } from "@/lib/storage";
 import { v4 as uuidv4 } from "uuid";
 
 import { useServerAction } from "zsa-react";
@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { behavioralViolationsSchema } from "@/lib/zod";
+import { handbookViolationSchema } from "@/lib/zod";
 import { z } from "zod";
 import {
   ChevronLeft,
@@ -48,6 +48,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 const behaviors = [
   // Substance Use and Abuse Violations
@@ -138,12 +139,13 @@ const ReportForm = ({
   );
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
-  const form = useForm<z.infer<typeof behavioralViolationsSchema>>({
-    resolver: zodResolver(behavioralViolationsSchema),
+  const form = useForm<z.infer<typeof handbookViolationSchema>>({
+    resolver: zodResolver(handbookViolationSchema),
     defaultValues: {
       violation: "",
-      evidence: "",
+      evidence: [],
       violationDate: "" as unknown as Date,
       location: "",
       violationDetails: "",
@@ -158,17 +160,18 @@ const ReportForm = ({
     if (file) {
       setIsUploading(true);
       const upload = await UploadMedia(file);
-      if (upload) form.setValue("evidence", upload.path);
+      if (upload) {
+        setUploadedFiles((prev) => [...prev, upload.path]);
+      }
     }
     setIsUploading(false);
   };
 
-  const onSubmit = async (
-    values: z.infer<typeof behavioralViolationsSchema>
-  ) => {
-    const validatedInput = behavioralViolationsSchema.parse({
+  const onSubmit = async (values: z.infer<typeof handbookViolationSchema>) => {
+    const validatedInput = handbookViolationSchema.parse({
       ...values,
       userId: data?.user.id,
+      evidence: uploadedFiles,
     });
     const res = await execute(validatedInput);
 
@@ -289,6 +292,28 @@ const ReportForm = ({
 
         {currentStep === 2 ? (
           <div className="grid w-full items-center gap-1.5">
+            <div className=" space-y-4 mb-4">
+              <span className="text-sm">
+                No. of uploaded files:{" "}
+                <span className=" font-bold">{uploadedFiles.length}</span>
+              </span>
+              <div className=" grid grid-cols-4 gap-4">
+                {uploadedFiles.length > 0
+                  ? uploadedFiles.map((path, index) => (
+                      <div className="border w-20 h-20" key={index}>
+                        <div className=" w-full h-full relative">
+                          <Image
+                            src={`${fileUrl}${path}`}
+                            alt={path}
+                            fill
+                            className=" object-cover rounded-xl"
+                          />
+                        </div>
+                      </div>
+                    ))
+                  : null}
+              </div>
+            </div>
             <Input
               onChange={handleFileOnchange}
               id="file"

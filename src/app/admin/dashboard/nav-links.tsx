@@ -24,12 +24,12 @@ const links = [
   },
   {
     name: "Campus Maintenance Request",
-    path: "/admin/dashboard/faulty-facilities",
+    path: "/admin/dashboard/campus-maintenance",
     icon: <HousePlug />,
   },
   {
     name: "Handbook Violation Report",
-    path: "/admin/dashboard/behavioral",
+    path: "/admin/dashboard/handbook-violation",
     icon: <UserPen />,
   },
   {

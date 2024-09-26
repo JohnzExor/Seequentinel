@@ -4,12 +4,12 @@ import {
   FindReportById,
   FindUserReports,
 } from "@/data-access/campus-maintenance";
-import { faultyFacilitiesSchema } from "@/lib/zod";
+import { campusMaintenanceSchema } from "@/lib/zod";
 import { z } from "zod";
 import { ReportResponse } from "./send-email";
 
 export const postReportUseCase = async (
-  newReport: z.infer<typeof faultyFacilitiesSchema>
+  newReport: z.infer<typeof campusMaintenanceSchema>
 ) => {
   const data = await CreateReport(newReport);
   if (!data) throw new Error("Report creation failed");

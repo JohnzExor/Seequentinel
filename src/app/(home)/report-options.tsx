@@ -40,7 +40,7 @@ const ReportingOptions = () => {
     <div className="w-full grid grid-cols-1 md:grid-cols-3 h-screen  gap-3 md:gap-0">
       {options.map(({ name, link, icon, image, description }, index) => (
         <Link href={link} key={index}>
-          <Card className=" h-full relative">
+          <Card className=" h-full relative group overflow-hidden md:rounded-none">
             {image ? (
               <div className="absolute w-full h-full">
                 <div className="relative w-full h-full">
@@ -48,31 +48,19 @@ const ReportingOptions = () => {
                     src={image}
                     alt={name}
                     fill
-                    className="object-cover brightness-50 dark:brightness-[0.2] hover:brightness-75 dark:hover:brightness-50 duration-500 rounded-xl md:rounded-none"
+                    className="object-cover grayscale hover:grayscale-0 duration-500 rounded-xl md:rounded-none brightness-50 hover:brightness-75 dark:brightness-[0.3] dark:hover:brightness-[0.4] hover:scale-110"
                   />
                 </div>
               </div>
             ) : null}
             <CardHeader>
               <CardTitle className="flex items-center p-4">
-                <p
-                  className={clsx(
-                    " z-20 flex items-center gap-2 text-2xl font-semibold",
-                    {
-                      "text-white": image,
-                    }
-                  )}
-                >
+                <p className=" z-20 flex items-center gap-2 text-2xl font-semibold text-white">
                   {icon}
                   {name}
                 </p>
               </CardTitle>
-              <CardDescription
-                className={clsx("mt-2 z-10", {
-                  "text-gray-200": image,
-                  "text-gray-600": !image,
-                })}
-              >
+              <CardDescription className="mt-2 z-10 text-white">
                 {description}
               </CardDescription>
             </CardHeader>

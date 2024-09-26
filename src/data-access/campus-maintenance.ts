@@ -1,12 +1,12 @@
 import prisma from "@/lib/db";
-import { faultyFacilitiesSchema } from "@/lib/zod";
+import { campusMaintenanceSchema } from "@/lib/zod";
 import { IFaultyFacilities } from "@/types/definitions";
 import { z } from "zod";
 
 export const CreateReport = async (
-  newReport: z.infer<typeof faultyFacilitiesSchema>
+  newReport: z.infer<typeof campusMaintenanceSchema>
 ) => {
-  const data = await prisma.faultyFacilities.create({ data: newReport });
+  const data = await prisma.campusMaintenance.create({ data: newReport });
   return data;
 };
 
@@ -14,7 +14,7 @@ export const UpdateReport = async (
   id: string,
   updatedReport: IFaultyFacilities
 ) => {
-  const data = await prisma.faultyFacilities.update({
+  const data = await prisma.campusMaintenance.update({
     where: { id },
     data: updatedReport,
   });
@@ -22,27 +22,27 @@ export const UpdateReport = async (
 };
 
 export const DeleteReport = async (id: string) => {
-  const data = await prisma.faultyFacilities.delete({ where: { id } });
+  const data = await prisma.campusMaintenance.delete({ where: { id } });
   return data;
 };
 
 export const FindAllReports = async () => {
-  const data = await prisma.faultyFacilities.findMany({});
+  const data = await prisma.campusMaintenance.findMany({});
   return data;
 };
 
 export const FindUserReports = async (userId: string) => {
-  const data = await prisma.faultyFacilities.findMany({ where: { userId } });
+  const data = await prisma.campusMaintenance.findMany({ where: { userId } });
   return data;
 };
 
 export const FindReportById = async (id: string) => {
-  const data = await prisma.faultyFacilities.findUnique({ where: { id } });
+  const data = await prisma.campusMaintenance.findUnique({ where: { id } });
   return data;
 };
 
 export const SetStatus = async (id: string, newStatus: string) => {
-  const data = await prisma.faultyFacilities.update({
+  const data = await prisma.campusMaintenance.update({
     where: { id },
     data: { status: newStatus },
   });

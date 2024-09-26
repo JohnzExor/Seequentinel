@@ -13,8 +13,8 @@ export const FindAllUserReports = async (id: string) => {
   const data = await prisma.user.findUnique({
     where: { id },
     include: {
-      faultyFacilitiesReports: true,
-      behaviorsReports: true,
+      campusMaintenanceReports: true,
+      handbookViolationReports: true,
       emergencyReports: true,
     },
   });

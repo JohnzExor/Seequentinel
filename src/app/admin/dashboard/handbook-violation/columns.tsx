@@ -14,12 +14,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Behaviors, FaultyFacilities } from "@prisma/client";
+import { HandbookViolation } from "@prisma/client";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<Behaviors>[] = [
+export const columns: ColumnDef<HandbookViolation>[] = [
   {
     id: "select",
     header: ({ table }) => (
