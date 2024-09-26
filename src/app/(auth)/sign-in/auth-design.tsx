@@ -21,7 +21,7 @@ const AuthDesign = ({
           src={"/images/bg.jpeg"}
           fill
           alt="bg"
-          className=" object-cover"
+          className=" object-cover brightness-90"
         />
       </div>
       <div className="flex flex-col items-center justify-center h-screen w-full">
