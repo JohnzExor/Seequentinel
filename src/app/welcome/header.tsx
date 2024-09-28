@@ -17,11 +17,7 @@ const Header = () => {
       </div>
       <div className=" flex items-center gap-2">
         <ModeToggle />
-        <Button
-          onClick={() => router.push("/sign-in")}
-          variant="outline"
-          className="shadow-lg hover:shadow-primary/50 transition-all duration-300"
-        >
+        <Button onClick={() => router.push("/sign-in")} variant="outline">
           Sign in
         </Button>
       </div>

@@ -14,15 +14,8 @@ const TitleSection = () => {
         </p>
       </div>
       <div className="space-x-4">
-        <Button className="shadow-lg hover:shadow-primary/50 transition-all duration-300">
-          Get Started
-        </Button>
-        <Button
-          variant="outline"
-          className="shadow-lg hover:shadow-primary/50 transition-all duration-300"
-        >
-          Learn More
-        </Button>
+        <Button>Get Started</Button>
+        <Button variant="outline">Learn More</Button>
       </div>
     </section>
   );

@@ -28,10 +28,7 @@ const ContactSection = () => {
                 type="email"
                 required
               />
-              <Button
-                type="submit"
-                className="shadow-lg hover:shadow-primary/50 transition-all duration-300"
-              >
+              <Button type="submit">
                 Get Involved
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
