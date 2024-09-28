@@ -14,12 +14,12 @@ export default async function RootLayout({
     redirect("/welcome");
   }
   return (
-    <>
-      <Header />
-      <div className="flex h-screen">
-        <SideNavigations session={session} />
-        <main className="overflow-y-auto w-full">{children}</main>
-      </div>
-    </>
+    <div className="flex h-screen">
+      <SideNavigations session={session} />
+      <main className="overflow-y-auto w-full">
+        <Header />
+        {children}
+      </main>
+    </div>
   );
 }

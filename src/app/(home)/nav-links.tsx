@@ -87,35 +87,36 @@ const NavLinks = ({
   return (
     <>
       {links.map(({ name, path, icon, children }, index) => (
-        <Link
-          href={path}
-          key={index}
-          onClick={handleClick}
-          className={clsx(
-            "flex items-center gap-3 text-sm p-3 pr-9 rounded-lg duration-200",
-            {
-              " bg-primary font-bold shadow-sm text-white hover:bg-primary":
-                isActive(path, children),
-              "hover:bg-muted": pathname !== path,
-            }
-          )}
-        >
-          <div>{icon}</div>
-          <motion.div
-            initial={{
-              width: isMinimized ? 0 : 200,
-              opacity: isMinimized ? 0 : 1,
-            }}
-            animate={{
-              width: isMinimized ? 0 : 200,
-              opacity: isMinimized ? 0 : 1,
-            }}
-            transition={{ delay: 0.2, ease: easeInOut }}
-            className=" overflow-hidden text-nowrap"
+        <li key={index}>
+          <Link
+            href={path}
+            onClick={handleClick}
+            className={clsx(
+              "flex items-center gap-3 text-sm p-3 pr-9 rounded-lg duration-200",
+              {
+                "bg-primary  md:border shadow-sm text-white hover:bg-primary":
+                  isActive(path, children),
+                "hover:bg-muted": pathname !== path,
+              }
+            )}
           >
-            {name}
-          </motion.div>
-        </Link>
+            <div>{icon}</div>
+            <motion.div
+              initial={{
+                width: isMinimized ? 0 : 200,
+                opacity: isMinimized ? 0 : 1,
+              }}
+              animate={{
+                width: isMinimized ? 0 : 200,
+                opacity: isMinimized ? 0 : 1,
+              }}
+              transition={{ delay: 0.2, ease: easeInOut }}
+              className=" overflow-hidden text-nowrap"
+            >
+              {name}
+            </motion.div>
+          </Link>
+        </li>
       ))}
     </>
   );

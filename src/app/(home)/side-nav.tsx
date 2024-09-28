@@ -42,7 +42,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
   };
 
   return (
-    <motion.aside
+    <motion.nav
       initial={sidebarWidth}
       animate={sidebarWidth}
       transition={{ delay: 0.2, ease: easeInOut, type: "spring" }}
@@ -55,10 +55,12 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
           initial={{ opacity: isMinimized ? 0 : 1 }}
           animate={{ opacity: isMinimized ? 0 : 1 }}
           transition={{ delay: 0.5, ease: easeInOut }}
-          className="flex items-center font-semibold gap-2 text-xl overflow-hidden"
+          className="overflow-hidden flex items-center gap-1 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground"
         >
           <BringToFront size={30} className="text-primary" />
-          Seequentinel
+          <span className="text-xl font-semibold tracking-tighter ">
+            Seequentinel
+          </span>
         </motion.div>
         <motion.button
           initial={{ marginRight: isMinimized ? 8 : 0 }}
@@ -87,7 +89,9 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
             Main Menu
           </motion.span>
         </span>
-        <NavLinks isMinimized={isMinimized} />
+        <ul className=" space-y-4">
+          <NavLinks isMinimized={isMinimized} />
+        </ul>
       </div>
       <footer className=" mt-auto flex flex-col gap-4 text-sm">
         {MotionDiv.map(({ logo, name, type }, index) => (
@@ -151,7 +155,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
           </motion.div>
         </div>
       </footer>
-    </motion.aside>
+    </motion.nav>
   );
 };
 
