@@ -23,6 +23,8 @@ import {
   ChevronLeft,
   ChevronRight,
   LoaderCircle,
+  Send,
+  Trash,
   UploadCloudIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -36,6 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Image from "next/image";
+import ProvidedDetails from "./provided-details";
 
 const options = [
   // Electrical Issues
@@ -147,17 +150,33 @@ const ReportForm = ({
       setIsUploading(true);
       const upload = await UploadMedia(file);
       if (upload) {
-        setUploadedFiles((prev) => [...prev, upload.path]);
+        setUploadedFiles((prev) => {
+          const newFiles = [...prev, upload.path];
+          form.setValue("media", newFiles); // Use the updated files here
+          return newFiles; // Return the updated state
+        });
       }
     }
     setIsUploading(false);
+  };
+
+  const deleteFile = async (file: string) => {
+    const { data, error } = await supabase.storage
+      .from(`evidences`)
+      .remove([file]);
+    if (data) {
+      setUploadedFiles((prev) => {
+        const newFiles = prev.filter((item) => item !== file);
+        form.setValue("media", newFiles);
+        return newFiles;
+      });
+    }
   };
 
   const onSubmit = async (values: z.infer<typeof campusMaintenanceSchema>) => {
     const res = await execute({
       ...values,
       userId: data?.user.id,
-      media: uploadedFiles,
     });
     console.log(res);
 
@@ -230,28 +249,38 @@ const ReportForm = ({
 
         {currentStep === 1 ? (
           <div className="grid w-full items-center gap-1.5">
-            <div className=" space-y-4 mb-4">
-              <span className="text-sm">
-                No. of uploaded files:{" "}
-                <span className=" font-bold">{uploadedFiles.length}</span>
-              </span>
-              <div className=" grid grid-cols-4 gap-4">
-                {uploadedFiles.length > 0
-                  ? uploadedFiles.map((path, index) => (
-                      <div className="border w-20 h-20" key={index}>
-                        <div className=" w-full h-full relative">
-                          <Image
-                            src={`${fileUrl}${path}`}
-                            alt={path}
-                            fill
-                            className=" object-cover rounded-xl"
-                          />
-                        </div>
-                      </div>
-                    ))
-                  : null}
+            {uploadedFiles.length > 0 ? (
+              <div className=" space-y-4 mb-4">
+                <span className="text-sm">
+                  No. of uploaded files:{" "}
+                  <span className=" font-bold">{uploadedFiles.length}</span>
+                </span>
+                <div className=" grid grid-cols-4 gap-4">
+                  {uploadedFiles.map((path, index) => (
+                    <div
+                      className="relative rounded-xl border border-primary"
+                      key={index}
+                    >
+                      <Image
+                        src={fileUrl + path}
+                        width={100}
+                        height={100}
+                        alt="Rounded picture"
+                        className="rounded-xl object-cover"
+                      />
+                      <button
+                        className="absolute bottom-0 right-0 p-1 bg-red-500 rounded-full transform translate-x-1/4 translate-y-1/4"
+                        aria-label="Delete"
+                        type="button"
+                        onClick={() => deleteFile(path)}
+                      >
+                        <Trash className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : null}
             <Input
               onChange={handleFileOnchange}
               id="file"
@@ -287,20 +316,7 @@ const ReportForm = ({
         ) : null}
 
         {currentStep === 3 ? (
-          <div>
-            <p>
-              Type: <span>{form.getValues("type")}</span>
-            </p>
-            <p>
-              No. of uploaded files: <span>{uploadedFiles.length}</span>
-            </p>
-            <p>
-              location: <span>{form.getValues("location")}</span>
-            </p>
-            <p>
-              status: <span>{form.getValues("status")}</span>
-            </p>
-          </div>
+          <ProvidedDetails values={form.getValues()} />
         ) : null}
 
         <div className="flex items-center justify-between">
@@ -326,7 +342,14 @@ const ReportForm = ({
           ) : null}
           {currentStep === 3 ? (
             <Button type="submit" className="w-2/4" disabled={isPending}>
-              {isPending ? <LoaderCircle className="animate-spin" /> : "Submit"}
+              {isPending ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <span className="flex items-center gap-1 font-bold">
+                  <Send />
+                  Submit
+                </span>
+              )}
             </Button>
           ) : null}
         </div>
