@@ -5,7 +5,7 @@ const TitleSection = () => {
   return (
     <section className=" bg-secondary h-[500px] flex flex-col items-center justify-center space-y-4">
       <div className="space-y-2 text-center px-4">
-        <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
+        <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
           Streamlined Emergency Tracking and Incident Mapping
         </h1>
         <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
