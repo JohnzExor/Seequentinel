@@ -189,7 +189,7 @@ const ReportForm = ({
 
     toast({
       title: "Submited Successfully",
-      description: "your submission is now on request page",
+      description: "Your submitted report is now on request page",
     });
     router.push(`/report-progress/cmr/${res[0]?.id}`);
     form.reset();

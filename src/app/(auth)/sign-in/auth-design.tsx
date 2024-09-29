@@ -11,7 +11,7 @@ const AuthDesign = ({
   return (
     <div className=" h-screen flex flex-col md:flex-row">
       <header className=" absolute z-20 w-full flex items-center justify-between p-6 md:p-16">
-        <Link href={"/"} className=" font-semibold md:text-3xl">
+        <Link href={"/welcome"} className=" font-semibold md:text-3xl">
           Seequentinel
         </Link>
         <ModeToggle />

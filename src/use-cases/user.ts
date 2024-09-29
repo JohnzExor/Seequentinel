@@ -6,6 +6,7 @@ import { z } from "zod";
 import { createAuditLogsUseCase } from "./audit-logs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { WelcomeUser } from "./send-email";
 
 export const getAllUserReportsUseCase = async (id: string) => {
   const data = await FindAllUserReports(id);
@@ -25,26 +26,34 @@ export const getAllAdminUseCase = async () => {
 export const createUserUseCase = async (
   newUser: z.infer<typeof createUserSchema>
 ) => {
-  const existing = await ExistingUserEmail(newUser.email);
-  if (existing) {
-    throw new Error("This email is already registered.");
-  }
-  const data = await CreateUser(newUser);
-
   const session = await getServerSession(authOptions);
 
-  await createAuditLogsUseCase({
-    eventType: "create",
-    userId: session?.user.id as string,
-    ipAddress: "",
-    objectType: data.type,
-    objectId: data.id,
-    status: data ? "success" : "failed",
-    description: `Added ${data.type}`,
-    source: "",
-  });
+  if (session) {
+    const existing = await ExistingUserEmail(newUser.email);
+    if (existing) {
+      throw new Error("This email is already registered.");
+    }
+    const data = await CreateUser(newUser);
 
-  return data;
+    if (data) {
+      await createAuditLogsUseCase({
+        eventType: "create",
+        userId: session?.user.id as string,
+        ipAddress: "",
+        objectType: data.type,
+        objectId: data.id,
+        status: data ? "success" : "failed",
+        description: `Added ${data.type}`,
+        source: "",
+      });
+
+      // await WelcomeUser(session.user.email);
+    }
+
+    return data;
+  }
+
+  throw new Error("Error creating user, no currrent session");
 };
 
 export const checkExistingEmailUseCase = async (email: string) => {

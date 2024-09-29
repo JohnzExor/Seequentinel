@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import ReportsTab from "./reports-tab";
+import HomeLoading from "../../loader";
 
 const page = async () => {
   return (
@@ -7,7 +9,9 @@ const page = async () => {
         <h1 className=" text-xl font-bold">Report Progress</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>
       </div>
-      <ReportsTab />
+      <Suspense fallback={<HomeLoading />}>
+        <ReportsTab />
+      </Suspense>
     </div>
   );
 };
