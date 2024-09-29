@@ -17,9 +17,9 @@ export default function WelcomeEmailTemplate({
             Hi, {userEmail}! 🎉
           </h2>
           <p className="text-gray-700 mb-6">
-            We're thrilled to have you join Seequentinel, Palawan State
-            University's reporting system. Our platform will help you report and
-            manage issues efficiently and effectively.
+            We&apos;re thrilled to have you join Seequentinel, Palawan State
+            University&apos;s reporting system. Our platform will help you
+            report and manage issues efficiently and effectively.
           </p>
           <p className="text-gray-700 mb-6">Here’s how you can start:</p>
           <ul className="list-disc list-inside text-gray-700 mb-6">
