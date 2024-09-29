@@ -1,19 +1,46 @@
+"use client";
+
 import { CheckCircle } from "lucide-react";
 import Image from "next/image";
+import { useMediaQuery } from "usehooks-ts";
+import { easeInOut, motion } from "framer-motion";
 
 const AboutSection = () => {
+  const matches = useMediaQuery("(min-width: 640px)");
+
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary flex justify-center">
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary flex justify-center overflow-hidden">
       <div className="container px-4 md:px-6">
         <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
-          <Image
-            alt="Campus map with incident markers"
-            className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last shadow-xl"
-            height="310"
-            src="/images/bg.jpeg"
-            width="550"
-          />
-          <div className="flex flex-col justify-center space-y-4">
+          <motion.div
+            initial={{
+              x: matches ? 150 : 0,
+              y: matches ? 0 : -30,
+              opacity: 0,
+            }}
+            whileInView={{
+              x: matches ? [150, 0] : 0,
+              y: matches ? 0 : [-30, 0],
+              opacity: [0, 1],
+            }}
+            transition={{ duration: 1, ease: easeInOut }}
+            className="lg:order-last"
+          >
+            <Image
+              alt="Campus map with incident markers"
+              className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full  shadow-xl"
+              height="310"
+              src="/images/bg.jpeg"
+              width="550"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ x: matches ? -150 : 0, opacity: 0 }}
+            whileInView={{ x: matches ? [-150, 0] : 0, opacity: [0, 1] }}
+            transition={{ duration: 1, ease: easeInOut }}
+            className="flex flex-col justify-center space-y-4"
+          >
             <div className="space-y-2">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
                 About Seequentinel
@@ -38,7 +65,7 @@ const AboutSection = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

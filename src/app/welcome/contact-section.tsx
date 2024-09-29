@@ -1,7 +1,10 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { TypeAnimation } from "react-type-animation";
 
 const ContactSection = () => {
   return (
@@ -12,10 +15,21 @@ const ContactSection = () => {
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
-              Ready to enhance campus safety?
-            </h2>
-            <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <TypeAnimation
+              sequence={[
+                "Ready to enhance campus safety?",
+                1000,
+                "Streamline reporting with ease.",
+                1000,
+                "Join the Seequentinel network today!",
+                1000,
+              ]}
+              wrapper="h2"
+              speed={50}
+              repeat={Infinity}
+              className="text-3xl font-bold tracking-tighter sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground"
+            />
+            <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Join the Seequentinel network and contribute to a safer Palawan
               State University.
             </p>

@@ -37,7 +37,6 @@ const LoginForm = () => {
 
   const onSubmit = async ({ email, password }: z.infer<typeof loginSchema>) => {
     const res = await execute({ email, password });
-    console.log(res);
     if (res && res[0]?.ok !== true) {
       form.setError("password", {
         type: "manual",

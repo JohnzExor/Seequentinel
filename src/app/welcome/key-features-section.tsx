@@ -1,4 +1,7 @@
+"use client";
+
 import { MapPin, Bell, Shield, BarChart, Users } from "lucide-react";
+import { motion } from "framer-motion";
 
 const features = [
   {
@@ -34,13 +37,21 @@ const KeyFeaturesSection = () => {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 flex justify-center">
       <div className="container px-4 md:px-6">
-        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
+        <motion.h1
+          initial={{ y: 0, opacity: 0 }}
+          whileInView={{ y: [-40, 0], opacity: [0, 1] }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground"
+        >
           Key Features
-        </h2>
+        </motion.h1>
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
           {features.map((feature, index) => (
-            <div
+            <motion.div
               key={index}
+              initial={{ y: 0, opacity: 0 }}
+              whileInView={{ y: [-10, 0], opacity: [0, 1] }}
+              transition={{ delay: index * 0.4, duration: 0.5 }}
               className="flex flex-col items-center space-y-2 border-border p-6 rounded-lg border bg-card hover:shadow-lg transition-all duration-300"
             >
               <feature.icon className="h-10 w-10 text-primary" />
@@ -48,7 +59,7 @@ const KeyFeaturesSection = () => {
               <p className="text-sm text-muted-foreground text-center">
                 {feature.description}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
