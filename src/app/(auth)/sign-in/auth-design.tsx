@@ -23,7 +23,7 @@ const AuthDesign = ({
         </div>
         <ModeToggle />
       </header>
-      <div className=" h-screen w-full relative hidden md:block">
+      <div className=" h-screen w-full relative hidden md:block shadow-2xl">
         <Image
           src={"/images/bg.jpeg"}
           fill

@@ -10,7 +10,7 @@ const Stepper = ({
   stepDetails: ISteps[];
 }) => {
   return (
-    <ul className="flex gap-10">
+    <>
       {stepDetails.map(({ name, description, icon }, index) => (
         <li key={index} className=" w-full">
           <div className="flex flex-col gap-4">
@@ -46,7 +46,7 @@ const Stepper = ({
           </div>
         </li>
       ))}
-    </ul>
+    </>
   );
 };
 

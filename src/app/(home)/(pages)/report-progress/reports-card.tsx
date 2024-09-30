@@ -25,7 +25,7 @@ const ReportsCard = ({
   }[];
 }) => {
   return (
-    <div>
+    <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
       {data.length > 0 ? (
         data.map(
           (
@@ -33,20 +33,18 @@ const ReportsCard = ({
             index
           ) => (
             <Link href={path} key={index}>
-              <Card className="mb-2 w-full hover:bg-muted duration-500">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="">{type ? type : violation}</CardTitle>
-                  <Badge>{status}</Badge>
-                </CardHeader>
-                <CardContent>
+              <Card className="hover:bg-muted duration-500">
+                <CardHeader>
                   <CardDescription className="flex items-center gap-1">
                     {icon}
                     {reportType}
                   </CardDescription>
-                  <p className="">
-                    Reported on: {createdAt.toLocaleDateString()}
-                  </p>
-                </CardContent>
+                  <CardTitle>{type ? type : violation}</CardTitle>
+                  <span className=" text-sm text-muted-foreground font-normal">
+                    Created {createdAt.toLocaleString()}
+                  </span>
+                  <Badge className=" w-fit">{status}</Badge>
+                </CardHeader>
               </Card>
             </Link>
           )

@@ -67,6 +67,7 @@ const EmailForm = () => {
                   placeholder="Enter your corporate email"
                   {...field}
                   disabled={isPending}
+                  autoFocus
                 />
               </FormControl>
 

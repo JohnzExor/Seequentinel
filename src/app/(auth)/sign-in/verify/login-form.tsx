@@ -70,6 +70,7 @@ const LoginForm = () => {
                   placeholder="Enter your password"
                   {...field}
                   disabled={isPending}
+                  autoFocus
                 />
               </FormControl>
 
