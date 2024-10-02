@@ -27,9 +27,11 @@ const Logout = ({ text }: { text?: string }) => {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+          <AlertDialogTitle>
+            Are you sure you want to sign out?
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            You will be logged out of your account. You can log in again to
+            You will be logged out of your account. You can sign out again to
             access your data.
           </AlertDialogDescription>
         </AlertDialogHeader>
