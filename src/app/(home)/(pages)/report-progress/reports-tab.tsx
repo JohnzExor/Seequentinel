@@ -28,7 +28,7 @@ const ReportsTab = async () => {
     .map((report) => ({
       ...report,
       reportType: "Campus Maintenance Request",
-      path: `/report-progress/${report.id}?type=${encodeURIComponent("cmr")}`,
+      path: `/report-progress/${report.id}?type=cmr`,
       icon: <ConstructionIcon size={15} />,
     }))
     .reverse();
@@ -37,7 +37,7 @@ const ReportsTab = async () => {
     .map((report) => ({
       ...report,
       reportType: "Handbook Violation Report",
-      path: `/report-progress/${report.id}?type=${encodeURIComponent("hvr")}`,
+      path: `/report-progress/${report.id}?type=hvr`,
       icon: <Book size={15} />,
     }))
     .reverse();
@@ -46,7 +46,7 @@ const ReportsTab = async () => {
     .map((report) => ({
       ...report,
       reportType: "Emergency Report Log",
-      path: `/report-progress/${report.id}?type=${encodeURIComponent("erl")}`,
+      path: `/report-progress/${report.id}?type=erl`,
       icon: <Siren size={15} />,
     }))
     .reverse();

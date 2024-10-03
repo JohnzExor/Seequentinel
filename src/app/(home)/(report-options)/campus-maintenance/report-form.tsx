@@ -191,7 +191,7 @@ const ReportForm = ({
       title: "Submited Successfully",
       description: "Your submitted report is now on request page",
     });
-    router.push(`/report-progress/cmr/${res[0]?.id}`);
+    router.push(`/report-progress/${res[0]?.id}?type=cmr`);
     form.reset();
   };
 

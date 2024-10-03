@@ -204,7 +204,7 @@ const ReportForm = ({
       title: "Submited Successfully",
       description: "Your submitted report is now on request page",
     });
-    router.push(`/report-progress/hvr/${res[0]?.id}`);
+    router.push(`/report-progress/${res[0]?.id}?type=hvr`);
     form.reset();
   };
   const disableButton = (index: number) => {

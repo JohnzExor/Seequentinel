@@ -35,6 +35,5 @@ export const getAllReportsUseCase = async () => {
 
 export const getUserReportByIdUseCase = async (id: string) => {
   const data = await FindReportById(id);
-  if (!data) throw new Error("error getting report");
   return data;
 };

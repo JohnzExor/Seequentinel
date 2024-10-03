@@ -6,6 +6,7 @@ import { MapPin, ReceiptText } from "lucide-react";
 import FilesPreview from "./files-preview";
 import ReportStatus from "./report-status";
 import ReportDetails from "./report-details";
+import { notFound } from "next/navigation";
 
 const ReportInformation = async ({
   documentId,
@@ -20,7 +21,9 @@ const ReportInformation = async ({
   };
 
   const reportData = await fetchers[typeHref](documentId);
-
+  if (!reportData) {
+    notFound();
+  }
   const { id, createdAt, location, status } = reportData;
 
   const mediaOrEvidence =
