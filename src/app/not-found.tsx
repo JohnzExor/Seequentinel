@@ -8,7 +8,7 @@ const NotFound = () => {
       </h1>
       <div className="flex flex-col gap-4 items-center text-center">
         <span className=" text-xl md:text-4xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
-          We couldn't connect the dots.
+          We couldn&apos;t connect the dots.
         </span>
         <p className=" text-sm md:text-base w-full max-w-[400px] text-center">
           This page was not found. You may have mistyped the address or the page
