@@ -4,16 +4,16 @@ import Image from "next/image";
 
 const FilesPreview = ({ files }: { files: string[] }) => {
   return (
-    <section className="space-y-2">
-      <div className="flex items-center gap-2">
-        <ArrowBigDownDash />
-        <span className="text-lg font-semibold">Uploaded Files</span>
+    <section>
+      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+        <ArrowBigDownDash size={20} />
+        <span>Uploaded Files</span>
       </div>
-      <span className="text-sm">
+      <span className="text-sm font-medium">
         No. of uploaded files:{" "}
         <span className=" font-bold">{files.length}</span>
       </span>
-      <div className=" grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className=" grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
         {files.length > 0
           ? files.map((path, index) => (
               <div className="border w-full h-[300px] rounded-xl" key={index}>

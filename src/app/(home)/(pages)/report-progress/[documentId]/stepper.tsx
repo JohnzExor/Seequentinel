@@ -17,7 +17,7 @@ const Stepper = ({
             <div className="flex items-center">
               <div
                 className={clsx(
-                  " bg-muted rounded-full p-2 md:p-3 text-white",
+                  " bg-muted-foreground rounded-full p-2 md:p-3 text-white",
                   {
                     " bg-primary": currentStep >= index,
                   }
@@ -26,7 +26,7 @@ const Stepper = ({
                 {icon}
               </div>
               <Separator
-                className={clsx(" h-1 bg-muted", {
+                className={clsx(" h-1 bg-muted-foreground", {
                   hidden: index >= stepDetails.length - 1,
                   " bg-primary": currentStep > index,
                 })}
@@ -34,7 +34,7 @@ const Stepper = ({
             </div>
             <p
               className={clsx(
-                "hidden md:block w-[100px] font-semibold text-sm",
+                "hidden xl:block w-[100px] font-semibold text-sm",
                 { " text-muted-foreground": currentStep < index }
               )}
             >

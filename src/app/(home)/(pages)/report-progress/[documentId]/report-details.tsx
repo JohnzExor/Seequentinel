@@ -17,7 +17,7 @@ const ReportDetails = ({
           <ConstructionIcon size={20} />
           <span>Campus Maintenance Request</span>
         </div>
-        <h1 className=" text-4xl font-bold">{documentTitle}</h1>
+        <h1 className="text-2xl md:text-4xl font-bold">{documentTitle}</h1>
         <div className="text-sm text-muted-foreground mt-1">
           <span>ID: {documentId}</span>
           <br />

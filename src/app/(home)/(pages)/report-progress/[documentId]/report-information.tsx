@@ -43,19 +43,19 @@ const ReportInformation = async ({
         createdAt={createdAt}
       />
       <ReportStatus currentStep={currentStep} createdAt={createdAt} />
-      <section className="space-y-2">
-        <div className="flex items-center gap-2">
-          <MapPin />
-          <span className="text-lg font-semibold">Location</span>
+      <section>
+        <div className="flex items-center gap-1 text-muted-foreground text-sm">
+          <MapPin size={20} />
+          <span>Location</span>
         </div>
-        <p className=" w-full max-w-[800px]">{location}</p>
+        <p className=" w-full max-w-[800px] font-medium">{location}</p>
       </section>
-      <section className=" space-y-2">
-        <div className="flex items-center gap-2">
-          <ReceiptText />
-          <span className="text-lg font-semibold">Additional Details</span>
+      <section>
+        <div className="flex items-center gap-1 text-muted-foreground text-sm">
+          <ReceiptText size={20} />
+          <span>Additional Details</span>
         </div>
-        <p className=" w-full max-w-[800px]">
+        <p className=" w-full max-w-[800px] font-medium">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
           sollicitudin nunc id sagittis lobortis. Nulla vel lectus ligula.
           Nullam pellentesque ipsum felis, tempus ultricies risus imperdiet eu.

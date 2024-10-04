@@ -19,7 +19,7 @@ const page = ({
   }
 
   return (
-    <div className=" p-4 md:p-8 space-y-6 md:space-y-12">
+    <div className=" p-4 md:p-8 space-y-6 md:space-y-8">
       <Suspense fallback={<HomeLoading />}>
         <ReportInformation documentId={documentId} typeHref={type} />
       </Suspense>

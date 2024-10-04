@@ -37,7 +37,7 @@ const options = [
 
 const ReportingOptions = () => {
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-3 h-screen  gap-3 md:gap-0">
+    <div className="w-full grid grid-cols-1 xl:grid-cols-3 h-screen  gap-3 md:gap-0">
       {options.map(({ name, link, icon, image, description }, index) => (
         <Link href={link} key={index}>
           <Card className=" h-full relative group overflow-hidden md:rounded-none">
@@ -48,7 +48,7 @@ const ReportingOptions = () => {
                     src={image}
                     alt={name}
                     fill
-                    className="object-cover grayscale hover:grayscale-0 duration-500 rounded-xl md:rounded-none brightness-50 hover:brightness-75 dark:brightness-[0.3] dark:hover:brightness-[0.4] hover:scale-110"
+                    className="object-cover md:grayscale hover:grayscale-0 duration-500 rounded-xl md:rounded-none brightness-50 hover:brightness-75 dark:brightness-[0.3] dark:hover:brightness-[0.4] md:hover:scale-110"
                   />
                 </div>
               </div>

@@ -34,7 +34,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
 
   const [isMinimized, setisMinimized] = useLocalStorage("isMinimized", false);
 
-  const sidebarWidth = { width: isMinimized ? 100 : 400 };
+  const sidebarWidth = { width: isMinimized ? 100 : 350 };
 
   const HandleMinimize = () => {
     const newValue = !isMinimized;
@@ -46,7 +46,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
       initial={sidebarWidth}
       animate={sidebarWidth}
       transition={{ delay: 0.2, ease: easeInOut, type: "spring" }}
-      className=" w-[400px] hidden md:flex flex-col py-10 px-7 shadow-2xl overflow-hidden dark:border-r"
+      className=" shrink-0 hidden md:flex flex-col py-10 px-7 shadow-2xl overflow-hidden dark:border-r"
     >
       <div
         className={clsx("flex items-center mb-9 w-full justify-between", {})}
@@ -64,6 +64,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
           initial={{ marginRight: isMinimized ? 8 : 0 }}
           animate={{ marginRight: isMinimized ? 8 : 0 }}
           onClick={HandleMinimize}
+          className=" hover:rotate-180 duration-500"
         >
           {isMinimized ? <PanelRightClose /> : <PanelLeftDashed />}
         </motion.button>
