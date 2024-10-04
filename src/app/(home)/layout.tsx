@@ -16,7 +16,7 @@ export default async function RootLayout({
   return (
     <div className="flex h-screen">
       <SideNavigations session={session} />
-      <main className="overflow-y-auto w-full">
+      <main className="md:overflow-y-auto w-full">
         <Header />
         {children}
       </main>
