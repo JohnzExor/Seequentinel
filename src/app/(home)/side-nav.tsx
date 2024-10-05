@@ -14,7 +14,7 @@ import { useLocalStorage } from "usehooks-ts";
 
 const MotionDiv = [
   {
-    logo: "Account and Settings",
+    logo: "Account and Theme",
     name: "",
     type: "dot",
   },

@@ -1,7 +1,6 @@
 import prisma from "@/lib/db";
 import { createUserSchema } from "@/lib/zod";
 import { compare, hash } from "bcryptjs";
-import Email from "next-auth/providers/email";
 import { z } from "zod";
 
 export const FindAllUser = async (type: string) => {
@@ -17,6 +16,7 @@ export const FindAllUserReports = async (id: string) => {
       handbookViolationReports: true,
       emergencyReports: true,
     },
+    cacheStrategy: { ttl: 60 },
   });
   return data;
 };

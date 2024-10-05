@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
-import PDFPreview from "./pdf-preview";
 import { Download } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const PDFPreview = dynamic(() => import("./pdf-preview"), {
+  ssr: false,
+});
 
 const page = () => {
   return (
@@ -22,15 +26,16 @@ const page = () => {
         </p>
         <div className=" w-fit">
           <a href="/pdf/guidelines.pdf" download>
-            <Button>
+            <Button className="flex items-center gap-1">
               <Download />
-              Download PDF
+              <span>Download PDF</span>
             </Button>
           </a>
         </div>
       </div>
-
-      <PDFPreview />
+      <div className=" w-full max-w-[600px] h-full max-h-[872px]">
+        <PDFPreview />
+      </div>
     </div>
   );
 };

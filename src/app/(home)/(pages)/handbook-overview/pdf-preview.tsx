@@ -7,8 +7,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import useResizeObserver from "use-resize-observer";
 
-pdfjs.GlobalWorkerOptions.workerSrc =
-  "https://unpkg.com/pdfjs-dist@4.4.168/legacy/build/pdf.worker.min.mjs";
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const PDFPreview = () => {
   const [numPages, setNumPages] = useState<number>(0);
@@ -23,10 +22,11 @@ const PDFPreview = () => {
   const nextPage = () => setPageNumber((prev) => prev + 1);
 
   return (
-    <div ref={ref} className=" w-full max-w-[600px] shadow-xl rounded-xl">
+    <div ref={ref} className="flex flex-col w-full shadow-xl rounded-xl h-full">
       <Document
         file="/pdf/guidelines.pdf"
         onLoadSuccess={onDocumentLoadSuccess}
+        loading={""}
       >
         <Page
           pageNumber={pageNumber}
@@ -35,7 +35,7 @@ const PDFPreview = () => {
           renderAnnotationLayer={false}
         />
       </Document>
-      <div className="flex items-center justify-between p-4 bg-muted">
+      <div className="flex items-center justify-between p-4 bg-muted mt-auto">
         <Button
           variant={"secondary"}
           disabled={pageNumber <= 1}
