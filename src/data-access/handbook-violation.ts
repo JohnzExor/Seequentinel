@@ -40,7 +40,10 @@ export const FindUserReports = async (userId: string) => {
 };
 
 export const FindReportById = async (id: string) => {
-  const data = await prisma.handbookViolation.findUnique({ where: { id } });
+  const data = await prisma.handbookViolation.findUnique({
+    where: { id },
+    cacheStrategy: { ttl: 60 },
+  });
   return data;
 };
 
