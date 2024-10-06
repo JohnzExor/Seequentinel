@@ -13,7 +13,7 @@ const page = () => {
         <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
           Student Handbook Overview
         </h1>
-        <p className=" w-full max-w-[700px]">
+        <p className=" w-full max-w-[700px] text-sm md:text-base">
           The student handbook serves as a comprehensive guide to the policies,
           procedures, and expectations for all students at Palawan State
           University. It covers essential information on academic standards,

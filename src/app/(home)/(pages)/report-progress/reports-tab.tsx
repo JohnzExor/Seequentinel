@@ -58,12 +58,23 @@ const ReportsTab = async () => {
   );
   return (
     <Tabs defaultValue="all" className="w-full">
-      <TabsList>
-        <TabsTrigger value="all">All</TabsTrigger>
-        <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-        <TabsTrigger value="violations">Violations</TabsTrigger>
-        <TabsTrigger value="emergencies">Emergencies</TabsTrigger>
-      </TabsList>
+      <div className=" overflow-x-auto pb-3">
+        <TabsList>
+          <TabsTrigger value="all">All Reports</TabsTrigger>
+          <TabsTrigger value="maintenance" className="flex items-center gap-1">
+            <ConstructionIcon size={15} />
+            <span>Campus Maintenance</span>
+          </TabsTrigger>
+          <TabsTrigger value="violations" className="flex items-center gap-1">
+            <Book size={15} />
+            <span>Handbook Violations</span>
+          </TabsTrigger>
+          <TabsTrigger value="emergencies" className="flex items-center gap-1">
+            <Siren size={15} />
+            <span>Emergencies</span>
+          </TabsTrigger>
+        </TabsList>
+      </div>
       <TabsContent value="all">
         <ReportsCard data={sortedReports} />
       </TabsContent>

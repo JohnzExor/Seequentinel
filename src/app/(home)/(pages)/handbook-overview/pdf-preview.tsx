@@ -23,6 +23,9 @@ const PDFPreview = () => {
 
   return (
     <div ref={ref} className="flex flex-col w-full shadow-xl rounded-xl h-full">
+      <span className="text-sm text-muted-foreground p-2 md:hidden">
+        Page {pageNumber} / {numPages}
+      </span>
       <Document
         file="/pdf/guidelines.pdf"
         onLoadSuccess={onDocumentLoadSuccess}
@@ -43,7 +46,7 @@ const PDFPreview = () => {
         >
           Previous Page
         </Button>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-muted-foreground hidden md:block">
           Page {pageNumber} / {numPages}
         </span>
         <Button disabled={pageNumber >= numPages} onClick={nextPage}>
