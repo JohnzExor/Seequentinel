@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import { getAllUserReportsUseCase } from "@/use-cases/user";
 import { notFound } from "next/navigation";
 import { Book, ConstructionIcon, Siren } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const ReportsTab = async () => {
   const session = await getServerSession(authOptions);
@@ -60,18 +61,23 @@ const ReportsTab = async () => {
     <Tabs defaultValue="all" className="w-full">
       <div className=" overflow-x-auto pb-3">
         <TabsList>
-          <TabsTrigger value="all">All Reports</TabsTrigger>
+          <TabsTrigger value="all">
+            All Reports <Badge className="ml-1">{reports.length}</Badge>
+          </TabsTrigger>
           <TabsTrigger value="maintenance" className="flex items-center gap-1">
             <ConstructionIcon size={15} />
             <span>Campus Maintenance</span>
+            <Badge>{cmrData.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="violations" className="flex items-center gap-1">
             <Book size={15} />
             <span>Handbook Violations</span>
+            <Badge>{hvrData.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="emergencies" className="flex items-center gap-1">
             <Siren size={15} />
             <span>Emergencies</span>
+            <Badge>{erlData.length}</Badge>
           </TabsTrigger>
         </TabsList>
       </div>

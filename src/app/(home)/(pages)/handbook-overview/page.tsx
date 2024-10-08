@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Download } from "lucide-react";
 import dynamic from "next/dynamic";
 
 const PDFPreview = dynamic(() => import("./pdf-preview"), {
   ssr: false,
+  loading: () => <Skeleton className=" w-full h-full" />,
 });
 
 const page = () => {
@@ -33,7 +35,7 @@ const page = () => {
           </a>
         </div>
       </div>
-      <div className=" w-full max-w-[600px] h-full max-h-[872px]">
+      <div className=" w-full max-w-[600px] h-[600px] md:h-full max-h-[872px] ">
         <PDFPreview />
       </div>
     </div>
