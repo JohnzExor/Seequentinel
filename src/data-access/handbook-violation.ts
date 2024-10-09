@@ -35,7 +35,10 @@ export const FindAllReports = async () => {
 };
 
 export const FindUserReports = async (userId: string) => {
-  const data = await prisma.handbookViolation.findMany({ where: { userId } });
+  const data = await prisma.handbookViolation.findMany({
+    where: { userId, isArchived: true },
+    cacheStrategy: { ttl: 60 },
+  });
   return data;
 };
 
@@ -51,6 +54,14 @@ export const SetStatus = async (id: string, newStatus: string) => {
   const data = await prisma.handbookViolation.update({
     where: { id },
     data: { status: newStatus },
+  });
+  return data;
+};
+
+export const ArchiveReport = async (id: string) => {
+  const data = await prisma.handbookViolation.update({
+    where: { id },
+    data: { isArchived: true },
   });
   return data;
 };

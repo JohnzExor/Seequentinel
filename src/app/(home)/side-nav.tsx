@@ -32,12 +32,30 @@ const MotionDiv = [
 const SideNavigations = ({ session }: { session: Session | null }) => {
   const user = session?.user;
 
-  const [isMinimized, setisMinimized] = useLocalStorage("isMinimized", false);
+  // const [isMinimized, setisMinimized] = useLocalStorage("isMinimized", false);
+
+  const [isMinimized, setisMinimized] = useState(false);
+
+  useEffect(() => {
+    const local = localStorage.getItem("isMinimized");
+    if (local === "true") {
+      return setisMinimized(true);
+    }
+    setisMinimized(false);
+  }, []);
 
   const sidebarWidth = { width: isMinimized ? 100 : 350 };
 
   const HandleMinimize = () => {
     const newValue = !isMinimized;
+
+    if (newValue === true) {
+      localStorage.setItem("isMinimized", "true");
+    }
+
+    if (newValue === false) {
+      localStorage.setItem("isMinimized", "false");
+    }
     setisMinimized(newValue);
   };
 

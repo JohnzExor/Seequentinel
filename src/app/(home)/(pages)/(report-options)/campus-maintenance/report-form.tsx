@@ -141,6 +141,7 @@ const ReportForm = ({
       location: "",
       userId: data?.user.id,
       status: "Request",
+      additionalDetails: "",
     },
   });
 
@@ -316,6 +317,26 @@ const ReportForm = ({
         ) : null}
 
         {currentStep === 3 ? (
+          <FormField
+            control={form.control}
+            name="additionalDetails"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Provide addtional details"
+                    {...field}
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : null}
+
+        {currentStep === 4 ? (
           <ProvidedDetails values={form.getValues()} />
         ) : null}
 
@@ -330,7 +351,7 @@ const ReportForm = ({
               <ChevronLeft />
             </Button>
           ) : null}
-          {currentStep < 3 ? (
+          {currentStep < 4 ? (
             <Button
               disabled={disableButton(currentStep)}
               type="button"
@@ -340,7 +361,7 @@ const ReportForm = ({
               <ChevronRight />
             </Button>
           ) : null}
-          {currentStep === 3 ? (
+          {currentStep === 4 ? (
             <Button type="submit" className="w-2/4" disabled={isPending}>
               {isPending ? (
                 <LoaderCircle className="animate-spin" />

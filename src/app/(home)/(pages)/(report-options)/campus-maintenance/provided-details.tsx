@@ -1,6 +1,14 @@
 import { fileUrl } from "@/lib/storage";
 import { campusMaintenanceSchema } from "@/lib/zod";
-import { Camera, FileText, Loader, MapPin, Trash, User } from "lucide-react";
+import {
+  Camera,
+  ClipboardPlus,
+  FileText,
+  Loader,
+  MapPin,
+  Trash,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import { z } from "zod";
 
@@ -9,12 +17,18 @@ const ProvidedDetails = ({
 }: {
   values: z.infer<typeof campusMaintenanceSchema>;
 }) => {
-  const { type, media, status, location } = values;
+  const { type, media, status, location, additionalDetails } = values;
 
   const inputs = [
     { name: "Status", value: status, icon: <Loader size={15} /> },
     { name: "Type", value: type, icon: <FileText size={15} /> },
     { name: "Location", value: location, icon: <MapPin size={15} /> },
+    {
+      name: "Additional Details",
+      value: additionalDetails,
+      icon: <ClipboardPlus size={15} />,
+    },
+
     { name: "Media", value: media, icon: <Camera size={15} /> },
   ];
   return (

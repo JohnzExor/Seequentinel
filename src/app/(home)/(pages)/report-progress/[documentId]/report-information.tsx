@@ -32,6 +32,17 @@ const ReportInformation = async ({
   const reportTypeOrViolation =
     "type" in reportData ? reportData.type : reportData.violation;
 
+  const AdditionalDetails =
+    "additionalDetails" in reportData
+      ? reportData.additionalDetails
+      : reportData.violationDetails;
+
+  const violatorName =
+    "violatorName" in reportData ? reportData.violatorName : null;
+
+  const violationDate =
+    "violationDate" in reportData ? reportData.violationDate : null;
+
   const currentStep = steps.findIndex(
     (step) => step.name.toLowerCase() === status.toLowerCase()
   );
@@ -41,12 +52,35 @@ const ReportInformation = async ({
         documentTitle={reportTypeOrViolation}
         documentId={id}
         createdAt={createdAt}
+        documentType={typeHref}
       />
       <ReportStatus currentStep={currentStep} createdAt={createdAt} />
+      {typeHref === "hvr" ? (
+        <>
+          <section>
+            <div className="flex items-center gap-1 text-muted-foreground text-sm">
+              <MapPin size={20} />
+              <span>Reported Person</span>
+            </div>
+            <p className=" w-full max-w-[800px] font-medium">{violatorName}</p>
+          </section>
+          <section>
+            <div className="flex items-center gap-1 text-muted-foreground text-sm">
+              <MapPin size={20} />
+              <span>When did she/he commit the violation?</span>
+            </div>
+            <p className=" w-full max-w-[800px] font-medium">
+              {violationDate?.toLocaleString()}
+            </p>
+          </section>
+        </>
+      ) : null}
       <section>
         <div className="flex items-center gap-1 text-muted-foreground text-sm">
           <MapPin size={20} />
-          <span>Location</span>
+          <span>
+            {typeHref === "hvr" ? "Where did it happened?" : "Location"}
+          </span>
         </div>
         <p className=" w-full max-w-[800px] font-medium">{location}</p>
       </section>
@@ -55,13 +89,7 @@ const ReportInformation = async ({
           <ReceiptText size={20} />
           <span>Additional Details</span>
         </div>
-        <p className=" w-full max-w-[800px] font-medium">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
-          sollicitudin nunc id sagittis lobortis. Nulla vel lectus ligula.
-          Nullam pellentesque ipsum felis, tempus ultricies risus imperdiet eu.
-          Donec vel nunc et felis sollicitudin eleifend nec in lacus. Mauris est
-          neque, ultrices et ante id, aliquet sagittis turpis.{" "}
-        </p>
+        <p className=" w-full max-w-[800px] font-medium">{AdditionalDetails}</p>
       </section>
       <FilesPreview files={mediaOrEvidence} />
     </>

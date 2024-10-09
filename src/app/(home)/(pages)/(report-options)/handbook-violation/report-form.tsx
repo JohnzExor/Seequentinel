@@ -154,6 +154,7 @@ const ReportForm = ({
       violationDetails: "",
       userId: data?.user.id,
       status: "Request",
+      violatorName: "",
     },
   });
 
@@ -210,12 +211,14 @@ const ReportForm = ({
   const disableButton = (index: number) => {
     const fields: Array<
       | "violation"
+      | "violatorName"
       | "violationDate"
       | "evidence"
       | "location"
       | "violationDetails"
     > = [
       "violation",
+      "violatorName",
       "violationDate",
       "evidence",
       "location",
@@ -265,6 +268,26 @@ const ReportForm = ({
         {currentStep === 1 ? (
           <FormField
             control={form.control}
+            name="violatorName"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Violator Name"
+                    {...field}
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ) : null}
+
+        {currentStep === 2 ? (
+          <FormField
+            control={form.control}
             name="violationDate"
             render={({ field }) => (
               <FormItem className="flex flex-col">
@@ -308,7 +331,7 @@ const ReportForm = ({
           />
         ) : null}
 
-        {currentStep === 2 ? (
+        {currentStep === 3 ? (
           <div className="grid w-full items-center gap-1.5">
             {uploadedFiles.length > 0 ? (
               <div className=" space-y-4 mb-4">
@@ -357,7 +380,7 @@ const ReportForm = ({
           </div>
         ) : null}
 
-        {currentStep === 3 ? (
+        {currentStep === 4 ? (
           <FormField
             control={form.control}
             name="location"
@@ -377,7 +400,7 @@ const ReportForm = ({
           />
         ) : null}
 
-        {currentStep === 4 ? (
+        {currentStep === 5 ? (
           <FormField
             control={form.control}
             name="violationDetails"
@@ -396,7 +419,7 @@ const ReportForm = ({
           />
         ) : null}
 
-        {currentStep === 5 ? (
+        {currentStep === 6 ? (
           <ProvidedDetails values={form.getValues()} />
         ) : null}
 
@@ -411,7 +434,7 @@ const ReportForm = ({
               <ChevronLeft />
             </Button>
           ) : null}
-          {currentStep < 5 ? (
+          {currentStep < 6 ? (
             <Button
               disabled={disableButton(currentStep)}
               type="button"
@@ -421,7 +444,7 @@ const ReportForm = ({
               <ChevronRight />
             </Button>
           ) : null}
-          {currentStep === 5 ? (
+          {currentStep === 6 ? (
             <Button type="submit" className="w-2/4" disabled={isPending}>
               {isPending ? (
                 <LoaderCircle className="animate-spin" />

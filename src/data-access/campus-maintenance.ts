@@ -31,7 +31,10 @@ export const FindAllReports = async () => {
 };
 
 export const FindUserReports = async (userId: string) => {
-  const data = await prisma.campusMaintenance.findMany({ where: { userId } });
+  const data = await prisma.campusMaintenance.findMany({
+    where: { userId, isArchived: true },
+    cacheStrategy: { ttl: 60 },
+  });
   return data;
 };
 
@@ -47,6 +50,14 @@ export const SetStatus = async (id: string, newStatus: string) => {
   const data = await prisma.campusMaintenance.update({
     where: { id },
     data: { status: newStatus },
+  });
+  return data;
+};
+
+export const ArchiveReport = async (id: string) => {
+  const data = await prisma.campusMaintenance.update({
+    where: { id },
+    data: { isArchived: true },
   });
   return data;
 };

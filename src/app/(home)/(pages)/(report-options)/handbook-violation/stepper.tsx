@@ -1,16 +1,16 @@
 import { Separator } from "@/components/ui/separator";
 import clsx from "clsx";
-import { ISteps } from "./steps";
+import { TSteps } from "./steps";
 
 const Stepper = ({
   currentStep,
   stepDetails,
 }: {
   currentStep: number;
-  stepDetails: ISteps[];
+  stepDetails: TSteps[];
 }) => {
   return (
-    <ul className="flex md:flex-col gap-10">
+    <ul className="flex md:flex-col gap-10 overflow-x-auto pb-2 md:pb-0">
       {stepDetails.map(({ name, short, icon }, index) => (
         <li key={index} className="w-full">
           <div className=" md:flex justify-between gap-4">

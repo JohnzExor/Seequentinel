@@ -5,10 +5,11 @@ import {
   LucideCalendar,
   MapPinned,
   RectangleEllipsisIcon,
+  UserPen,
 } from "lucide-react";
 import { ReactNode } from "react";
 
-export type ISteps = {
+export type TSteps = {
   name: string;
   short: string;
   description: string;
@@ -16,7 +17,7 @@ export type ISteps = {
   step: number;
 };
 
-export const steps: ISteps[] = [
+export const steps: TSteps[] = [
   {
     name: "Violation",
     description:
@@ -26,12 +27,20 @@ export const steps: ISteps[] = [
     step: 0,
   },
   {
+    name: "Violator Name",
+    description:
+      "Enter the full name of the individual responsible for the violation. This helps in identifying and managing the incident records.",
+    short: "Input the violator's name",
+    icon: <UserPen />,
+    step: 1,
+  },
+  {
     name: "Violation Date",
     description:
       "Pick the date when the violation occurred. This is essential for tracking and reviewing the incident.",
     short: "Select the date of the violation",
     icon: <LucideCalendar />,
-    step: 1,
+    step: 2,
   },
   {
     name: "Evidence",
@@ -39,7 +48,7 @@ export const steps: ISteps[] = [
       "Upload media files such as photos, videos, or audio clips that serve as proof of the violation.",
     short: "Provide media files for proof",
     icon: <ImageUp />,
-    step: 2,
+    step: 3,
   },
   {
     name: "Location",
@@ -47,7 +56,7 @@ export const steps: ISteps[] = [
       "Specify the exact location where the violation took place. This could be an address or a pinned point on a map.",
     short: "Place where it happened",
     icon: <MapPinned />,
-    step: 3,
+    step: 4,
   },
   {
     name: "Details",
@@ -55,7 +64,7 @@ export const steps: ISteps[] = [
       "Provide any additional information, context, or clarifications that might be relevant to the violation.",
     short: "Provide additional info",
     icon: <ListCheck />,
-    step: 4,
+    step: 5,
   },
 
   {
@@ -65,6 +74,6 @@ export const steps: ISteps[] = [
     description:
       "Review all the information you've provided, ensuring everything is accurate. Once verified, submit the request, and the maintenance team will be notified to begin addressing the issue.",
     icon: <ClipboardCheck size={30} />,
-    step: 4,
+    step: 6,
   },
 ];

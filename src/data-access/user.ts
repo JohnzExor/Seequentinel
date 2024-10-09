@@ -12,11 +12,10 @@ export const FindAllUserReports = async (id: string) => {
   const data = await prisma.user.findUnique({
     where: { id },
     include: {
-      campusMaintenanceReports: true,
-      handbookViolationReports: true,
+      campusMaintenanceReports: { where: { isArchived: false } },
+      handbookViolationReports: { where: { isArchived: false } },
       emergencyReports: true,
     },
-    cacheStrategy: { ttl: 60 },
   });
   return data;
 };

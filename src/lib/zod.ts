@@ -29,6 +29,7 @@ export const campusMaintenanceSchema = z.object({
   location: z.string().min(1, "Location is required").max(255),
   userId: z.string().min(1, "UserID is required").max(50).optional(),
   status: z.enum(["Request", "Reviewing", "Accepted", "Completed"]),
+  additionalDetails: z.string().min(1, "Specify details").max(1000).optional(),
 });
 
 export const handbookViolationSchema = z.object({
@@ -39,9 +40,10 @@ export const handbookViolationSchema = z.object({
     required_error: "Please select a date and time",
     invalid_type_error: "That's not a date",
   }),
-  violationDetails: z.string().min(1, "Specify details").max(255),
+  violationDetails: z.string().min(1, "Specify details").max(1000),
   userId: z.string().min(1, "UserID is required").max(50).optional(),
   status: z.enum(["Request", "Reviewing", "Accepted", "Completed"]),
+  violatorName: z.string().min(1).max(50),
 });
 
 export const emergencyResponseFeedbackSchema = z.object({

@@ -1,6 +1,14 @@
 import { fileUrl } from "@/lib/storage";
 import { handbookViolationSchema } from "@/lib/zod";
-import { Camera, FileText, Loader, MapPin, Trash, User } from "lucide-react";
+import {
+  Camera,
+  FileText,
+  Loader,
+  MapPin,
+  Trash,
+  User,
+  UserPen,
+} from "lucide-react";
 import Image from "next/image";
 import { z } from "zod";
 
@@ -16,11 +24,14 @@ const ProvidedDetails = ({
     location,
     violationDate,
     violationDetails,
+    violatorName,
   } = values;
 
   const inputs = [
     { name: "Status", value: status, icon: <Loader size={15} /> },
     { name: "Violation", value: violation, icon: <FileText size={15} /> },
+    { name: "ViolatorName", value: violatorName, icon: <UserPen size={15} /> },
+
     {
       name: "Violation Date",
       value: violationDate,

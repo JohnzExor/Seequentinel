@@ -1,7 +1,13 @@
-import { ClipboardCheck, ImageUp, ListCheck, MapPinned } from "lucide-react";
+import {
+  ClipboardCheck,
+  ClipboardPlus,
+  ImageUp,
+  ListCheck,
+  MapPinned,
+} from "lucide-react";
 import { ReactNode } from "react";
 
-export type ISteps = {
+export type TSteps = {
   name: string;
   short: string;
   description: string;
@@ -9,7 +15,7 @@ export type ISteps = {
   step: number;
 };
 
-export const steps: ISteps[] = [
+export const steps: TSteps[] = [
   {
     name: "Details",
     short: "Give the details of the problem",
@@ -34,6 +40,15 @@ export const steps: ISteps[] = [
     description:
       "Specify the exact location where the maintenance work is required, such as a room number, building name, or outdoor area. Accurate location information ensures the maintenance team can find and fix the problem quickly.",
     icon: <MapPinned size={30} />,
+    step: 3,
+  },
+  {
+    name: "Additional Details",
+    short: "Please add more details regarding to the problem",
+
+    description:
+      "Specify the exact location where the maintenance work is required, such as a room number, building name, or outdoor area. Accurate location information ensures the maintenance team can find and fix the problem quickly.",
+    icon: <ClipboardPlus size={30} />,
     step: 3,
   },
   {
