@@ -1,12 +1,12 @@
 import clsx from "clsx";
-import { ISteps } from "./steps";
+import { TSteps } from "./steps";
 
 const StepsText = ({
   currentStep,
   stepDetails,
 }: {
   currentStep: number;
-  stepDetails: ISteps[];
+  stepDetails: TSteps[];
 }) => {
   return (
     <div>
