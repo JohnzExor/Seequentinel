@@ -15,15 +15,23 @@ import { Button } from "@/components/ui/button";
 import { Archive } from "lucide-react";
 import { useServerAction } from "zsa-react";
 import { ArchiveReportAction } from "./action";
+import { useToast } from "@/hooks/use-toast";
 
 const ArchiveReport = ({ id }: { id: string }) => {
+  const { toast } = useToast();
   const { execute } = useServerAction(ArchiveReportAction);
   const handleArchiveReport = async () => {
-    try {
-      await execute({ id });
-    } catch (error) {
-      console.error(error);
-    }
+    const res = await execute({ id });
+    if (!res)
+      return toast({
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
+
+    toast({
+      title: "Archived Successfully!",
+      description: "Contact the admin if you need to restore the report.",
+    });
   };
   return (
     <AlertDialog>

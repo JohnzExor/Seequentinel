@@ -41,15 +41,15 @@ const ChangePasswordForm = () => {
     const comparePassword = values.password === values.confirmPassword;
     if (!comparePassword)
       return toast({
-        title: "Uh oh! Something went wrong.",
-        description: "The password did not match!",
+        title: "Error!",
+        description: "The passwords do not match.",
       });
 
     await execute({ ...values, id: data?.user.id });
 
     toast({
-      title: "Password changed!",
-      description: "Your password is updated successfully.",
+      title: "Password Updated",
+      description: "Your password has been changed successfully.",
     });
     form.reset();
   };
