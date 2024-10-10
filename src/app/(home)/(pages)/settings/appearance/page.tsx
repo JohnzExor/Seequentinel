@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
-import { AppearanceForm } from "./appearance-form";
+import ThemeSwitcher from "./theme-switcher";
 
-export default function SettingsAppearancePage() {
+const page = () => {
   return (
     <div className="space-y-6">
       <div>
@@ -12,7 +12,8 @@ export default function SettingsAppearancePage() {
         </p>
       </div>
       <Separator />
-      <AppearanceForm />
+      <ThemeSwitcher />
     </div>
   );
-}
+};
+export default page;

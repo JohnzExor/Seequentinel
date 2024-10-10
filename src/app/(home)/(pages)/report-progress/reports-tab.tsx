@@ -1,97 +1,82 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReportsCard from "./reports-card";
 
-import { authOptions } from "@/lib/auth";
-
-import { getServerSession } from "next-auth";
-import { getAllUserReportsUseCase } from "@/use-cases/user";
-import { notFound } from "next/navigation";
 import { Book, ConstructionIcon, Siren } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { z } from "zod";
+import { reportTypeEnum } from "@/lib/zod";
+import { Reports } from "@prisma/client";
 
-const ReportsTab = async () => {
-  const session = await getServerSession(authOptions);
+const titles = {
+  CampusMaintenance: "Campus Maintenance Request",
+  Emergencies: "Emergency Report Log",
+  HandbookViolation: "Handbook Violation Report",
+};
 
-  const userId = session?.user.id.toString() as string;
-  const data = await getAllUserReportsUseCase(userId);
+const icons = {
+  CampusMaintenance: <ConstructionIcon size={15} />,
+  Emergencies: <Siren size={15} />,
+  HandbookViolation: <Book size={15} />,
+};
 
-  if (!data) {
-    notFound();
-  }
+const ReportsTab = ({ reports }: { reports: Reports[] }) => {
+  const MapReports = (filter?: z.infer<typeof reportTypeEnum>) =>
+    reports
+      .filter(({ reportType }) => !filter || reportType === filter)
+      .map(({ id, reportType, createdAt, status, problemType }) => {
+        return {
+          reportType: titles[reportType],
+          problemType: problemType,
+          status: status,
+          createdAt: createdAt,
+          icon: icons[reportType],
+          path: `/report-progress/${id}`,
+        };
+      })
+      .reverse();
 
-  const {
-    handbookViolationReports,
-    campusMaintenanceReports,
-    emergencyReports,
-  } = data;
+  const allReports = MapReports();
+  const maintenanceReports = MapReports("CampusMaintenance");
+  const violationReports = MapReports("HandbookViolation");
+  const emergencyReports = MapReports("Emergencies");
 
-  const cmrData = campusMaintenanceReports
-    .map((report) => ({
-      ...report,
-      reportType: "Campus Maintenance Request",
-      path: `/report-progress/${report.id}?type=cmr`,
-      icon: <ConstructionIcon size={15} />,
-    }))
-    .reverse();
-
-  const hvrData = handbookViolationReports
-    .map((report) => ({
-      ...report,
-      reportType: "Handbook Violation Report",
-      path: `/report-progress/${report.id}?type=hvr`,
-      icon: <Book size={15} />,
-    }))
-    .reverse();
-
-  const erlData = emergencyReports
-    .map((report) => ({
-      ...report,
-      reportType: "Emergency Report Log",
-      path: `/report-progress/${report.id}?type=erl`,
-      icon: <Siren size={15} />,
-    }))
-    .reverse();
-
-  const reports = [...cmrData, ...hvrData, ...erlData];
-
-  const sortedReports = reports.sort(
-    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-  );
   return (
     <Tabs defaultValue="all" className="w-full">
-      <div className=" overflow-x-auto pb-3">
+      <div className=" overflow-x-auto pb-3 -mx-4 md:-mx-0">
         <TabsList>
           <TabsTrigger value="all">
-            All Reports <Badge className="ml-1">{reports.length}</Badge>
+            All Reports <Badge className="ml-1">{allReports.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="maintenance" className="flex items-center gap-1">
             <ConstructionIcon size={15} />
             <span>Campus Maintenance</span>
-            <Badge>{cmrData.length}</Badge>
+            <Badge>{maintenanceReports.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="violations" className="flex items-center gap-1">
             <Book size={15} />
             <span>Handbook Violations</span>
-            <Badge>{hvrData.length}</Badge>
+            <Badge>{violationReports.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="emergencies" className="flex items-center gap-1">
             <Siren size={15} />
             <span>Emergencies</span>
-            <Badge>{erlData.length}</Badge>
+            <Badge>{emergencyReports.length}</Badge>
           </TabsTrigger>
         </TabsList>
       </div>
       <TabsContent value="all">
-        <ReportsCard data={sortedReports} />
+        <ReportsCard data={allReports} />
       </TabsContent>
       <TabsContent value="maintenance">
-        <ReportsCard data={cmrData} />
+        <ReportsCard data={maintenanceReports} />
       </TabsContent>
       <TabsContent value="violations">
-        <ReportsCard data={hvrData} />
+        <ReportsCard data={violationReports} />
       </TabsContent>
       <TabsContent value="emergencies">
-        <ReportsCard data={erlData} />
+        <ReportsCard data={emergencyReports} />
       </TabsContent>
     </Tabs>
   );

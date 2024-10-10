@@ -14,12 +14,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HandbookViolation } from "@prisma/client";
+import { Reports } from "@prisma/client";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<HandbookViolation>[] = [
+export const columns: ColumnDef<Reports>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -51,7 +51,7 @@ export const columns: ColumnDef<HandbookViolation>[] = [
     header: "Status",
   },
   {
-    accessorKey: "type",
+    accessorKey: "reportType",
     header: "Report Type",
   },
   {

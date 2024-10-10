@@ -2,8 +2,20 @@ import { Suspense } from "react";
 import ReportsTab from "./reports-tab";
 import HomeLoading from "../../loader";
 import { Separator } from "@/components/ui/separator";
+import { getServerSession } from "next-auth";
+import { getAllUserReportsUseCase } from "@/use-cases/report";
+import { authOptions } from "@/lib/auth";
+import { notFound } from "next/navigation";
 
 const page = async () => {
+  const session = await getServerSession(authOptions);
+
+  const userId = session?.user.id.toString() as string;
+  const data = await getAllUserReportsUseCase(userId);
+
+  if (!data) {
+    notFound();
+  }
   return (
     <div className=" p-6 md:p-10 space-y-4 w-full">
       <Suspense fallback={<HomeLoading />}>
@@ -14,7 +26,7 @@ const page = async () => {
           </p>
         </div>
         <Separator className="my-6" />
-        <ReportsTab />
+        <ReportsTab reports={data} />
       </Suspense>
     </div>
   );

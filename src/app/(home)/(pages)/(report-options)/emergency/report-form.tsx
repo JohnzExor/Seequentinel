@@ -15,13 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { emergencyResponseFeedbackSchema } from "@/lib/zod";
 import { z } from "zod";
 import { LoaderCircle, Router } from "lucide-react";
 import { Textarea } from "@/components/ui/textArea";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import emergencyResponseFeedbackAction from "./actions";
+import { reportSchema } from "@/lib/zod";
 
 const ReportForm = () => {
   const { data } = useSession();
@@ -31,19 +31,18 @@ const ReportForm = () => {
     emergencyResponseFeedbackAction
   );
 
-  const form = useForm<z.infer<typeof emergencyResponseFeedbackSchema>>({
-    resolver: zodResolver(emergencyResponseFeedbackSchema),
+  const form = useForm<z.infer<typeof reportSchema>>({
+    resolver: zodResolver(reportSchema),
     defaultValues: {
-      type: "",
+      reportType: "Emergencies",
+      problemType: "",
       details: "",
       userId: data?.user.id,
-      status: "Request",
+      attachments: [],
     },
   });
 
-  const onSubmit = async (
-    values: z.infer<typeof emergencyResponseFeedbackSchema>
-  ) => {
+  const onSubmit = async (values: z.infer<typeof reportSchema>) => {
     const res = await execute({
       ...values,
       userId: data?.user.id,
@@ -59,7 +58,7 @@ const ReportForm = () => {
       >
         <FormField
           control={form.control}
-          name="type"
+          name="problemType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Emergency Description</FormLabel>

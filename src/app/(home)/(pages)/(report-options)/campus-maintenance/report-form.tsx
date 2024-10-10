@@ -4,7 +4,6 @@ import supabase, { fileUrl } from "@/lib/storage";
 import { v4 as uuidv4 } from "uuid";
 
 import { useServerAction } from "zsa-react";
-import faultyFacilitiesAction from "./actions";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { campusMaintenanceSchema } from "@/lib/zod";
+import { reportSchema } from "@/lib/zod";
 import { z } from "zod";
 import {
   ChevronLeft,
@@ -39,6 +38,7 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import ProvidedDetails from "./provided-details";
+import campusMaintenanceAction from "./actions";
 
 const options = [
   // Electrical Issues
@@ -127,21 +127,21 @@ const ReportForm = ({
   const router = useRouter();
   const { toast } = useToast();
   const { execute, isError, error, isPending } = useServerAction(
-    faultyFacilitiesAction
+    campusMaintenanceAction
   );
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
-  const form = useForm<z.infer<typeof campusMaintenanceSchema>>({
-    resolver: zodResolver(campusMaintenanceSchema),
+  const form = useForm<z.infer<typeof reportSchema>>({
+    resolver: zodResolver(reportSchema),
     defaultValues: {
-      type: "",
-      media: [],
+      reportType: "CampusMaintenance",
+      problemType: "",
+      attachments: [],
       location: "",
       userId: data?.user.id,
-      status: "Request",
-      additionalDetails: "",
+      details: "",
     },
   });
 
@@ -153,7 +153,7 @@ const ReportForm = ({
       if (upload) {
         setUploadedFiles((prev) => {
           const newFiles = [...prev, upload.path];
-          form.setValue("media", newFiles); // Use the updated files here
+          form.setValue("attachments", newFiles); // Use the updated files here
           return newFiles; // Return the updated state
         });
       }
@@ -168,13 +168,13 @@ const ReportForm = ({
     if (data) {
       setUploadedFiles((prev) => {
         const newFiles = prev.filter((item) => item !== file);
-        form.setValue("media", newFiles);
+        form.setValue("attachments", newFiles);
         return newFiles;
       });
     }
   };
 
-  const onSubmit = async (values: z.infer<typeof campusMaintenanceSchema>) => {
+  const onSubmit = async (values: z.infer<typeof reportSchema>) => {
     const res = await execute({
       ...values,
       userId: data?.user.id,
@@ -197,12 +197,9 @@ const ReportForm = ({
   };
 
   const disableButton = (index: number) => {
-    const fields: Array<"type" | "media" | "location" | "status"> = [
-      "type",
-      "media",
-      "location",
-      "status",
-    ];
+    const fields: Array<
+      "problemType" | "attachments" | "location" | "details" | "status"
+    > = ["problemType", "attachments", "location", "details", "status"];
 
     const check = form.getValues(fields[index]);
     return check ? false : true;
@@ -217,7 +214,7 @@ const ReportForm = ({
         {currentStep === 0 ? (
           <FormField
             control={form.control}
-            name="type"
+            name="problemType"
             render={({ field }) => (
               <FormItem>
                 <Select
@@ -319,7 +316,7 @@ const ReportForm = ({
         {currentStep === 3 ? (
           <FormField
             control={form.control}
-            name="additionalDetails"
+            name="details"
             render={({ field }) => (
               <FormItem>
                 <FormControl>

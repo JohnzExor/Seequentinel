@@ -1,14 +1,14 @@
-import { CalendarArrowUp, User, Waypoints } from "lucide-react";
+import { Waypoints } from "lucide-react";
 import Stepper from "./stepper";
 import { steps } from "./steps";
 import { Badge } from "@/components/ui/badge";
 
 const ReportStatus = ({
   currentStep,
-  createdAt,
+  updatedAt,
 }: {
   currentStep: number;
-  createdAt: Date;
+  updatedAt: Date;
 }) => {
   return (
     <section className=" space-y-1 bg-muted p-4 rounded-xl">
@@ -24,7 +24,7 @@ const ReportStatus = ({
         <div className="flex items-center gap-1 font-medium text-muted-foreground">
           <span>Updated:</span>
           <Badge className=" bg-muted-foreground text-white">
-            {createdAt.toLocaleString()}
+            {updatedAt.toLocaleString()}
           </Badge>
         </div>
       </div>

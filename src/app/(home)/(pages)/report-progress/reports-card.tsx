@@ -15,11 +15,9 @@ const ReportsCard = ({
   data,
 }: {
   data: {
-    id: string;
-    reportType?: string;
-    type?: string;
-    violation?: string;
-    status: string;
+    reportType: string;
+    problemType: string | null;
+    status: string | null;
     createdAt: Date;
     path: string;
     icon: ReactNode;
@@ -30,7 +28,7 @@ const ReportsCard = ({
       {data.length > 0 ? (
         data.map(
           (
-            { type, violation, reportType, createdAt, status, path, icon },
+            { problemType, createdAt, status, path, icon, reportType },
             index
           ) => (
             <Link href={path} key={index}>
@@ -40,7 +38,7 @@ const ReportsCard = ({
                     {icon}
                     {reportType}
                   </CardDescription>
-                  <CardTitle>{type ? type : violation}</CardTitle>
+                  <CardTitle>{problemType}</CardTitle>
                   <span className=" text-sm text-muted-foreground font-normal">
                     Created {createdAt.toLocaleString()}
                   </span>

@@ -1,9 +1,9 @@
+import { getReportTypeReportsUseCase } from "@/use-cases/report";
 import { DataTable } from "../data-table";
 import { columns } from "./columns";
-import { getAllReportsUseCase } from "@/use-cases/campus-maintenance";
 
 const page = async () => {
-  const data = await getAllReportsUseCase();
+  const data = await getReportTypeReportsUseCase("CampusMaintenance");
 
   return (
     <div>

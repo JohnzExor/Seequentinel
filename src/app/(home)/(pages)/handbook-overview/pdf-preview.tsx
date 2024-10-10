@@ -1,19 +1,25 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Download } from "lucide-react";
 import { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import useResizeObserver from "use-resize-observer";
 
-try {
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-} catch {
-  throw new Error("Error getting worker");
-}
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const PDFPreview = () => {
+  const isBrowserCompatible = () => {
+    return (
+      typeof window !== "undefined" &&
+      typeof window.Promise !== "undefined" &&
+      typeof window.fetch !== "undefined" &&
+      typeof window.Worker !== "undefined"
+    );
+  };
+
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -24,6 +30,17 @@ const PDFPreview = () => {
 
   const prevPage = () => setPageNumber((prev) => prev - 1);
   const nextPage = () => setPageNumber((prev) => prev + 1);
+
+  if (!isBrowserCompatible()) {
+    // Fallback for browsers that don't support react-pdf
+    return (
+      <div className="text-center w-full h-full flex flex-col items-center justify-center">
+        <p className="text-lg font-semibold">
+          PDF preview is not supported in this browser.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} className="flex flex-col w-full shadow-xl rounded-xl h-full">

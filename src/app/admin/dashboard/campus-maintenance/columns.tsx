@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CampusMaintenance } from "@prisma/client";
+import { Reports } from "@prisma/client";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<CampusMaintenance>[] = [
+export const columns: ColumnDef<Reports>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -51,7 +51,7 @@ export const columns: ColumnDef<CampusMaintenance>[] = [
     header: "Status",
   },
   {
-    accessorKey: "type",
+    accessorKey: "problemType",
     header: "Report Type",
   },
   {

@@ -1,17 +1,12 @@
-import { ExistingUserEmail, FindAllUserReports } from "@/data-access/user";
+import { ExistingUserEmail, UpdateUserPassword } from "@/data-access/user";
 
 import { CreateUser, FindAllUser } from "@/data-access/user";
-import { createUserSchema } from "@/lib/zod";
+import { changePasswordSchema, createUserSchema } from "@/lib/zod";
 import { z } from "zod";
 import { createAuditLogsUseCase } from "./audit-logs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { WelcomeUser } from "./send-email";
-
-export const getAllUserReportsUseCase = async (id: string) => {
-  const data = await FindAllUserReports(id);
-  return data;
-};
 
 export const getAllUserUseCase = async () => {
   const data = await FindAllUser("user");
@@ -62,4 +57,14 @@ export const checkExistingEmailUseCase = async (email: string) => {
     throw new Error("Email not found");
   }
   return existing;
+};
+
+export const changeUserPasswordUseCase = async (
+  values: z.infer<typeof changePasswordSchema>
+) => {
+  const data = await UpdateUserPassword(values);
+  if (!data) {
+    throw new Error("Error Changing Password");
+  }
+  return data;
 };

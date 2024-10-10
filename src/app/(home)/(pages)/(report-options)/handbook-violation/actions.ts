@@ -1,14 +1,14 @@
 "use server";
 
-import { handbookViolationSchema } from "@/lib/zod";
-import { postReportUseCase } from "@/use-cases/handbook-violation";
+import { reportSchema } from "@/lib/zod";
+import { postReportUseCase } from "@/use-cases/report";
 import { createServerAction } from "zsa";
 
-const behavioralViolationsAction = createServerAction()
-  .input(handbookViolationSchema)
+const handbookViolationAction = createServerAction()
+  .input(reportSchema)
   .handler(async ({ input }) => {
     const data = await postReportUseCase(input);
     return data;
   });
 
-export default behavioralViolationsAction;
+export default handbookViolationAction;

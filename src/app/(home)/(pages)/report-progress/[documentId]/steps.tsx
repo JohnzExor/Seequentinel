@@ -1,8 +1,9 @@
+import { StatusEnum } from "@prisma/client";
 import { ClipboardCheck, ImageUp, ListCheck, MapPinned } from "lucide-react";
 import { ReactNode } from "react";
 
 export type ISteps = {
-  name: string;
+  name: StatusEnum;
   description: string;
   icon: ReactNode;
   step: number;

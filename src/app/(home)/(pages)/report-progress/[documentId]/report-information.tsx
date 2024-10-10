@@ -1,72 +1,84 @@
-import { getUserReportByIdUseCase as cmReportByUser } from "@/use-cases/campus-maintenance";
-import { getUserReportByIdUseCase as hvReportByUser } from "@/use-cases/handbook-violation";
-
 import { steps } from "./steps";
-import { MapPin, ReceiptText } from "lucide-react";
+import {
+  Book,
+  CalendarClock,
+  ConstructionIcon,
+  FileText,
+  MapPin,
+  ReceiptText,
+  Siren,
+  UserPen,
+} from "lucide-react";
 import FilesPreview from "./files-preview";
 import ReportStatus from "./report-status";
-import ReportDetails from "./report-details";
-import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import ArchiveReport from "./archive-report";
+import { Reports } from "@prisma/client";
 
-const ReportInformation = async ({
-  documentId,
-  typeHref,
-}: {
-  documentId: string;
-  typeHref: "hvr" | "cmr";
-}) => {
-  const fetchers = {
-    cmr: cmReportByUser,
-    hvr: hvReportByUser,
-  };
+const titles = {
+  CampusMaintenance: "Campus Maintenance Request",
+  Emergencies: "Emergency Report Log",
+  HandbookViolation: "Handbook Violation Report",
+};
 
-  const reportData = await fetchers[typeHref](documentId);
-  if (!reportData) {
-    notFound();
-  }
-  const { id, createdAt, location, status } = reportData;
+const icons = {
+  CampusMaintenance: <ConstructionIcon size={20} />,
+  Emergencies: <Siren size={20} />,
+  HandbookViolation: <Book size={20} />,
+};
 
-  const mediaOrEvidence =
-    "media" in reportData ? reportData.media : reportData.evidence;
-
-  const reportTypeOrViolation =
-    "type" in reportData ? reportData.type : reportData.violation;
-
-  const AdditionalDetails =
-    "additionalDetails" in reportData
-      ? reportData.additionalDetails
-      : reportData.violationDetails;
-
-  const violatorName =
-    "violatorName" in reportData ? reportData.violatorName : null;
-
-  const violationDate =
-    "violationDate" in reportData ? reportData.violationDate : null;
+const ReportInformation = async ({ data }: { data: Reports }) => {
+  const {
+    id,
+    reportType,
+    createdAt,
+    problemType,
+    violatorName,
+    violationDate,
+    location,
+    details,
+    attachments,
+    status,
+    updatedAt,
+  } = data;
 
   const currentStep = steps.findIndex(
-    (step) => step.name.toLowerCase() === status.toLowerCase()
+    (step) => step.name.toLowerCase() === status?.toLowerCase()
   );
   return (
     <>
-      <ReportDetails
-        documentTitle={reportTypeOrViolation}
-        documentId={id}
-        createdAt={createdAt}
-        documentType={typeHref}
-      />
-      <ReportStatus currentStep={currentStep} createdAt={createdAt} />
-      {typeHref === "hvr" ? (
+      <section className="flex justify-between">
+        <div>
+          <div className=" text-muted-foreground flex items-center gap-1">
+            {icons[reportType]}
+            <span>{titles[reportType]}</span>
+          </div>
+          <h1 className="text-2xl md:text-4xl font-bold">{problemType}</h1>
+          <div className="text-sm text-muted-foreground mt-1">
+            <span>ID: {id}</span>
+            <br />
+            <span>Created {createdAt.toLocaleString()}</span>
+          </div>
+          <Button variant="outline" className="mt-2">
+            <FileText className="w-4 h-4 mr-2" />
+            Download Report
+          </Button>
+        </div>
+        <ArchiveReport id={id} />
+      </section>
+      <ReportStatus currentStep={currentStep} updatedAt={updatedAt} />
+      {reportType === "HandbookViolation" ? (
         <>
           <section>
             <div className="flex items-center gap-1 text-muted-foreground text-sm">
-              <MapPin size={20} />
+              <UserPen size={20} />
               <span>Reported Person</span>
             </div>
             <p className=" w-full max-w-[800px] font-medium">{violatorName}</p>
           </section>
           <section>
             <div className="flex items-center gap-1 text-muted-foreground text-sm">
-              <MapPin size={20} />
+              <CalendarClock size={20} />
               <span>When did she/he commit the violation?</span>
             </div>
             <p className=" w-full max-w-[800px] font-medium">
@@ -79,7 +91,9 @@ const ReportInformation = async ({
         <div className="flex items-center gap-1 text-muted-foreground text-sm">
           <MapPin size={20} />
           <span>
-            {typeHref === "hvr" ? "Where did it happened?" : "Location"}
+            {reportType === "HandbookViolation"
+              ? "Where did it happened?"
+              : "Location"}
           </span>
         </div>
         <p className=" w-full max-w-[800px] font-medium">{location}</p>
@@ -89,9 +103,9 @@ const ReportInformation = async ({
           <ReceiptText size={20} />
           <span>Additional Details</span>
         </div>
-        <p className=" w-full max-w-[800px] font-medium">{AdditionalDetails}</p>
+        <p className=" w-full max-w-[800px] font-medium">{details}</p>
       </section>
-      <FilesPreview files={mediaOrEvidence} />
+      <FilesPreview files={attachments} />
     </>
   );
 };

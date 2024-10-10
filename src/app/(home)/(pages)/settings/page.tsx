@@ -1,17 +1,17 @@
 import { Separator } from "@/components/ui/separator";
-import ProfileForm from "./profile-form";
+import ChangePasswordForm from "./change-password-form";
 
 const page = () => {
   return (
-    <div className="space-y-6">
+    <div className=" space-y-3">
       <div>
-        <h3 className="text-lg font-medium">Profile</h3>
+        <h3 className="text-lg font-medium">Account</h3>
         <p className="text-sm text-muted-foreground">
-          This is how others will see you on the site.
+          In the account settings, users can change their password.
         </p>
       </div>
       <Separator />
-      <ProfileForm />
+      <ChangePasswordForm />
     </div>
   );
 };

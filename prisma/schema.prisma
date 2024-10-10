@@ -13,54 +13,50 @@ datasource db {
 //   url      = env("DATABASE_URL")
 // }
 
+enum ReportTypeEnum {
+  CampusMaintenance
+  Emergencies
+  HandbookViolation
+}
+
+enum StatusEnum {
+  Request
+  Reviewing
+  Accepted
+  Completed
+}
+
 model User {
-  id                       String              @id @default(cuid())
-  type                     String
-  status                   String
-  createdAt                DateTime            @default(now())
-  email                    String              @unique
-  password                 String
-  campusMaintenanceReports CampusMaintenance[] @relation(name: "CampusMaintenance")
-  handbookViolationReports HandbookViolation[] @relation(name: "HandbookViolation")
-  emergencyReports         Emergencies[]       @relation(name: "EmergenciesToUser")
-}
-
-model CampusMaintenance {
-  id                String   @id @default(cuid())
-  createdAt         DateTime @default(now())
-  type              String
-  media             String[]
-  location          String
-  user              User?    @relation(name: "CampusMaintenance", fields: [userId], references: [id])
-  userId            String?
-  status            String
-  additionalDetails String?
-  isArchived        Boolean  @default(false)
-}
-
-model Emergencies {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
   type      String
-  details   String
-  userId    String?
-  user      User?    @relation(name: "EmergenciesToUser", fields: [userId], references: [id])
   status    String
+  createdAt DateTime  @default(now())
+  email     String    @unique
+  password  String
+  reports   Reports[] @relation(name: "Reports")
 }
 
-model HandbookViolation {
-  id               String   @id @default(cuid())
-  violatorName     String?
-  location         String
-  createdAt        DateTime @default(now())
-  evidence         String[]
-  violation        String
-  userId           String?
-  user             User?    @relation(name: "HandbookViolation", fields: [userId], references: [id])
-  status           String
-  violationDate    DateTime
-  violationDetails String
-  isArchived       Boolean  @default(false)
+model Reports {
+  id         String         @id @default(cuid())
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt // Automatically updates to the current timestamp on each change
+  reportType ReportTypeEnum // "CampusMaintenance", "Emergencies", or "HandbookViolation"
+
+  // Common fields
+  problemType String?
+  location    String?
+  userId      String?
+  user        User?       @relation(name: "Reports", fields: [userId], references: [id])
+  status      StatusEnum? @default(Request)
+  isArchived  Boolean     @default(false)
+  details     String?
+
+  // Handbook Violation-specific fields
+  violatorName  String?
+  violationDate DateTime?
+
+  // Shared media/evidence field
+  attachments String[] // Combined field for both media and evidence
 }
 
 model Administrator {

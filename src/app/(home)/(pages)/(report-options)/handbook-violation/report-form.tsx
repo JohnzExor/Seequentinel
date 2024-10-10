@@ -4,7 +4,6 @@ import supabase, { fileUrl } from "@/lib/storage";
 import { v4 as uuidv4 } from "uuid";
 
 import { useServerAction } from "zsa-react";
-import behavioralViolationsAction from "./actions";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,13 +11,12 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handbookViolationSchema } from "@/lib/zod";
+import { reportSchema } from "@/lib/zod";
 import { z } from "zod";
 import {
   ChevronLeft,
@@ -32,7 +30,7 @@ import { Textarea } from "@/components/ui/textArea";
 
 // date picker imports
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format, formatISO } from "date-fns";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -52,6 +50,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 import ProvidedDetails from "./provided-details";
+import handbookViolationAction from "./actions";
 
 const behaviors = [
   // Substance Use and Abuse Violations
@@ -138,22 +137,22 @@ const ReportForm = ({
   const router = useRouter();
   const { toast } = useToast();
   const { execute, isError, error, isPending } = useServerAction(
-    behavioralViolationsAction
+    handbookViolationAction
   );
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
-  const form = useForm<z.infer<typeof handbookViolationSchema>>({
-    resolver: zodResolver(handbookViolationSchema),
+  const form = useForm<z.infer<typeof reportSchema>>({
+    resolver: zodResolver(reportSchema),
     defaultValues: {
-      violation: "",
-      evidence: [],
+      reportType: "HandbookViolation",
+      problemType: "",
+      attachments: [],
       violationDate: "" as unknown as Date,
       location: "",
-      violationDetails: "",
+      details: "",
       userId: data?.user.id,
-      status: "Request",
       violatorName: "",
     },
   });
@@ -167,7 +166,7 @@ const ReportForm = ({
       if (upload) {
         setUploadedFiles((prev) => {
           const newFiles = [...prev, upload.path];
-          form.setValue("evidence", newFiles); // Use the updated files here
+          form.setValue("attachments", newFiles); // Use the updated files here
           return newFiles; // Return the updated state
         });
       }
@@ -182,14 +181,14 @@ const ReportForm = ({
     if (data) {
       setUploadedFiles((prev) => {
         const newFiles = prev.filter((item) => item !== file);
-        form.setValue("evidence", newFiles);
+        form.setValue("attachments", newFiles);
         return newFiles;
       });
     }
   };
 
-  const onSubmit = async (values: z.infer<typeof handbookViolationSchema>) => {
-    const validatedInput = handbookViolationSchema.parse({
+  const onSubmit = async (values: z.infer<typeof reportSchema>) => {
+    const validatedInput = reportSchema.parse({
       ...values,
       userId: data?.user.id,
     });
@@ -210,19 +209,19 @@ const ReportForm = ({
   };
   const disableButton = (index: number) => {
     const fields: Array<
-      | "violation"
+      | "problemType"
       | "violatorName"
       | "violationDate"
-      | "evidence"
+      | "attachments"
       | "location"
-      | "violationDetails"
+      | "details"
     > = [
-      "violation",
+      "problemType",
       "violatorName",
       "violationDate",
-      "evidence",
+      "attachments",
       "location",
-      "violationDetails",
+      "details",
     ];
 
     const check = form.getValues(fields[index]);
@@ -238,7 +237,7 @@ const ReportForm = ({
         {currentStep === 0 ? (
           <FormField
             control={form.control}
-            name="violation"
+            name="problemType"
             render={({ field }) => (
               <FormItem>
                 <Select
@@ -403,7 +402,7 @@ const ReportForm = ({
         {currentStep === 5 ? (
           <FormField
             control={form.control}
-            name="violationDetails"
+            name="details"
             render={({ field }) => (
               <FormItem>
                 <FormControl>

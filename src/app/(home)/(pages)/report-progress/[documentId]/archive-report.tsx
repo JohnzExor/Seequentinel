@@ -12,22 +12,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Archive, FileX } from "lucide-react";
+import { Archive } from "lucide-react";
 import { useServerAction } from "zsa-react";
 import { ArchiveReportAction } from "./action";
 
-const ArchiveReport = ({
-  id,
-  documentType,
-}: {
-  id: string;
-  documentType: "cmr" | "hvr";
-}) => {
-  const { isPending, execute } = useServerAction(ArchiveReportAction);
+const ArchiveReport = ({ id }: { id: string }) => {
+  const { execute } = useServerAction(ArchiveReportAction);
   const handleArchiveReport = async () => {
     try {
-      const [data, error] = await execute({ id, documentType });
-      console.log(data, error);
+      await execute({ id });
     } catch (error) {
       console.error(error);
     }

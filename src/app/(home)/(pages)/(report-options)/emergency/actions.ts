@@ -1,15 +1,14 @@
 "use server";
 
-import { emergencyResponseFeedbackSchema } from "@/lib/zod";
-import { postReportUseCase } from "@/use-cases/emergencies";
+import { reportSchema } from "@/lib/zod";
+import { postReportUseCase } from "@/use-cases/report";
 import { createServerAction } from "zsa";
 
 const emergencyResponseFeedbackAction = createServerAction()
-  .input(emergencyResponseFeedbackSchema)
+  .input(reportSchema)
   .handler(async ({ input }) => {
     const data = await postReportUseCase(input);
     return data;
   });
 
 export default emergencyResponseFeedbackAction;
-

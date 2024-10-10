@@ -1,22 +1,10 @@
 import prisma from "@/lib/db";
-import { createUserSchema } from "@/lib/zod";
+import { changePasswordSchema, createUserSchema } from "@/lib/zod";
 import { compare, hash } from "bcryptjs";
 import { z } from "zod";
 
 export const FindAllUser = async (type: string) => {
   const data = await prisma.user.findMany({ where: { type } });
-  return data;
-};
-
-export const FindAllUserReports = async (id: string) => {
-  const data = await prisma.user.findUnique({
-    where: { id },
-    include: {
-      campusMaintenanceReports: { where: { isArchived: false } },
-      handbookViolationReports: { where: { isArchived: false } },
-      emergencyReports: true,
-    },
-  });
   return data;
 };
 
@@ -45,13 +33,16 @@ export const DeleteUser = async (id: string) => {
   return data;
 };
 
-export const UpdatePassword = async (id: string, password: string) => {
+export const UpdateUserPassword = async ({
+  id,
+  password,
+}: z.infer<typeof changePasswordSchema>) => {
   const hashPWD = await hash(password, 10);
-  const newPassword = await prisma.user.update({
+  const data = await prisma.user.update({
     where: { id },
     data: { password: hashPWD },
   });
-  return newPassword;
+  return data;
 };
 
 export const LoginUser = async (email: string, password: string) => {
