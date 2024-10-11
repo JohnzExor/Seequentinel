@@ -14,10 +14,8 @@ import { Menu } from "lucide-react";
 import NavLinks from "./nav-links";
 import React, { useState } from "react";
 import { Session } from "next-auth";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Logout from "@/components/logout";
 import { ModeToggle } from "@/components/theme/mode-toggle";
-import { Button } from "@/components/ui/button";
 
 const SideNavToggle = ({ session }: { session: Session | null }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +24,7 @@ const SideNavToggle = ({ session }: { session: Session | null }) => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger>
-        <Menu />
+        <Menu className=" hover:rotate-180 duration-500 text-primary" />
       </SheetTrigger>
       <SheetContent className="flex flex-col justify-between">
         <SheetHeader className="text-left">

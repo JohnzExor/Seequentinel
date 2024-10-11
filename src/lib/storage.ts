@@ -7,6 +7,6 @@ const supabase = createClient(
 );
 
 export const fileUrl =
-  "https://mefpvvgnqqvpbqcxloyx.supabase.co/storage/v1/object/public/evidences/";
+  "https://mefpvvgnqqvpbqcxloyx.supabase.co/storage/v1/object/public/attachments/";
 
 export default supabase;

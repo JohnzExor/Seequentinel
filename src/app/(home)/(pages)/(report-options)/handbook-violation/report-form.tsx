@@ -114,10 +114,10 @@ const behaviors = [
   },
 ];
 
-export const UploadMedia = async (file: File) => {
+export const UploadMedia = async (file: File, imageCount: number) => {
   const { data, error } = await supabase.storage
-    .from("evidences")
-    .upload(`/${uuidv4()}.jpg`, file, {
+    .from("attachments")
+    .upload(`/HandbookViolation/${uuidv4()}/image-${imageCount}.jpg`, file, {
       cacheControl: "3600",
       upsert: true,
     });
@@ -162,7 +162,7 @@ const ReportForm = ({
     console.log(file);
     if (file) {
       setIsUploading(true);
-      const upload = await UploadMedia(file);
+      const upload = await UploadMedia(file, uploadedFiles.length);
       if (upload) {
         setUploadedFiles((prev) => {
           const newFiles = [...prev, upload.path];
@@ -204,7 +204,7 @@ const ReportForm = ({
       title: "Submited Successfully",
       description: "Your submitted report is now on request page",
     });
-    router.push(`/report-progress/${res[0]?.id}?type=hvr`);
+    router.push(`/report-progress/${res[0]?.id}`);
     form.reset();
   };
   const disableButton = (index: number) => {

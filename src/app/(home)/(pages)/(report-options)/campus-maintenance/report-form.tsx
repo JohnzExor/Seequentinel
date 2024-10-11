@@ -104,10 +104,10 @@ const options = [
   },
 ];
 
-export const UploadMedia = async (file: File) => {
+export const UploadMedia = async (file: File, imageCount: number) => {
   const { data, error } = await supabase.storage
-    .from("evidences")
-    .upload(`/${uuidv4()}.jpg`, file, {
+    .from("attachments")
+    .upload(`/CampusMaintenance/${uuidv4()}/image-${imageCount}.jpg`, file, {
       cacheControl: "3600",
       upsert: true,
     });
@@ -149,7 +149,7 @@ const ReportForm = ({
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
       setIsUploading(true);
-      const upload = await UploadMedia(file);
+      const upload = await UploadMedia(file, uploadedFiles.length);
       if (upload) {
         setUploadedFiles((prev) => {
           const newFiles = [...prev, upload.path];
@@ -192,7 +192,7 @@ const ReportForm = ({
       title: "Submited Successfully",
       description: "Your submitted report is now on request page",
     });
-    router.push(`/report-progress/${res[0]?.id}?type=cmr`);
+    router.push(`/report-progress/${res[0]?.id}`);
     form.reset();
   };
 
