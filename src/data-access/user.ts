@@ -35,9 +35,9 @@ export const DeleteUser = async (id: string) => {
 
 export const UpdateUserPassword = async ({
   id,
-  password,
+  newPassword,
 }: z.infer<typeof changePasswordSchema>) => {
-  const hashPWD = await hash(password, 10);
+  const hashPWD = await hash(newPassword, 10);
   const data = await prisma.user.update({
     where: { id },
     data: { password: hashPWD },

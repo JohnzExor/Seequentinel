@@ -1,4 +1,8 @@
-import { ExistingUserEmail, UpdateUserPassword } from "@/data-access/user";
+import {
+  ExistingUserEmail,
+  FindUserByID,
+  UpdateUserPassword,
+} from "@/data-access/user";
 
 import { CreateUser, FindAllUser } from "@/data-access/user";
 import { changePasswordSchema, createUserSchema } from "@/lib/zod";
@@ -7,6 +11,8 @@ import { createAuditLogsUseCase } from "./audit-logs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { WelcomeUser } from "./send-email";
+
+import { compare, hash } from "bcryptjs";
 
 export const getAllUserUseCase = async () => {
   const data = await FindAllUser("user");
@@ -62,6 +68,24 @@ export const checkExistingEmailUseCase = async (email: string) => {
 export const changeUserPasswordUseCase = async (
   values: z.infer<typeof changePasswordSchema>
 ) => {
+  const user = await FindUserByID(values.id as string);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const comparePassword = await compare(values.currentPassword, user.password);
+
+  if (!comparePassword) {
+    throw new Error("The current password is wrong.");
+  }
+
+  const compareOldPassword = await compare(values.newPassword, user.password);
+
+  if (compareOldPassword) {
+    throw new Error("You cant use the same password.");
+  }
+
   const data = await UpdateUserPassword(values);
   if (!data) {
     throw new Error("Error Changing Password");

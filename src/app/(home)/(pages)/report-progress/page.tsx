@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import ReportsTab from "./reports-tab";
 import { Separator } from "@/components/ui/separator";
 import { getServerSession } from "next-auth";
@@ -9,7 +8,7 @@ import { notFound } from "next/navigation";
 const page = async () => {
   const session = await getServerSession(authOptions);
 
-  const userId = session?.user.id.toString() as string;
+  const userId = session?.user.id as string;
   const data = await getAllUserReportsUseCase(userId);
 
   if (!data) {

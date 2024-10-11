@@ -11,7 +11,7 @@ import { Reports } from "@prisma/client";
 
 const titles = {
   CampusMaintenance: "Campus Maintenance Request",
-  Emergencies: "Emergency Report Log",
+  Emergencies: "Emergencies",
   HandbookViolation: "Handbook Violation Report",
 };
 

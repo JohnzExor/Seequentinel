@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { changePasswordSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 import { z } from "zod";
@@ -21,10 +20,8 @@ import { useServerAction } from "zsa-react";
 import { changePasswordAction } from "./action";
 import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 
-const ChangePasswordForm = () => {
-  const { data } = useSession();
+const ChangePasswordForm = ({ userId }: { userId: string | undefined }) => {
   const { toast } = useToast();
 
   const { execute, isPending } = useServerAction(changePasswordAction);
@@ -32,20 +29,28 @@ const ChangePasswordForm = () => {
   const form = useForm<z.infer<typeof changePasswordSchema>>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
-      password: "",
-      confirmPassword: "",
+      id: userId,
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof changePasswordSchema>) => {
-    const comparePassword = values.password === values.confirmPassword;
+    const comparePassword = values.newPassword === values.confirmNewPassword;
     if (!comparePassword)
       return toast({
         title: "Error!",
-        description: "The passwords do not match.",
+        description: "The new passwords do not match.",
       });
 
-    await execute({ ...values, id: data?.user.id });
+    const res = await execute(values);
+    if (res[1]) {
+      return toast({
+        title: res[1].name,
+        description: res[1].message,
+      });
+    }
 
     toast({
       title: "Password Updated",
@@ -58,21 +63,31 @@ const ChangePasswordForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 w-full flex flex-col"
+        className="space-y-2 w-full flex flex-col px-2"
       >
-        {data?.user ? (
-          <div className=" border rounded-xl p-3 mt-4">
-            <h1 className=" font-semibold">{data?.user.email}</h1>
-            <span className=" text-muted-foreground text-sm">
-              ID: {data?.user.id}
-            </span>
-          </div>
-        ) : (
-          <Skeleton className=" p-9" />
-        )}
         <FormField
           control={form.control}
-          name="password"
+          name="currentPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Current Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Enter your current password"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Make sure your current password is right.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="newPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel>New Password</FormLabel>
@@ -92,7 +107,7 @@ const ChangePasswordForm = () => {
         />
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name="confirmNewPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Confirm New Password</FormLabel>

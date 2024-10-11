@@ -44,8 +44,9 @@ export const loginSchema = z.object({
 
 export const changePasswordSchema = z.object({
   id: z.string().optional(),
-  password: z.string().min(6, "Password is required").max(50),
-  confirmPassword: z.string().min(6, "Password is required").max(50),
+  currentPassword: z.string().min(1, "Enter your current password").max(50),
+  newPassword: z.string().min(6, "Password is required").max(50),
+  confirmNewPassword: z.string().min(6, "Password is required").max(50),
 });
 
 export const createUserSchema = z.object({
