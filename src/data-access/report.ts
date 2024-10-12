@@ -45,3 +45,34 @@ export const FindAllReports = async () => {
   const data = await prisma.reports.findMany();
   return data;
 };
+
+export const FindMonthlyReportsCounts = async () => {
+  const reportCounts = await prisma.reports.groupBy({
+    by: ["createdAt"],
+    _count: {
+      id: true, // Count the number of reports
+    },
+    orderBy: {
+      createdAt: "asc", // Sort by date
+    },
+  });
+
+  // Define the shape of the monthlyCounts object
+  const monthlyCounts: { [key: string]: number } = {};
+
+  // Transform data into a monthly summary
+  reportCounts.forEach((report) => {
+    const month = new Date(report.createdAt).toLocaleString("en-US", {
+      month: "long",
+      year: "numeric",
+    });
+
+    // Safely index the object by using a type with string keys
+    if (!monthlyCounts[month]) {
+      monthlyCounts[month] = 0;
+    }
+    monthlyCounts[month] += report._count.id;
+  });
+
+  return monthlyCounts;
+};

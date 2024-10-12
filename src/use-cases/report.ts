@@ -3,6 +3,7 @@ import {
   CreateReport,
   FindAllReports,
   FindAllUserReports,
+  FindMonthlyReportsCounts,
   FindReportById,
   FindReportTypeReports,
 } from "@/data-access/report";
@@ -45,7 +46,12 @@ export const getReportTypeReportsUseCase = async (
   return data;
 };
 
-export const getAllReports = async () => {
+export const getAllReportsUseCase = async () => {
   const data = await FindAllReports();
+  return data;
+};
+
+export const getMonthlyReportsCountsUseCase = async () => {
+  const data = await FindMonthlyReportsCounts();
   return data;
 };

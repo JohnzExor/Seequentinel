@@ -47,7 +47,7 @@ const CountCards = ({
   ];
   return (
     <div className=" col-span-2">
-      <div className="grid md:grid-cols-4 gap-2">
+      <div className="grid md:grid-cols-4 gap-4">
         {cardData.map(({ label, icon: Icon, count, description }, index) => (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

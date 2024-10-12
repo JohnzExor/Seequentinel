@@ -18,38 +18,55 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export const description = "A line chart with dots";
-
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
+export const description = "A line chart showing report trends";
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  reports: {
+    label: "Reports",
     color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
-const ReportsOverview = () => {
+const ReportsOverview = ({
+  data,
+}: {
+  data: {
+    [key: string]: number;
+  };
+}) => {
+  const formatChartData = (data: { [key: string]: number }) => {
+    const chartData = Object.entries(data).map(([month, count]) => ({
+      month,
+      reports: count,
+    }));
+
+    return chartData;
+  };
+
+  const chartData = formatChartData(data);
+
+  // Calculate trend (just a placeholder, you can implement your own logic)
+  const latestMonthReports = chartData[chartData.length - 1]?.reports || 0;
+  const previousMonthReports = chartData[chartData.length - 2]?.reports || 0;
+  const trend =
+    previousMonthReports > 0
+      ? ((latestMonthReports - previousMonthReports) / previousMonthReports) *
+        100
+      : 0;
+  const trendText =
+    trend > 0
+      ? `Trending up by ${trend.toFixed(1)}% this month`
+      : `Trending down by ${Math.abs(trend).toFixed(1)}% this month`;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Overview</CardTitle>
+        <CardTitle>Reports Overview</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
-        <div className=" w-full">
+        <div className="w-full">
           <span className="text-sm text-muted-foreground pl-4">
-            January - June 2024
+            {chartData[0]?.month} - {chartData[chartData.length - 1]?.month}
           </span>
           <ChartContainer config={chartConfig}>
             <LineChart
@@ -73,12 +90,12 @@ const ReportsOverview = () => {
                 content={<ChartTooltipContent hideLabel />}
               />
               <Line
-                dataKey="desktop"
+                dataKey="reports"
                 type="natural"
-                stroke="var(--color-desktop)"
+                stroke="var(--color-reports)"
                 strokeWidth={2}
                 dot={{
-                  fill: "var(--color-desktop)",
+                  fill: "var(--color-reports)",
                 }}
                 activeDot={{
                   r: 6,
@@ -88,10 +105,11 @@ const ReportsOverview = () => {
           </ChartContainer>
           <div className="flex-col items-start gap-2 text-sm">
             <div className="flex gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              {trendText} <TrendingUp className="h-4 w-4" />
             </div>
             <div className="leading-none text-muted-foreground">
-              Showing total visitors for the last 6 months
+              Showing total reports from {chartData[0]?.month} to{" "}
+              {chartData[chartData.length - 1]?.month}
             </div>
           </div>
         </div>

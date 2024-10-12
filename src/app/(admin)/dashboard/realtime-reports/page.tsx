@@ -1,9 +1,9 @@
 import { Separator } from "@/components/ui/separator";
-import { getAllReports } from "@/use-cases/report";
 import RealtimeReports from "./realtime-reports";
+import { getAllReportsUseCase } from "@/use-cases/report";
 
 const page = async () => {
-  const data = await getAllReports();
+  const data = await getAllReportsUseCase();
 
   return (
     <div>
