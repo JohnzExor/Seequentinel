@@ -3,7 +3,6 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Header from "./header";
 import SideNavigations from "./side-nav";
-import { signOut } from "next-auth/react";
 
 export default async function RootLayout({
   children,

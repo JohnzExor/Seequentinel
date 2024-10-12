@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import Sidebar from "./sidebar";
 import Header from "./header";
+import SideNavigations from "./side-nav";
 
 export default async function RootLayout({
   children,
@@ -14,9 +14,12 @@ export default async function RootLayout({
     redirect("/");
   }
   return (
-    <>
-      <Header />
-      <Sidebar>{children}</Sidebar>
-    </>
+    <div className="flex h-screen">
+      <SideNavigations session={session} />
+      <main className="md:overflow-y-auto w-full">
+        <Header />
+        <div className=" p-4 md:p-10">{children}</div>
+      </main>
+    </div>
   );
 }

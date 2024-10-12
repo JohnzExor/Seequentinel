@@ -40,3 +40,8 @@ export const FindReportTypeReports = async (
   });
   return data;
 };
+
+export const FindAllReports = async () => {
+  const data = await prisma.reports.findMany();
+  return data;
+};

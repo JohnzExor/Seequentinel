@@ -1,6 +1,7 @@
 import {
   ArchiveReport,
   CreateReport,
+  FindAllReports,
   FindAllUserReports,
   FindReportById,
   FindReportTypeReports,
@@ -41,5 +42,10 @@ export const getReportTypeReportsUseCase = async (
   reportType: z.infer<typeof reportTypeEnum>
 ) => {
   const data = await FindReportTypeReports(reportType);
+  return data;
+};
+
+export const getAllReports = async () => {
+  const data = await FindAllReports();
   return data;
 };

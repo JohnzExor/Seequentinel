@@ -34,10 +34,10 @@ const ReportingOptions = () => {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 h-screen">
       {options.map(({ name, link, icon: Icon, image, description }, index) => (
-        <Link href={link} key={index}>
-          <div className=" space-y-4 absolute z-10 p-10 text-white w-full max-w-[400px]">
+        <Link href={link} key={index} className=" relative">
+          <div className=" space-y-4 absolute z-10 p-10 text-white w-full">
             <div className="flex items-center gap-1 font-medium md:text-2xl md:gap-4">
-              <Icon className=" w-[1.5em] h-[1.5em] md:w-[3em] md:h-[3em]" />
+              <Icon className=" w-[1.5em] h-[1.5em] md:w-[2em] md:h-[2em]" />
               <span>{name}</span>
             </div>
             <p className=" text-sm text-muted dark:text-muted-foreground break-words">

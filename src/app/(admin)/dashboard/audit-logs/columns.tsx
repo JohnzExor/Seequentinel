@@ -14,18 +14,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { AuditLog } from "@prisma/client";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export type User = {
-  id: string;
-  email: string;
-  createdAt: Date;
-  status: string;
-};
-
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<AuditLog>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -50,31 +44,58 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "id",
-    header: "ID",
+    header: "Document Id",
   },
   {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
-    accessorKey: "email",
+    accessorKey: "timestamp",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          className=" shadow-none"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Timestamp
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
+
   {
-    accessorKey: "createdAt",
-    header: "Account created",
+    accessorKey: "eventType",
+    header: "Event",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
   },
 
+  {
+    accessorKey: "objectType",
+    header: "objectType",
+  },
+  {
+    accessorKey: "objectId",
+    header: "objectId",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+  },
+
+  {
+    accessorKey: "userId",
+    header: "Action by",
+  },
+  {
+    accessorKey: "ipAddress",
+    header: "IpAddress",
+  },
+  {
+    accessorKey: "source",
+    header: "Source",
+  },
   {
     id: "actions",
     header: "Actions",
@@ -92,7 +113,7 @@ export const columns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+            // onClick={() => navigator.clipboard.writeText(payment.id)}
             >
               Copy payment ID
             </DropdownMenuItem>
