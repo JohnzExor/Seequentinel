@@ -14,16 +14,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { User } from "@prisma/client";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-
-export type User = {
-  id: string;
-  email: string;
-  createdAt: Date;
-  status: string;
-};
 
 export const columns: ColumnDef<User>[] = [
   {

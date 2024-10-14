@@ -10,6 +10,12 @@ export const statusEnum = z
   .enum(["Request", "Reviewing", "Accepted", "Completed"])
   .optional();
 
+export const changeStatusSchema = z.object({
+  documentId: z.string(),
+  newStatus: statusEnum,
+  isAccepted: z.boolean(),
+});
+
 export const reportSchema = z.object({
   reportType: reportTypeEnum,
 

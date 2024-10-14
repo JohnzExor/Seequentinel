@@ -27,13 +27,14 @@ enum StatusEnum {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  type      String
-  status    String
-  createdAt DateTime  @default(now())
-  email     String    @unique
-  password  String
-  reports   Reports[] @relation(name: "Reports")
+  id              String    @id @default(cuid())
+  type            String
+  status          String
+  createdAt       DateTime  @default(now())
+  email           String    @unique
+  password        String
+  reports         Reports[] @relation(name: "Reports")
+  assignedReports Reports[] @relation(name: "Assigned")
 }
 
 model Reports {
@@ -43,13 +44,15 @@ model Reports {
   reportType ReportTypeEnum // "CampusMaintenance", "Emergencies", or "HandbookViolation"
 
   // Common fields
-  problemType String?
-  location    String?
-  userId      String?
-  user        User?       @relation(name: "Reports", fields: [userId], references: [id])
-  status      StatusEnum? @default(Request)
-  isArchived  Boolean     @default(false)
-  details     String?
+  problemType    String?
+  location       String?
+  userId         String?
+  user           User?       @relation(name: "Reports", fields: [userId], references: [id])
+  status         StatusEnum? @default(Request)
+  isArchived     Boolean     @default(false)
+  details        String?
+  assginedUserId String?
+  assigned       User?       @relation(name: "Assigned", fields: [assginedUserId], references: [id])
 
   // Handbook Violation-specific fields
   violatorName  String?

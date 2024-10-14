@@ -1,15 +1,32 @@
 import {
   ArchiveReport,
   CreateReport,
+  FindAllAssignedReports,
   FindAllReports,
   FindAllUserReports,
   FindMonthlyReportsCounts,
   FindReportById,
+  FindReportsByStatus,
   FindReportTypeReports,
+  UpdateReportAssignee,
+  UpdateReportStatus,
 } from "@/data-access/report";
-import { reportSchema, reportTypeEnum } from "@/lib/zod";
+import { reportSchema, reportTypeEnum, statusEnum } from "@/lib/zod";
 import { z } from "zod";
 import { ReportResponse } from "./send-email";
+
+export const setReportAssigneeUseCase = async (
+  documentId: string,
+  userId: string
+) => {
+  const data = await UpdateReportAssignee(documentId, userId);
+  return data;
+};
+
+export const getAllAssignedReportsUseCase = async (userId: string) => {
+  const data = await FindAllAssignedReports(userId);
+  return data;
+};
 
 export const postReportUseCase = async (
   newReport: z.infer<typeof reportSchema>
@@ -53,5 +70,19 @@ export const getAllReportsUseCase = async () => {
 
 export const getMonthlyReportsCountsUseCase = async () => {
   const data = await FindMonthlyReportsCounts();
+  return data;
+};
+
+export const getReportsByStatusUseCase = async (
+  status: z.infer<typeof statusEnum>
+) => {
+  const data = await FindReportsByStatus(status);
+  return data;
+};
+export const updateReportStatusUseCase = async (
+  documentId: string,
+  newStatus: z.infer<typeof statusEnum>
+) => {
+  const data = await UpdateReportStatus(documentId, newStatus);
   return data;
 };

@@ -1,7 +1,7 @@
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import ReportInformation from "./report-information";
 import { getUserReportByIdUseCase } from "@/use-cases/report";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 const page = async ({ params }: { params: Params }) => {
   const { documentId } = params;

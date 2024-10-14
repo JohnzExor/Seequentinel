@@ -19,7 +19,7 @@ const page = async () => {
         <h1 className=" text-xl font-bold">Dashboard Data Analytics</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>
       </div>
-      <div className=" md:grid space-y-4 md:space-y-0 grid-cols-1 md:grid-cols-2 gap-4">
+      <div className=" lg:grid space-y-4 lg:space-y-0 lg:grid-cols-2 gap-4">
         <CountCards reports={reports} userCount={users.length} />
         <ReportsOverview data={monthlyReport} />
         <RecentReports reports={reports.slice(-6)} />

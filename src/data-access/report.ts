@@ -1,6 +1,37 @@
 import prisma from "@/lib/db";
-import { reportSchema, reportTypeEnum } from "@/lib/zod";
+import { reportSchema, reportTypeEnum, statusEnum } from "@/lib/zod";
 import { z } from "zod";
+
+export const UpdateReportAssignee = async (
+  documentId: string,
+  userId: string
+) => {
+  const data = await prisma.reports.update({
+    where: { id: documentId },
+    data: { assginedUserId: userId, status: "Reviewing" },
+  });
+  return data;
+};
+
+export const UpdateReportStatus = async (
+  documentId: string,
+  newStatus: z.infer<typeof statusEnum>
+) => {
+  const data = await prisma.reports.update({
+    where: { id: documentId },
+    data: { status: newStatus },
+  });
+  return data;
+};
+export const FindAllAssignedReports = async (userId: string) => {
+  const data = await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      assignedReports: {},
+    },
+  });
+  return data?.assignedReports;
+};
 
 export const CreateReport = async (newReport: z.infer<typeof reportSchema>) => {
   const data = await prisma.reports.create({ data: newReport });
@@ -28,6 +59,15 @@ export const FindAllUserReports = async (id: string) => {
 export const FindReportById = async (id: string) => {
   const data = await prisma.reports.findUnique({
     where: { id },
+  });
+  return data;
+};
+
+export const FindReportsByStatus = async (
+  status: z.infer<typeof statusEnum>
+) => {
+  const data = await prisma.reports.findMany({
+    where: { status },
   });
   return data;
 };

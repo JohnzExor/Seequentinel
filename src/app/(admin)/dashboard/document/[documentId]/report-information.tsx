@@ -1,3 +1,5 @@
+"use client";
+
 import { steps } from "./steps";
 import {
   Book,
@@ -12,8 +14,9 @@ import {
 import FilesPreview from "./files-preview";
 import ReportStatus from "./report-status";
 import { Button } from "@/components/ui/button";
-import ArchiveReport from "./archive-report";
 import { Reports } from "@prisma/client";
+import AssignReport from "./assign-report";
+import ChangeStatusForm from "./change-status-form";
 
 const titles = {
   CampusMaintenance: "Campus Maintenance Request",
@@ -27,7 +30,7 @@ const icons = {
   HandbookViolation: <Book size={20} />,
 };
 
-const ReportInformation = async ({ data }: { data: Reports }) => {
+const ReportInformation = ({ data }: { data: Reports }) => {
   const {
     id,
     reportType,
@@ -40,6 +43,7 @@ const ReportInformation = async ({ data }: { data: Reports }) => {
     attachments,
     status,
     updatedAt,
+    assginedUserId,
   } = data;
 
   const currentStep = steps.findIndex(
@@ -64,9 +68,17 @@ const ReportInformation = async ({ data }: { data: Reports }) => {
             Download Report
           </Button>
         </div>
-        <ArchiveReport id={id} />
+        {!assginedUserId ? (
+          <AssignReport documentId={id} />
+        ) : status ? (
+          <ChangeStatusForm oldStatus={status} documentId={id} />
+        ) : null}
       </section>
-      <ReportStatus currentStep={currentStep} updatedAt={updatedAt} />
+      <ReportStatus
+        currentStep={currentStep}
+        updatedAt={updatedAt}
+        assigned={assginedUserId}
+      />
       {reportType === "HandbookViolation" ? (
         <>
           <section>

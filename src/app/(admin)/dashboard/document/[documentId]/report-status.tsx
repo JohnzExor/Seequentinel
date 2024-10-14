@@ -6,9 +6,11 @@ import { Badge } from "@/components/ui/badge";
 const ReportStatus = ({
   currentStep,
   updatedAt,
+  assigned,
 }: {
   currentStep: number;
   updatedAt: Date;
+  assigned: string | null;
 }) => {
   return (
     <section className=" space-y-1 bg-muted p-4 rounded-xl">
@@ -16,10 +18,10 @@ const ReportStatus = ({
         <Waypoints size={20} />
         <span>Report Status</span>
       </div>
-      <div className="text-sm flex md:items-center gap-1 md:gap-3 flex-col md:flex-row pb-2">
+      <div className="text-sm flex lg:items-center gap-1 md:gap-3 flex-col lg:flex-row pb-2">
         <div className="flex items-center gap-1 font-medium">
           <span>Assigned to:</span>
-          <Badge>Pending</Badge>
+          <Badge>{assigned ? assigned : "Pending"}</Badge>
         </div>
         <div className="flex items-center gap-1 font-medium text-muted-foreground">
           <span>Updated:</span>

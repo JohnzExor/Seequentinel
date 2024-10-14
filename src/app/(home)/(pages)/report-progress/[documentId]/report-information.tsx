@@ -1,3 +1,5 @@
+"use client";
+
 import { steps } from "./steps";
 import {
   Book,
@@ -27,7 +29,7 @@ const icons = {
   HandbookViolation: <Book size={20} />,
 };
 
-const ReportInformation = async ({ data }: { data: Reports }) => {
+const ReportInformation = ({ data }: { data: Reports }) => {
   const {
     id,
     reportType,
@@ -40,6 +42,7 @@ const ReportInformation = async ({ data }: { data: Reports }) => {
     attachments,
     status,
     updatedAt,
+    assginedUserId,
   } = data;
 
   const currentStep = steps.findIndex(
@@ -66,7 +69,11 @@ const ReportInformation = async ({ data }: { data: Reports }) => {
         </div>
         <ArchiveReport id={id} />
       </section>
-      <ReportStatus currentStep={currentStep} updatedAt={updatedAt} />
+      <ReportStatus
+        currentStep={currentStep}
+        updatedAt={updatedAt}
+        assigned={assginedUserId}
+      />
       {reportType === "HandbookViolation" ? (
         <>
           <section>
