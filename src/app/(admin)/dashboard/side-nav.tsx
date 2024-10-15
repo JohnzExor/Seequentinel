@@ -74,7 +74,9 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
           className="overflow-hidden flex items-center gap-1 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground"
         >
           <BringToFront size={30} className="text-primary" />
-          <span className="text-xl font-semibold">Seequentinel</span>
+          <span className="text-xl font-semibold text-nowrap">
+            Seequentinel Admin
+          </span>
         </motion.div>
         <motion.button
           initial={{ marginRight: isMinimized ? 8 : 0 }}

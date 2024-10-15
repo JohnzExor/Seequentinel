@@ -8,6 +8,7 @@ import {
   Flag,
   HousePlug,
   LayoutDashboard,
+  MapPinned,
   Scroll,
   Settings,
   Shield,
@@ -36,6 +37,12 @@ const links = [
     name: "Realtime Reports",
     path: "/dashboard/realtime-reports",
     icon: ChevronsRight,
+  },
+
+  {
+    name: "Campus Map",
+    path: "/dashboard/campus-map",
+    icon: MapPinned,
   },
   {
     name: "Assigned Reports",
