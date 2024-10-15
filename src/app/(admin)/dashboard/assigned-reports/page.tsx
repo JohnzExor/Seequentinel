@@ -17,8 +17,10 @@ const page = async () => {
   return (
     <div>
       <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">Real-time Reports</h2>
-        <p className="text-muted-foreground">View all available reports</p>
+        <h2 className="text-2xl font-bold tracking-tight">Assigned Reports</h2>
+        <p className="text-muted-foreground">
+          View all the reports you&apos;re assigned
+        </p>
       </div>
       <Separator className="my-6" />
       <ReportsTab reports={data} />

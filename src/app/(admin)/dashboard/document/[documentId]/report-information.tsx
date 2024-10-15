@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Reports } from "@prisma/client";
 import AssignReport from "./assign-report";
 import ChangeStatusForm from "./change-status-form";
+import { useEffect, useState } from "react";
+import supabase from "@/lib/storage";
 
 const titles = {
   CampusMaintenance: "Campus Maintenance Request",
@@ -31,6 +33,26 @@ const icons = {
 };
 
 const ReportInformation = ({ data }: { data: Reports }) => {
+  const [reports, setReports] = useState(data);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("reports-db-document-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "Reports" },
+        async (payload) => {
+          setReports(payload.new as Reports);
+          console.log(data);
+          console.log(reports);
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [data, reports, setReports]);
+
   const {
     id,
     reportType,
@@ -44,11 +66,12 @@ const ReportInformation = ({ data }: { data: Reports }) => {
     status,
     updatedAt,
     assginedUserId,
-  } = data;
+  } = reports;
 
   const currentStep = steps.findIndex(
     (step) => step.name.toLowerCase() === status?.toLowerCase()
   );
+
   return (
     <>
       <section className="flex justify-between">

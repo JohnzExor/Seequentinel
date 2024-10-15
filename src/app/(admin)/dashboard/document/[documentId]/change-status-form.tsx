@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   FilePlus,
   LoaderCircle,
+  LucideProps,
   NotebookPen,
   Search,
 } from "lucide-react";
@@ -35,16 +36,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { StatusEnum } from "@prisma/client";
 import { changeStatusSchema } from "@/lib/zod";
 import { useServerAction } from "zsa-react";
 import { setReportStatusAction } from "./action";
 import clsx from "clsx";
-import { useState } from "react";
+import { ForwardRefExoticComponent, RefAttributes, useState } from "react";
 
-const status = [
+const status: {
+  status: string;
+  description: string;
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
+}[] = [
   {
     status: "Request",
     description:
@@ -120,6 +126,7 @@ const ChangeStatusForm = ({
       title: "Status Updated",
       description: "The report status has been successfully changed.",
     });
+
     form.reset();
     setOpen(false);
   };
@@ -158,14 +165,13 @@ const ChangeStatusForm = ({
                         ({ status, icon: Icon, description }, index) => (
                           <label
                             className={clsx(
-                              " p-3 border rounded-xl disabled:bg-black cursor-pointer",
+                              " p-3 border rounded-xl cursor-pointer",
                               {
                                 " bg-primary text-white":
-                                  status === form.getValues("newStatus"),
+                                  status === field.value,
                               },
                               {
-                                " hover:bg-muted":
-                                  status !== form.getValues("newStatus"),
+                                " hover:bg-muted": status !== field.value,
                               }
                             )}
                             key={index}
@@ -174,13 +180,12 @@ const ChangeStatusForm = ({
                               value={status}
                               className=" sr-only"
                             />
-                            <div>
+                            <div className=" text-sm">
                               <div className="flex items-center justify-between">
                                 <h1 className="font-medium">{status}</h1>
-                                <Icon />
+                                <Icon className=" flex-shrink-0 h-3 w-3 text-muted-foreground" />
                               </div>
-
-                              <p className="text-sm">{description}</p>
+                              <p>{description}</p>
                             </div>
                           </label>
                         )
@@ -207,8 +212,8 @@ const ChangeStatusForm = ({
                     <FormLabel>Accept Responsibility</FormLabel>
                     <FormDescription>
                       By checking this box, you agree to the terms and confirm
-                      that you are responsible for changing the status of this
-                      report.
+                      you&apos;re responsible for updating this report&apos;s
+                      status.
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -219,10 +224,11 @@ const ChangeStatusForm = ({
                 type="button"
                 variant={"secondary"}
                 onClick={() => setOpen(false)}
+                disabled={isPending}
               >
                 <ChevronLeft />
               </Button>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full " disabled={isPending}>
                 {isPending ? (
                   <LoaderCircle className="animate-spin" />
                 ) : (

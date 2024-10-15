@@ -38,7 +38,7 @@ const ArchiveReport = ({ id }: { id: string }) => {
       <AlertDialogTrigger asChild>
         <Button variant={"outline"}>
           <Archive className="w-4 h-4 md:mr-2" />
-          <span className="hidden md:block">Archive Report</span>
+          <span className="hidden lg:block">Archive Report</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
