@@ -43,8 +43,6 @@ const ReportInformation = ({ data }: { data: Reports }) => {
         { event: "*", schema: "public", table: "Reports" },
         async (payload) => {
           setReports(payload.new as Reports);
-          console.log(data);
-          console.log(reports);
         }
       )
       .subscribe();
