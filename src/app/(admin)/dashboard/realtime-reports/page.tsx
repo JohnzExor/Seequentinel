@@ -1,9 +1,17 @@
 import { Separator } from "@/components/ui/separator";
 import RealtimeReports from "./realtime-reports";
 import { getReportsByStatusUseCase } from "@/use-cases/report";
+import { Reports } from "@prisma/client";
 
 const page = async () => {
-  const data = await getReportsByStatusUseCase("Request");
+  let data: Reports[] = [];
+
+  try {
+    const res = await getReportsByStatusUseCase("Request");
+    data = res;
+  } catch (error: any) {
+    console.error(error.message);
+  }
 
   return (
     <div>

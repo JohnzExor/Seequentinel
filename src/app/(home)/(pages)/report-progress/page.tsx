@@ -3,17 +3,20 @@ import { Separator } from "@/components/ui/separator";
 import { getServerSession } from "next-auth";
 import { getAllUserReportsUseCase } from "@/use-cases/report";
 import { authOptions } from "@/lib/auth";
-import { notFound } from "next/navigation";
+import { Reports } from "@prisma/client";
 
 const page = async () => {
-  const session = await getServerSession(authOptions);
+  let data: Reports[] = [];
 
-  const userId = session?.user.id as string;
-  const data = await getAllUserReportsUseCase(userId);
+  try {
+    const session = await getServerSession(authOptions);
+    const res = await getAllUserReportsUseCase(session?.user.id as string);
 
-  if (!data) {
-    notFound();
+    data = res as Reports[];
+  } catch (error: any) {
+    console.error(error.message);
   }
+
   return (
     <div className=" p-6 md:p-10 space-y-4 w-full">
       <div className="space-y-0.5">

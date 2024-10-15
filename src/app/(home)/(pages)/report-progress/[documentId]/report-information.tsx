@@ -79,7 +79,7 @@ const ReportInformation = ({ data }: { data: Reports }) => {
           <div className="text-sm text-muted-foreground mt-1">
             <span>ID: {id}</span>
             <br />
-            <span>Created {createdAt.toLocaleString()}</span>
+            <span>Created {createdAt ? createdAt.toLocaleString() : null}</span>
           </div>
           <Button variant="outline" className="mt-2">
             <FileText className="w-4 h-4 mr-2" />

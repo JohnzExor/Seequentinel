@@ -2,9 +2,17 @@ import { getAllUserUseCase } from "@/use-cases/user";
 import { columns } from "./columns";
 import AddUser from "./add-user";
 import { DataTable } from "../data-table";
+import { User } from "@prisma/client";
 
 const page = async () => {
-  const data = await getAllUserUseCase();
+  let data: User[] = [];
+
+  try {
+    const res = await getAllUserUseCase();
+    data = res;
+  } catch (error: any) {
+    console.error(error.message);
+  }
   return (
     <>
       <div>

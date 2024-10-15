@@ -26,7 +26,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(admin)/dashboard/campus-maintenance",
+    "src/app/(admin)/dashboard/(report-tables)/campus-maintenance",
     "src/components/email-templates"
   ],
   "exclude": ["node_modules"]

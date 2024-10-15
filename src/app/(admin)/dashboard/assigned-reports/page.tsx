@@ -4,16 +4,22 @@ import ReportsTab from "./reports-tab";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { notFound } from "next/navigation";
+import { Reports } from "@prisma/client";
 
 const page = async () => {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    notFound();
+  let data: Reports[] = [];
+
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      notFound();
+    }
+    const res = await getAllAssignedReportsUseCase(session?.user.id);
+    data = res as Reports[];
+  } catch (error: any) {
+    console.error(error.message);
   }
-  const data = await getAllAssignedReportsUseCase(session?.user.id);
-  if (!data) {
-    notFound();
-  }
+
   return (
     <div>
       <div className="space-y-0.5">

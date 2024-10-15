@@ -26,7 +26,7 @@ const ReportStatus = ({
         <div className="flex items-center gap-1 font-medium text-muted-foreground">
           <span>Updated:</span>
           <Badge className=" bg-muted-foreground text-white">
-            {updatedAt.toLocaleString()}
+            {updatedAt ? updatedAt.toLocaleString() : null}
           </Badge>
         </div>
       </div>

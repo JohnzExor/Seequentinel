@@ -4,13 +4,16 @@ import { Book, ConstructionIcon, Siren } from "lucide-react";
 
 import Link from "next/link";
 import Image from "next/image";
+import CampusMaintenanceImage from "/public/images/cmr.jpg";
+import HandBookViolationImage from "/public/images/hvr.jpg";
+import EmergenciesImage from "/public/images/erl.jpg";
 
 const options = [
   {
     name: "Campus Maintenance Request",
     link: "/campus-maintenance",
     icon: ConstructionIcon,
-    image: "/images/cmr.jpg",
+    image: CampusMaintenanceImage,
     description:
       "This allows students, faculty, and staff to report faulty utilities, broken equipment, or hazardous conditions on campus.",
   },
@@ -18,7 +21,7 @@ const options = [
     name: "Handbook Violation Report",
     link: "/handbook-violation",
     icon: Book,
-    image: "/images/hvr.jpg",
+    image: HandBookViolationImage,
     description:
       "This allows students, faculty, and staff to report a violation against the University guidelines or student handbook on campus.",
   },
@@ -26,7 +29,7 @@ const options = [
     name: "Emergency",
     link: "/emergency",
     icon: Siren,
-    image: "/images/erl.jpg",
+    image: EmergenciesImage,
   },
 ];
 
@@ -49,6 +52,7 @@ const ReportingOptions = () => {
               src={image}
               alt={name}
               fill
+              placeholder="blur"
               className="object-cover md:grayscale hover:grayscale-0 duration-500 brightness-50 hover:brightness-75 dark:brightness-[0.3] dark:hover:brightness-[0.4] md:hover:scale-110"
             />
           </div>

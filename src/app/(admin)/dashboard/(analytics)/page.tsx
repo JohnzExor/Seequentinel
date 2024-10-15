@@ -8,11 +8,27 @@ import {
   getAllReportsUseCase,
   getMonthlyReportsCountsUseCase,
 } from "@/use-cases/report";
+import { Reports, User } from "@prisma/client";
 
 const page = async () => {
-  const reports = await getAllReportsUseCase();
-  const users = await getAllUserUseCase();
-  const monthlyReport = await getMonthlyReportsCountsUseCase();
+  let reports: Reports[] = [];
+  let users: User[] = [];
+  let monthlyReport: {
+    [key: string]: number;
+  } = {};
+
+  try {
+    const getReports = await getAllReportsUseCase();
+    const getUsers = await getAllUserUseCase();
+    const getMonthlyReport = await getMonthlyReportsCountsUseCase();
+
+    reports = getReports;
+    users = getUsers;
+    monthlyReport = getMonthlyReport;
+  } catch (error: any) {
+    console.error(error.message);
+  }
+
   return (
     <div className=" space-y-4">
       <div>

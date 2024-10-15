@@ -1,14 +1,21 @@
 import { getReportTypeReportsUseCase } from "@/use-cases/report";
-import { DataTable } from "../data-table";
+import { DataTable } from "../../data-table";
 import { columns } from "./columns";
+import { Reports } from "@prisma/client";
 
 const page = async () => {
-  const data = await getReportTypeReportsUseCase("CampusMaintenance");
+  let data: Reports[] = [];
 
+  try {
+    const res = await await getReportTypeReportsUseCase("Emergencies");
+    data = res;
+  } catch (error: any) {
+    console.error(error.message);
+  }
   return (
     <div>
       <div>
-        <h1 className=" text-xl font-bold">Campus Mentenance Request</h1>
+        <h1 className=" text-xl font-bold">Emergencies</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>
       </div>
       <DataTable data={data} columns={columns} />
