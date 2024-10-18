@@ -5,30 +5,46 @@ import { LatLngExpression, LatLngTuple } from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 import UserLocationMarker from "./user-location-marker";
-import RoutingMachine from "./routing-machine";
+import { universityIcon } from "./icons";
+import Emergencies from "./emergencies";
+import ViewEmergencyDetails from "./view-emergency-details";
 import { useState } from "react";
 
+import RoutingMachine from "./routing-machine";
+import { userLocation } from "./data";
+
+const zoom = 18;
+
 const RealtimeMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
-  const zoom = 18;
-  const [userLocation, setUserLocation] = useState();
+  const [isViewEmergency, setIsViewEmergency] = useState(false);
+
+  const handleViewEmergency = () => {
+    setIsViewEmergency(!isViewEmergency);
+  };
 
   return (
-    <MapContainer
-      center={posix}
-      zoom={zoom}
-      scrollWheelZoom={true}
-      className=" w-full h-screen"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={posix}>
-        <Popup>Palawan State University</Popup>
-      </Marker>
-      <UserLocationMarker />
-      <RoutingMachine />
-    </MapContainer>
+    <>
+      {isViewEmergency ? (
+        <ViewEmergencyDetails closeSidebar={handleViewEmergency} />
+      ) : null}
+      <MapContainer
+        center={posix}
+        zoom={zoom}
+        scrollWheelZoom={true}
+        className=" w-full h-screen z-10"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={posix} icon={universityIcon}>
+          <Popup>Palawan State University</Popup>
+        </Marker>
+        <UserLocationMarker />
+        <RoutingMachine />
+        <Emergencies onMarkerClick={handleViewEmergency} />
+      </MapContainer>
+    </>
   );
 };
 

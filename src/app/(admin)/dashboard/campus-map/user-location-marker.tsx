@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import L, { LatLngExpression } from "leaflet";
-import RoutingMachine from "./routing-machine";
+import { userIcon } from "./icons";
+import { SetUserLocation } from "./data";
 
 const UserLocationMarker = () => {
   const [position, setPosition] = useState<LatLngExpression>([0, 0]);
@@ -12,7 +13,8 @@ const UserLocationMarker = () => {
   useEffect(() => {
     map.locate().on("locationfound", (e) => {
       setPosition(e.latlng);
-      map.flyTo(e.latlng, map.getZoom());
+      SetUserLocation(e.latlng);
+      // map.flyTo(e.latlng, map.getZoom());
       const radius = e.accuracy;
       const circle = L.circle(e.latlng, radius);
       circle.addTo(map);
@@ -21,7 +23,7 @@ const UserLocationMarker = () => {
   }, [map]);
 
   return (
-    <Marker position={position}>
+    <Marker position={position} icon={userIcon}>
       <Popup>
         You are here. <br />
         Map bbox: <br />

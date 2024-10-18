@@ -10,6 +10,10 @@ const loginUserAction = createServerAction()
       password: input.password,
       redirect: false,
     });
+    const res = await data;
+    if (res && res.ok !== true) {
+      throw new Error(`${res.error}`);
+    }
     return data;
   });
 

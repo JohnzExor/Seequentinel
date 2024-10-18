@@ -64,7 +64,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
       initial={sidebarWidth}
       animate={sidebarWidth}
       transition={{ delay: 0.2, ease: easeInOut, type: "spring" }}
-      className=" shrink-0 hidden md:flex flex-col py-10 px-7 shadow-2xl overflow-hidden dark:border-r"
+      className=" shrink-0 hidden md:flex flex-col py-10 px-7 shadow-2xl overflow-hidden dark:border-r z-30"
     >
       <div
         className={clsx("flex items-center mb-9 w-full justify-between", {})}

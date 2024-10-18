@@ -25,7 +25,7 @@ const SideNavToggle = ({ session }: { session: Session | null }) => {
       <SheetTrigger>
         <Menu className=" hover:rotate-180 duration-500 text-primary" />
       </SheetTrigger>
-      <SheetContent className="flex flex-col justify-between">
+      <SheetContent className="flex flex-col justify-between z-50">
         <SheetHeader className="text-left">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <ModeToggle /> Theme

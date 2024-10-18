@@ -24,7 +24,7 @@ const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const emailHref = searchParams.get("email");
-  const { execute, isError, error, isPending } =
+  const { execute, isError, error, isPending, isSuccess } =
     useServerAction(loginUserAction);
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -37,10 +37,10 @@ const LoginForm = () => {
 
   const onSubmit = async ({ email, password }: z.infer<typeof loginSchema>) => {
     const res = await execute({ email, password });
-    if (res && res[0]?.ok !== true) {
+    if (res[1]) {
       form.setError("password", {
         type: "manual",
-        message: res[0]?.error as string,
+        message: res[1].message,
       });
       return;
     }
@@ -69,7 +69,7 @@ const LoginForm = () => {
                   type="password"
                   placeholder="Enter your password"
                   {...field}
-                  disabled={isPending}
+                  disabled={isPending || isSuccess}
                   autoFocus
                 />
               </FormControl>
@@ -78,8 +78,16 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full mt-3" disabled={isPending}>
-          {isPending ? <LoaderCircle className=" animate-spin" /> : "Login"}
+        <Button
+          type="submit"
+          className="w-full mt-3"
+          disabled={isPending || isSuccess}
+        >
+          {isPending || isSuccess ? (
+            <LoaderCircle className=" animate-spin" />
+          ) : (
+            "Login"
+          )}
         </Button>
       </form>
     </Form>

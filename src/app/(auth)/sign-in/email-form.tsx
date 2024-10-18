@@ -22,7 +22,7 @@ import { LoaderCircle } from "lucide-react";
 
 const EmailForm = () => {
   const router = useRouter();
-  const { execute, isError, error, isPending } =
+  const { execute, isError, error, isPending, isSuccess } =
     useServerAction(checkUserEmailAction);
 
   const form = useForm<z.infer<typeof emailSchema>>({
@@ -34,7 +34,6 @@ const EmailForm = () => {
 
   const onSubmit = async ({ email }: z.infer<typeof emailSchema>) => {
     const res = await execute({ email });
-    console.log(res);
     if (res[1]) {
       form.setError("email", {
         type: "manual",
@@ -66,7 +65,7 @@ const EmailForm = () => {
                   type="email"
                   placeholder="Enter your corporate email"
                   {...field}
-                  disabled={isPending}
+                  disabled={isPending || isSuccess}
                   autoFocus
                 />
               </FormControl>
@@ -75,8 +74,16 @@ const EmailForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full mt-3" disabled={isPending}>
-          {isPending ? <LoaderCircle className=" animate-spin" /> : "Next"}
+        <Button
+          type="submit"
+          className="w-full mt-3"
+          disabled={isPending || isSuccess}
+        >
+          {isPending || isSuccess ? (
+            <LoaderCircle className=" animate-spin" />
+          ) : (
+            "Next"
+          )}
         </Button>
       </form>
     </Form>

@@ -136,7 +136,7 @@ const ReportForm = ({
   const { data } = useSession();
   const router = useRouter();
   const { toast } = useToast();
-  const { execute, isError, error, isPending } = useServerAction(
+  const { execute, isError, error, isPending, isSuccess } = useServerAction(
     handbookViolationAction
   );
 
@@ -205,7 +205,6 @@ const ReportForm = ({
       description: "Your submitted report is now on request page",
     });
     router.push(`/report-progress/${res[0]?.id}`);
-    form.reset();
   };
   const disableButton = (index: number) => {
     const fields: Array<
@@ -425,7 +424,7 @@ const ReportForm = ({
         <div className="flex justify-between mt-4">
           {currentStep > 0 ? (
             <Button
-              disabled={isPending}
+              disabled={isPending || isSuccess}
               type="button"
               variant={"secondary"}
               onClick={prevStep}
@@ -444,8 +443,12 @@ const ReportForm = ({
             </Button>
           ) : null}
           {currentStep === 6 ? (
-            <Button type="submit" className="w-2/4" disabled={isPending}>
-              {isPending ? (
+            <Button
+              type="submit"
+              className="w-2/4"
+              disabled={isPending || isSuccess}
+            >
+              {isPending || isSuccess ? (
                 <LoaderCircle className="animate-spin" />
               ) : (
                 <span className="flex items-center gap-1 font-bold">
