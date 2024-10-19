@@ -4,6 +4,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { LatLngExpression, LatLngTuple } from "leaflet";
 
 import "leaflet/dist/leaflet.css";
+import UserLocationMarker from "./user-location-marker";
 
 const zoom = 18;
 
@@ -20,6 +21,7 @@ const RealtimeMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <UserLocationMarker />
       </MapContainer>
     </>
   );

@@ -10,6 +10,10 @@ export const statusEnum = z
   .enum(["Request", "Reviewing", "Accepted", "Completed"])
   .optional();
 
+export const callStatusEnum = z
+  .enum(["None", "Pending", "Connected", "Disconnected", "Canceled", "Failed"])
+  .optional();
+
 export const changeStatusSchema = z.object({
   documentId: z.string(),
   newStatus: statusEnum,
@@ -34,6 +38,10 @@ export const reportSchema = z.object({
       invalid_type_error: "That's not a date",
     })
     .optional(),
+
+  // Emergency-specific fields
+  callStatus: callStatusEnum,
+  gpsCoordinates: z.string().optional(),
 
   // Shared media/evidence field
   attachments: z.array(z.string()),

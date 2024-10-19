@@ -7,16 +7,21 @@ import "leaflet/dist/leaflet.css";
 import UserLocationMarker from "./user-location-marker";
 import { universityIcon } from "./icons";
 import Emergencies from "./emergencies";
-import ViewEmergencyDetails from "./view-emergency-details";
 import { useState } from "react";
-
 import RoutingMachine from "./routing-machine";
-import { userLocation } from "./data";
-
+import { Reports } from "@prisma/client";
+import EmergencyList from "./emergency-list";
+import { Button } from "@/components/ui/button";
 const zoom = 18;
 
-const RealtimeMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
-  const [isViewEmergency, setIsViewEmergency] = useState(false);
+const RealtimeMap = ({
+  emergencies,
+  posix,
+}: {
+  emergencies: Reports[];
+  posix: LatLngExpression | LatLngTuple;
+}) => {
+  const [isViewEmergency, setIsViewEmergency] = useState(true);
 
   const handleViewEmergency = () => {
     setIsViewEmergency(!isViewEmergency);
@@ -25,8 +30,12 @@ const RealtimeMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
   return (
     <>
       {isViewEmergency ? (
-        <ViewEmergencyDetails closeSidebar={handleViewEmergency} />
-      ) : null}
+        <EmergencyList data={emergencies} closeSidebar={handleViewEmergency} />
+      ) : (
+        <div className=" right-0 p-3 fixed z-20">
+          <Button onClick={handleViewEmergency}>View all emergencies</Button>
+        </div>
+      )}
       <MapContainer
         center={posix}
         zoom={zoom}
@@ -41,8 +50,11 @@ const RealtimeMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
           <Popup>Palawan State University</Popup>
         </Marker>
         <UserLocationMarker />
-        <RoutingMachine />
-        <Emergencies onMarkerClick={handleViewEmergency} />
+        {/* <RoutingMachine /> */}
+        <Emergencies
+          emergencies={emergencies}
+          onMarkerClick={handleViewEmergency}
+        />
       </MapContainer>
     </>
   );

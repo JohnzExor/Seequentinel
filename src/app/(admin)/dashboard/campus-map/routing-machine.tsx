@@ -1,36 +1,34 @@
-import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
-import "leaflet-routing-machine";
-import { createControlComponent } from "@react-leaflet/core";
 import L from "leaflet";
-import { targetLocation, userLocation } from "./data";
+import { createControlComponent } from "@react-leaflet/core";
+import "leaflet-routing-machine";
+import "leaflet/dist/leaflet.css";
 
-const createRoutingMachine = () => {
+const createRoutineMachineLayer = () => {
   const instance = L.Routing.control({
-    show: false,
-    waypoints: [L.latLng(userLocation), L.latLng(targetLocation)],
+    waypoints: [
+      L.latLng([9.788644, 118.74893]),
+      L.latLng([9.765764, 118.736849]),
+    ],
     lineOptions: {
       styles: [{ color: "#6FA1EC", weight: 4 }],
       extendToWaypoints: true,
-      missingRouteTolerance: 10,
+      missingRouteTolerance: 15,
     },
-    // router: L.Routing.osrmv1({
-    //   // OSRM routing service
-    //   serviceUrl: "https://router.project-osrm.org/route/v1", // Public OSRM service
-    //   profile: "car", // Options: 'car', 'bike', 'foot'
-    // }),
-    showAlternatives: true, // Show alternative routes
     altLineOptions: {
-      styles: [{ color: "#FF0000", weight: 4 }],
+      styles: [{ color: "gray", weight: 4 }],
       extendToWaypoints: true,
-      missingRouteTolerance: 10,
+      missingRouteTolerance: 15,
     },
-    routeWhileDragging: true, // Allows dragging the route
+    show: false,
+    addWaypoints: false,
+    routeWhileDragging: true,
     fitSelectedRoutes: true,
+    showAlternatives: true,
   });
 
   return instance;
 };
 
-const RoutingMachine = createControlComponent(createRoutingMachine);
+const RoutingMachine = createControlComponent(createRoutineMachineLayer);
 
 export default RoutingMachine;

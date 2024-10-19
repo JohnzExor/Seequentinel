@@ -26,6 +26,15 @@ enum StatusEnum {
   Completed
 }
 
+enum CallStatusEnum {
+  None
+  Pending
+  Connected
+  Disconnected
+  Canceled
+  Failed
+}
+
 model User {
   id              String    @id @default(cuid())
   type            String
@@ -57,6 +66,10 @@ model Reports {
   // Handbook Violation-specific fields
   violatorName  String?
   violationDate DateTime?
+
+  // Emergency-specific fields
+  callStatus     CallStatusEnum? @default(None)
+  gpsCoordinates String? // For storing GPS coordinates as a string (latitude, longitude)
 
   // Shared media/evidence field
   attachments String[] // Combined field for both media and evidence
