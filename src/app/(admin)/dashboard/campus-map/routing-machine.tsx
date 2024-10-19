@@ -40,7 +40,7 @@ const RoutingMachine = ({ waypoints }: { waypoints: LatLngExpression[] }) => {
       // Cleanup the routing control on component unmount
       map.removeControl(routingControl);
     };
-  }, [waypoints]); // Add waypoints to the dependency array to update on changes
+  }, [waypoints, map]); // Add waypoints to the dependency array to update on changes
 
   return null;
 };

@@ -23,7 +23,7 @@ const UserLocationMarker = ({
       circle.addTo(map);
       setBbox(e.bounds.toBBoxString().split(","));
     });
-  }, [map]);
+  }, [map, setUserPosition]);
 
   return (
     <Marker position={position} icon={userIcon}>
