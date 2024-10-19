@@ -8,8 +8,9 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import React, { ReactNode } from "react";
+import React, { ForwardRefExoticComponent, RefAttributes } from "react";
 import Link from "next/link";
+import { LucideProps } from "lucide-react";
 
 const ReportsCard = ({
   data,
@@ -20,7 +21,9 @@ const ReportsCard = ({
     status: string | null;
     createdAt: Date;
     path: string;
-    icon: ReactNode;
+    icon: ForwardRefExoticComponent<
+      Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+    >;
   }[];
 }) => {
   return (
@@ -28,14 +31,14 @@ const ReportsCard = ({
       {data.length > 0 ? (
         data.map(
           (
-            { problemType, createdAt, status, path, icon, reportType },
+            { problemType, createdAt, status, path, icon: Icon, reportType },
             index
           ) => (
             <Link href={path} key={index}>
               <Card className="hover:bg-muted duration-500">
                 <CardHeader>
                   <CardDescription className="flex items-center gap-1">
-                    {icon}
+                    <Icon size={15} />
                     {reportType}
                   </CardDescription>
                   <CardTitle>{problemType}</CardTitle>

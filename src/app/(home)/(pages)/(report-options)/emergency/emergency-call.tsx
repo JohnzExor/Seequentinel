@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { LoaderCircle, MapPin, PhoneCall, PhoneOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useServerAction } from "zsa-react";
-import emergencyCallAction, { cancelCallAction } from "./actions";
+import emergencyCallAction, { changeCallStatusAction } from "./actions";
 import { useSession } from "next-auth/react";
 
 const callStatusState: { name: CallStatusEnum; description: string }[] = [
@@ -62,7 +62,7 @@ const EmergencyCall = ({
   const { execute, isError, error, isPending } =
     useServerAction(emergencyCallAction);
 
-  const cancelCall = useServerAction(cancelCallAction);
+  const cancelCall = useServerAction(changeCallStatusAction);
 
   const setCount = async () => {
     setTapCount(tapCount + 1);
@@ -101,14 +101,14 @@ const EmergencyCall = ({
 
   const handleCancelCall = async () => {
     try {
-      await cancelCall.execute({ id: callData.id, newStatus: "Canceled" });
       setCallStatus("Canceled");
+      setTimeout(() => {
+        setCallStatus("None");
+      }, 2000);
+      await cancelCall.execute({ id: callData.id, newStatus: "Canceled" });
     } catch (error: any) {
       console.error(error);
     }
-    setTimeout(() => {
-      setCallStatus("None");
-    }, 2000);
   };
 
   return (
@@ -128,7 +128,7 @@ const EmergencyCall = ({
           </div>
         </div>
       ) : (
-        <div className=" bottom-0 w-full  max-w-[40em] fixed z-20 p-3 space-y-2 hover:scale-105 duration-500 ease-in-out cursor-pointer">
+        <div className=" bottom-0 w-full md:max-w-[25em] lg:max-w-[40em] fixed z-20 p-3 space-y-2 lg:hover:scale-105 duration-500 ease-in-out cursor-pointer">
           <Badge variant={"destructive"}>HIGH PRIORITY</Badge>
           <div className="bg-background w-full h-full rounded-xl shadow-2xl flex items-center justify-between gap-2 p-3">
             <div

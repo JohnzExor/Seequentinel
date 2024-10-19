@@ -1,34 +1,48 @@
-import L from "leaflet";
-import { createControlComponent } from "@react-leaflet/core";
+import L, { LatLngExpression } from "leaflet";
 import "leaflet-routing-machine";
 import "leaflet/dist/leaflet.css";
+import { useEffect } from "react";
+import { useMap } from "react-leaflet";
+import { pinIcon } from "./icons";
 
-const createRoutineMachineLayer = () => {
-  const instance = L.Routing.control({
-    waypoints: [
-      L.latLng([9.788644, 118.74893]),
-      L.latLng([9.765764, 118.736849]),
-    ],
-    lineOptions: {
-      styles: [{ color: "#6FA1EC", weight: 4 }],
-      extendToWaypoints: true,
-      missingRouteTolerance: 15,
-    },
-    altLineOptions: {
-      styles: [{ color: "gray", weight: 4 }],
-      extendToWaypoints: true,
-      missingRouteTolerance: 15,
-    },
-    show: false,
-    addWaypoints: false,
-    routeWhileDragging: true,
-    fitSelectedRoutes: true,
-    showAlternatives: true,
-  });
+const RoutingMachine = ({ waypoints }: { waypoints: LatLngExpression[] }) => {
+  const map = useMap();
+  useEffect(() => {
+    const waypointsWithLatLng = waypoints.map((point) => L.latLng(point));
+    const routingControl = L.Routing.control({
+      waypoints: waypointsWithLatLng, // Use the waypoints prop here
+      lineOptions: {
+        styles: [{ color: "#6FA1EC", weight: 4 }],
+        extendToWaypoints: false,
+        missingRouteTolerance: 0,
+      },
+      altLineOptions: {
+        styles: [{ color: "gray", weight: 4 }],
+        extendToWaypoints: false,
+        missingRouteTolerance: 0,
+      },
+      addWaypoints: false,
+      routeWhileDragging: true,
+      fitSelectedRoutes: true,
+      showAlternatives: true,
+      plan: L.routing.plan(waypointsWithLatLng, {
+        createMarker: () => false,
+        // {
+        //   return L.marker(wp.latLng, {
+        //     draggable: false,
+        //     icon: pinIcon,
+        //   });
+        // },
+      }),
+    }).addTo(map); // Make sure to add the control to your map instance
 
-  return instance;
+    return () => {
+      // Cleanup the routing control on component unmount
+      map.removeControl(routingControl);
+    };
+  }, [waypoints]); // Add waypoints to the dependency array to update on changes
+
+  return null;
 };
-
-const RoutingMachine = createControlComponent(createRoutineMachineLayer);
 
 export default RoutingMachine;

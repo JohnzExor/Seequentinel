@@ -12,6 +12,7 @@ import RoutingMachine from "./routing-machine";
 import { Reports } from "@prisma/client";
 import EmergencyList from "./emergency-list";
 import { Button } from "@/components/ui/button";
+import FlyToLocation from "./fly-to-location";
 const zoom = 18;
 
 const RealtimeMap = ({
@@ -23,14 +24,32 @@ const RealtimeMap = ({
 }) => {
   const [isViewEmergency, setIsViewEmergency] = useState(true);
 
+  const [currentPosition, setCurrentPosition] = useState<LatLngExpression>([
+    0, 0,
+  ]);
+  const [selectedPosition, setSelectedPosition] = useState<LatLngExpression>([
+    0, 0,
+  ]);
+
   const handleViewEmergency = () => {
     setIsViewEmergency(!isViewEmergency);
+  };
+
+  const handleCurrentPosition = (position: LatLngExpression) => {
+    setCurrentPosition(position);
+  };
+  const handleSelectedLocation = (position: LatLngExpression) => {
+    setSelectedPosition(position);
   };
 
   return (
     <>
       {isViewEmergency ? (
-        <EmergencyList data={emergencies} closeSidebar={handleViewEmergency} />
+        <EmergencyList
+          setSelectedPosition={handleSelectedLocation}
+          data={emergencies}
+          closeSidebar={handleViewEmergency}
+        />
       ) : (
         <div className=" right-0 p-3 fixed z-20">
           <Button onClick={handleViewEmergency}>View all emergencies</Button>
@@ -46,11 +65,12 @@ const RealtimeMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {/* <FlyToLocation location={selectedPosition} /> */}
         <Marker position={posix} icon={universityIcon}>
           <Popup>Palawan State University</Popup>
         </Marker>
-        <UserLocationMarker />
-        {/* <RoutingMachine /> */}
+        <UserLocationMarker setUserPosition={handleCurrentPosition} />
+        <RoutingMachine waypoints={[currentPosition, selectedPosition]} />
         <Emergencies
           emergencies={emergencies}
           onMarkerClick={handleViewEmergency}

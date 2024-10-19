@@ -103,3 +103,14 @@
 .leaflet-control-attribution {
   filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
+
+.leaflet-routing-container {
+  display: none;
+  /* Completely hide the routing control */
+}
+
+/* Alternatively, to hide just the text section */
+.leaflet-routing-alt {
+  display: none;
+  /* Hide the alternative routes panel */
+}

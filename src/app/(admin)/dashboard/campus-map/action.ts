@@ -1,20 +1,10 @@
 "use server";
 
-import { callStatusEnum, reportSchema } from "@/lib/zod";
-import {
-  postReportUseCase,
-  updateCurrentCallStatusUseCase,
-} from "@/use-cases/report";
+import { callStatusEnum } from "@/lib/zod";
+import { updateCurrentCallStatusUseCase } from "@/use-cases/report";
 import { CallStatusEnum } from "@prisma/client";
 import { z } from "zod";
 import { createServerAction } from "zsa";
-
-const emergencyCallAction = createServerAction()
-  .input(reportSchema)
-  .handler(async ({ input }) => {
-    const data = await postReportUseCase(input);
-    return data;
-  });
 
 export const changeCallStatusAction = createServerAction()
   .input(z.object({ id: z.string(), newStatus: callStatusEnum }))
@@ -25,5 +15,3 @@ export const changeCallStatusAction = createServerAction()
     );
     return data;
   });
-
-export default emergencyCallAction;

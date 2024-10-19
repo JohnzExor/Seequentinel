@@ -56,10 +56,10 @@ export const postReportUseCase = async (
   const data = await CreateReport(newReport);
   if (!data) throw new Error("Report creation failed");
 
-  const emailResponse = await ReportResponse();
-  if (!emailResponse) {
-    throw new Error("Email not send");
-  }
+  // const emailResponse = await ReportResponse();
+  // if (!emailResponse) {
+  //   throw new Error("Email not send");
+  // }
   return data;
 };
 

@@ -29,7 +29,7 @@ const page = async () => {
   }
 
   return (
-    <div className="w-full flex flex-col items-center justify-center h-screen">
+    <div className="w-full flex flex-col items-center justify-center h-screen pt-4">
       <EmergencyCall status={currentStatus} callData={data} />
       <RealtimeMap posix={[9.7769525, 118.7341474]} />
     </div>

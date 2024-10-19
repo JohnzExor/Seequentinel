@@ -3,7 +3,11 @@ import { Marker, Popup, useMap } from "react-leaflet";
 import L, { LatLngExpression } from "leaflet";
 import { userIcon } from "./icons";
 
-const UserLocationMarker = () => {
+const UserLocationMarker = ({
+  setUserPosition,
+}: {
+  setUserPosition: (position: LatLngExpression) => void;
+}) => {
   const [position, setPosition] = useState<LatLngExpression>([0, 0]);
   const [bbox, setBbox] = useState<string[]>([]);
 
@@ -12,6 +16,7 @@ const UserLocationMarker = () => {
   useEffect(() => {
     map.locate().on("locationfound", (e) => {
       setPosition(e.latlng);
+      setUserPosition(e.latlng);
       // map.flyTo(e.latlng, map.getZoom());
       const radius = e.accuracy;
       const circle = L.circle(e.latlng, radius);

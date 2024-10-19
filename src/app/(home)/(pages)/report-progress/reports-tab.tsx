@@ -16,9 +16,9 @@ const titles = {
 };
 
 const icons = {
-  CampusMaintenance: <ConstructionIcon size={15} />,
-  Emergencies: <Siren size={15} />,
-  HandbookViolation: <Book size={15} />,
+  CampusMaintenance: ConstructionIcon,
+  Emergencies: Siren,
+  HandbookViolation: Book,
 };
 
 const ReportsTab = ({ reports }: { reports: Reports[] }) => {
