@@ -11,10 +11,12 @@ import { changeCallStatusAction } from "./action";
 const EmergencyList = ({
   closeSidebar,
   setSelectedPosition,
+  acceptedCall,
   data,
 }: {
   closeSidebar: () => void;
   setSelectedPosition: (position: LatLngExpression) => void;
+  acceptedCall: (room: string) => void;
 
   data: Reports[];
 }) => {
@@ -22,7 +24,8 @@ const EmergencyList = ({
 
   const acceptCall = async (id: string) => {
     try {
-      await execute({ id, newStatus: "Connected" });
+      await execute({ id, newStatus: "Connected", room: id });
+      acceptedCall(id);
     } catch (error: any) {
       console.error(error.message);
     }
@@ -46,7 +49,7 @@ const EmergencyList = ({
         <div className="mt-4 space-y-4 overflow-y-auto h-[800px]">
           {data.map(
             (
-              { callStatus, location, createdAt, id, gpsCoordinates },
+              { callStatus, location, createdAt, id, gpsCoordinates, callRoom },
               index
             ) => {
               const position: [number, number] | null = gpsCoordinates

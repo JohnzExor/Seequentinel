@@ -1,10 +1,10 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import EmergencyCall from "./emergency-call";
-import dynamic from "next/dynamic";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getCurrentCallStatusUseCase } from "@/use-cases/report";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+import EmergencyCall from "./emergency-call";
 import { CallStatusEnum, Reports } from "@prisma/client";
+import { getCurrentCallStatusUseCase } from "@/use-cases/report";
 
 const RealtimeMap = dynamic(() => import("./realtime-map"), {
   ssr: false,
@@ -27,11 +27,10 @@ const page = async () => {
   } catch (error: any) {
     console.error(error.message);
   }
-
   return (
-    <div className="w-full flex flex-col items-center justify-center h-screen pt-4">
+    <div className="w-full flex flex-col items-center justify-center h-screen">
       <EmergencyCall status={currentStatus} callData={data} />
-      <RealtimeMap posix={[9.7769525, 118.7341474]} />
+      <RealtimeMap posix={[9.776904, 118.733746]} />
     </div>
   );
 };

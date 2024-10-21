@@ -21,7 +21,7 @@ const page = async () => {
     console.error(error);
   }
   return (
-    <div className=" -mx-4 -mb-4 mt-2 md:-m-10">
+    <div className=" -mx-4 -mb-4 mt-2 md:-m-10 flex flex-col items-center">
       <RealtimeMap emergencies={data} posix={palsuLatlng} />
     </div>
   );

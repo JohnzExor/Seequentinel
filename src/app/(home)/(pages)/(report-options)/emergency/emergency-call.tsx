@@ -1,40 +1,18 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
+
+import { useSession } from "next-auth/react";
+import CallRoom from "./call-room";
 import { CallStatusEnum, Reports } from "@prisma/client";
-import clsx from "clsx";
-import { LoaderCircle, MapPin, PhoneCall, PhoneOff } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+
+import "@livekit/components-styles";
+import { Badge } from "@/components/ui/badge";
 import { useServerAction } from "zsa-react";
 import emergencyCallAction, { changeCallStatusAction } from "./actions";
-import { useSession } from "next-auth/react";
-
-const callStatusState: { name: CallStatusEnum; description: string }[] = [
-  {
-    name: "Pending",
-    description:
-      "The emergency call is in the queue and has not yet been connected.",
-  },
-  {
-    name: "Connected",
-    description:
-      "The emergency call has been successfully connected with the authorities.",
-  },
-  {
-    name: "Disconnected",
-    description:
-      "The emergency call was connected but has been disconnected or dropped.",
-  },
-  {
-    name: "Failed",
-    description:
-      "The emergency call failed to connect, possibly due to network issues.",
-  },
-  {
-    name: "Canceled",
-    description:
-      "The emergency call was canceled before it could connect with the authorities.",
-  },
-];
+import supabase from "@/lib/storage";
+import CallStatusIdentifier from "./call-status-identifier";
+import { PhoneMissed } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const fetchLocationName = async (lat: number, lon: number) => {
   const res = await fetch(
@@ -53,11 +31,13 @@ const EmergencyCall = ({
   status: CallStatusEnum;
   callData: Reports;
 }) => {
-  const [tapCount, setTapCount] = useState<number>(0);
   const [callStatus, setCallStatus] = useState<CallStatusEnum>(status);
+  const [tapCount, setTapCount] = useState<number>(0);
   const [locationName, setLocationName] = useState<string>();
   const [coordinates, setCoordinates] = useState<string>();
-  const { data } = useSession();
+  const [data, setData] = useState(callData);
+
+  const session = useSession();
 
   const { execute, isError, error, isPending } =
     useServerAction(emergencyCallAction);
@@ -66,20 +46,21 @@ const EmergencyCall = ({
 
   const setCount = async () => {
     setTapCount(tapCount + 1);
-    if (tapCount > 1 && data?.user && locationName) {
+    if (tapCount > 1 && session.data?.user && locationName) {
       setCallStatus("Pending");
       setTapCount(0);
 
       try {
-        await execute({
+        const res = await execute({
           reportType: "Emergencies",
           problemType: "Emergency",
           callStatus: "Pending",
           location: locationName,
           gpsCoordinates: coordinates,
-          userId: data.user.id,
+          userId: session.data.user.id,
           attachments: [],
         });
+        setData(res[0] as Reports);
       } catch (error: any) {
         console.error(error);
       }
@@ -87,6 +68,7 @@ const EmergencyCall = ({
   };
 
   useEffect(() => {
+    if (data.callRoom) setCallStatus("Connected");
     if ("geolocation" in navigator) {
       // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
       navigator.geolocation.getCurrentPosition(({ coords }) => {
@@ -99,8 +81,42 @@ const EmergencyCall = ({
     }
   }, []);
 
+  useEffect(() => {
+    const channel = supabase
+      .channel("emergency-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "Reports",
+        },
+        async (payload) => {
+          const res = payload.new as Reports;
+          if (res.id !== data.id) return;
+          if (res.callRoom) {
+            setCallStatus("Connected");
+            return setData(res);
+          }
+          if (res.callStatus === "Canceled") {
+            setData({} as Reports);
+            setCallStatus("Canceled");
+            setTimeout(() => {
+              setCallStatus("None");
+            }, 2000);
+          }
+          setData(res);
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [data, setData]);
+
   const handleCancelCall = async () => {
     try {
+      setData({} as Reports);
       setCallStatus("Canceled");
       setTimeout(() => {
         setCallStatus("None");
@@ -130,35 +146,29 @@ const EmergencyCall = ({
       ) : (
         <div className=" bottom-0 w-full md:max-w-[25em] lg:max-w-[40em] fixed z-20 p-3 space-y-2 lg:hover:scale-105 duration-500 ease-in-out cursor-pointer">
           <Badge variant={"destructive"}>HIGH PRIORITY</Badge>
-          <div className="bg-background w-full h-full rounded-xl shadow-2xl flex items-center justify-between gap-2 p-3">
-            <div
-              className={clsx(
-                "bg-primary text-white w-[3em] h-[3em] rounded-full flex items-center justify-center flex-shrink-0",
-                { "animate-pulse": callStatus === "Pending" }
-              )}
-            >
-              <PhoneCall />
+          <div className="bg-background w-full h-full rounded-xl shadow-2xl flex flex-col items-center gap-2 p-3">
+            <div className="flex items-center justify-between w-full">
+              <CallStatusIdentifier
+                status={callStatus}
+                location={locationName}
+              />
+              <Button
+                onClick={handleCancelCall}
+                variant={"destructive"}
+                className=" rounded-full p-4 h-12 w-12"
+              >
+                <PhoneMissed className="shrink-0" />
+              </Button>
             </div>
-            {callStatusState.map(({ name, description }, index) =>
-              name === callStatus ? (
-                <div key={index} className="w-full">
-                  {locationName ? (
-                    <span className="text-xs flex items-start gap-1">
-                      <MapPin size={15} />
-                      {locationName}
-                    </span>
-                  ) : null}
-                  <h1 className=" font-semibold">{name}</h1>
-                  <p className="text-sm text-muted-foreground">{description}</p>
-                </div>
-              ) : null
-            )}
-            <button
-              onClick={handleCancelCall}
-              className="bg-red-500 text-white w-[3em] h-[3em] rounded-full flex items-center justify-center flex-shrink-0"
-            >
-              <PhoneOff />
-            </button>
+            {data.callRoom ? (
+              <div className=" bg-black text-white w-full rounded-xl">
+                <CallRoom
+                  room={data.callRoom as string}
+                  name={data.id}
+                  onLeave={handleCancelCall}
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       )}

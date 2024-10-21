@@ -5,12 +5,14 @@ import { z } from "zod";
 
 export const updateCurrentCallStatus = async (
   id: string,
-  newStatus: CallStatusEnum
+  newStatus: CallStatusEnum,
+  room?: string
 ) => {
   const data = await prisma.reports.update({
     where: { id },
     data: {
       callStatus: newStatus,
+      callRoom: room,
     },
   });
   return data;

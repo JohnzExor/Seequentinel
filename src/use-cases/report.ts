@@ -21,9 +21,10 @@ import { CallStatusEnum } from "@prisma/client";
 
 export const updateCurrentCallStatusUseCase = async (
   id: string,
-  newStatus: CallStatusEnum
+  newStatus: CallStatusEnum,
+  room?: string
 ) => {
-  const data = await updateCurrentCallStatus(id, newStatus);
+  const data = await updateCurrentCallStatus(id, newStatus, room);
   return data;
 };
 

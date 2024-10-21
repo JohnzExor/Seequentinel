@@ -15,7 +15,7 @@ const RealtimeMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
         center={posix}
         zoom={zoom}
         scrollWheelZoom={true}
-        className=" w-full h-screen z-10"
+        className=" w-full h-full z-10"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
