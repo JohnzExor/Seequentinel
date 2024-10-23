@@ -14,6 +14,12 @@ export const callStatusEnum = z
   .enum(["None", "Pending", "Connected", "Disconnected", "Canceled", "Failed"])
   .optional();
 
+export const updateLocationSchema = z.object({
+  id: z.string(),
+  gpsCoordinates: z.string(),
+  location: z.string(),
+});
+
 export const changeStatusSchema = z.object({
   documentId: z.string(),
   newStatus: statusEnum,

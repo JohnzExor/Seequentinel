@@ -1,10 +1,12 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import { getAllEmergenciesOnTheMapUseCase } from "@/use-cases/report";
 import { Reports } from "@prisma/client";
+import EmergencyList from "./emergency-list";
+import { DataProvider } from "./data-provider";
 import { LatLngExpression } from "leaflet";
 import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const RealtimeMap = dynamic(() => import("./realtime-map"), {
+const Map = dynamic(() => import("./map"), {
   ssr: false,
   loading: () => <Skeleton className=" h-full w-full" />,
 });
@@ -18,11 +20,14 @@ const page = async () => {
     const res = await getAllEmergenciesOnTheMapUseCase();
     data = res;
   } catch (error: any) {
-    console.error(error);
+    console.error(error.message);
   }
   return (
-    <div className=" -mx-4 -mb-4 mt-2 md:-m-10 flex flex-col items-center">
-      <RealtimeMap emergencies={data} posix={palsuLatlng} />
+    <div className="flex justify-center h-screen w-full -m-4 md:-m-10">
+      <DataProvider emergencyData={data}>
+        <EmergencyList />
+        <Map posix={palsuLatlng} />
+      </DataProvider>
     </div>
   );
 };

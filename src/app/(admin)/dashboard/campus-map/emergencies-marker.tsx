@@ -1,22 +1,16 @@
 "use client";
 
 import { Marker, Popup } from "react-leaflet";
+import { useContext } from "react";
 import { emergencyIcon } from "./icons";
-import { Reports } from "@prisma/client";
-import { useEffect } from "react";
+import { DataContext } from "./data-provider";
 
-const Emergencies = ({
-  emergencies,
-  onMarkerClick,
-}: {
-  emergencies: Reports[];
-  onMarkerClick: () => void;
-}) => {
-  useEffect(() => {}, []);
+const EmergenciesMarker = () => {
+  const { data } = useContext(DataContext);
 
   return (
     <>
-      {emergencies.map(({ gpsCoordinates }, index) => {
+      {data.map(({ gpsCoordinates }, index) => {
         // Ensure gpsCoordinates exist and convert them into [lat, lng] numbers
         const position: [number, number] | null = gpsCoordinates
           ? (gpsCoordinates
@@ -31,7 +25,7 @@ const Emergencies = ({
             key={index} // Add a unique key for each marker
             position={position} // Position expects an array [lat, lng]
             icon={emergencyIcon}
-            eventHandlers={{ click: () => onMarkerClick() }}
+            // eventHandlers={{ click: () => onMarkerClick() }}
           >
             <Popup>Emergency</Popup>
           </Marker>
@@ -41,4 +35,4 @@ const Emergencies = ({
   );
 };
 
-export default Emergencies;
+export default EmergenciesMarker;

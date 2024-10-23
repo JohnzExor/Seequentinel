@@ -1,4 +1,4 @@
-import L, { Icon } from "leaflet";
+import { Icon } from "leaflet";
 
 const universityIcon = new Icon({
   iconUrl: "/marker/university.svg",

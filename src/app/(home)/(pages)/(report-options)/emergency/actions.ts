@@ -1,15 +1,17 @@
 "use server";
 
-import { callStatusEnum, reportSchema } from "@/lib/zod";
+import { callStatusEnum, reportSchema, updateLocationSchema } from "@/lib/zod";
+import { getParticipantTokenUseCase } from "@/use-cases/live-kit";
 import {
   postReportUseCase,
   updateCurrentCallStatusUseCase,
+  updateEmergencyLocationUseCase,
 } from "@/use-cases/report";
 import { CallStatusEnum } from "@prisma/client";
 import { z } from "zod";
 import { createServerAction } from "zsa";
 
-const emergencyCallAction = createServerAction()
+export const emergencyCallAction = createServerAction()
   .input(reportSchema)
   .handler(async ({ input }) => {
     const data = await postReportUseCase(input);
@@ -26,4 +28,16 @@ export const changeCallStatusAction = createServerAction()
     return data;
   });
 
-export default emergencyCallAction;
+export const getParticipantTokenAction = createServerAction()
+  .input(z.object({ room: z.string(), name: z.string() }))
+  .handler(async ({ input }) => {
+    const data = await getParticipantTokenUseCase(input.room, input.name);
+    return data;
+  });
+
+export const updateEmergencyLocationAction = createServerAction()
+  .input(updateLocationSchema)
+  .handler(async ({ input }) => {
+    const data = await updateEmergencyLocationUseCase(input);
+    return data;
+  });

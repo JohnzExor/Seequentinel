@@ -1,174 +1,117 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import CallRoom from "./call-room";
-import { CallStatusEnum, Reports } from "@prisma/client";
-import { useState, useEffect } from "react";
-
-import "@livekit/components-styles";
-import { Badge } from "@/components/ui/badge";
-import { useServerAction } from "zsa-react";
-import emergencyCallAction, { changeCallStatusAction } from "./actions";
-import supabase from "@/lib/storage";
-import CallStatusIdentifier from "./call-status-identifier";
-import { PhoneMissed } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Reports } from "@prisma/client";
+import { useContext, useState } from "react";
+import CallRoom from "./call-room";
+import { useServerAction } from "zsa-react";
+import { changeCallStatusAction, emergencyCallAction } from "./actions";
+import { useSession } from "next-auth/react";
+import { PhoneCall, PhoneMissed } from "lucide-react";
+import { DataContext } from "./data-provider";
 
-const fetchLocationName = async (lat: number, lon: number) => {
-  const res = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
-  );
-
-  const { display_name } = await res.json();
-
-  return display_name;
-};
-
-const EmergencyCall = ({
-  status,
-  callData,
-}: {
-  status: CallStatusEnum;
-  callData: Reports;
-}) => {
-  const [callStatus, setCallStatus] = useState<CallStatusEnum>(status);
-  const [tapCount, setTapCount] = useState<number>(0);
-  const [locationName, setLocationName] = useState<string>();
-  const [coordinates, setCoordinates] = useState<string>();
-  const [data, setData] = useState(callData);
-
+const EmergencyCall = () => {
   const session = useSession();
+  const { data, setData } = useContext(DataContext);
+  const [tapCounter, setTapCounter] = useState<number>(0);
 
-  const { execute, isError, error, isPending } =
-    useServerAction(emergencyCallAction);
+  const { id, callRoom, userId } = data;
 
-  const cancelCall = useServerAction(changeCallStatusAction);
+  const emergency = useServerAction(emergencyCallAction);
+  const changeCallStatus = useServerAction(changeCallStatusAction);
 
-  const setCount = async () => {
-    setTapCount(tapCount + 1);
-    if (tapCount > 1 && session.data?.user && locationName) {
-      setCallStatus("Pending");
-      setTapCount(0);
-
-      try {
-        const res = await execute({
-          reportType: "Emergencies",
-          problemType: "Emergency",
-          callStatus: "Pending",
-          location: locationName,
-          gpsCoordinates: coordinates,
-          userId: session.data.user.id,
-          attachments: [],
-        });
-        setData(res[0] as Reports);
-      } catch (error: any) {
-        console.error(error);
-      }
+  const postEmergency = async () => {
+    try {
+      const res = await emergency.execute({
+        reportType: "Emergencies",
+        problemType: "Emergency",
+        callStatus: "Pending",
+        location: "none",
+        gpsCoordinates: "none",
+        userId: session.data?.user.id,
+        attachments: [],
+      });
+      setData(res[0] as Reports);
+      setTapCounter(0);
+    } catch (error: any) {
+      console.error(error.message);
     }
   };
 
-  useEffect(() => {
-    if (data.callRoom) setCallStatus("Connected");
-    if ("geolocation" in navigator) {
-      // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
-      navigator.geolocation.getCurrentPosition(({ coords }) => {
-        const { latitude, longitude } = coords;
-        setCoordinates(`${latitude},${longitude}`);
-        fetchLocationName(latitude, longitude).then((name) =>
-          setLocationName(name)
-        );
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel("emergency-db-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "Reports",
-        },
-        async (payload) => {
-          const res = payload.new as Reports;
-          if (res.id !== data.id) return;
-          if (res.callRoom) {
-            setCallStatus("Connected");
-            return setData(res);
-          }
-          if (res.callStatus === "Canceled") {
-            setData({} as Reports);
-            setCallStatus("Canceled");
-            setTimeout(() => {
-              setCallStatus("None");
-            }, 2000);
-          }
-          setData(res);
-        }
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [data, setData]);
-
-  const handleCancelCall = async () => {
+  const cancelCall = async () => {
     try {
       setData({} as Reports);
-      setCallStatus("Canceled");
-      setTimeout(() => {
-        setCallStatus("None");
-      }, 2000);
-      await cancelCall.execute({ id: callData.id, newStatus: "Canceled" });
+      await changeCallStatus.execute({ id, newStatus: "Canceled" });
     } catch (error: any) {
-      console.error(error);
+      console.error(error.message);
     }
   };
 
+  const handleTapCounter = () => {
+    if (tapCounter <= 1) {
+      return setTapCounter(tapCounter + 1);
+    }
+    postEmergency();
+  };
   return (
     <>
-      {callStatus === "None" ? (
-        <div className=" h-screen w-full z-20 flex flex-col gap-4 items-center justify-center fixed backdrop-blur-lg">
-          <div className=" bg-red-300 w-80 h-80 rounded-full flex items-center justify-center p-10 cursor-pointer shadow-2xl">
-            <button
-              onClick={setCount}
-              className=" bg-red-500 hover:bg-red-400 duration-500 ease-in-out w-full h-full rounded-full flex flex-col items-center justify-center text-white hover:scale-95"
-            >
-              <h1 className=" text-7xl font-bold">
-                {tapCount > 0 ? tapCount : "SOS"}
-              </h1>
-              <p className="text-sm">Tap 3 times</p>
-            </button>
+      {!id ? (
+        <div className=" h-screen w-full z-20 flex flex-col gap-4 items-center justify-center fixed bg-white dark:bg-black dark:bg-opacity-80 bg-opacity-80 backdrop-blur-md">
+          <div className="bg-background max-w-[30em] rounded-xl p-4 shadow-lg">
+            <h1 className=" text-xl font-medium">Are you in an emergency?</h1>
+            <p className=" text-muted-foreground text-sm">
+              Press the SOS button, your live location will be shared with the
+              nearest help centre and your emergency contacts
+            </p>
+            <div className=" rounded-xl bg-muted mt-4 h-[20em] flex items-center justify-center overflow-hidden">
+              <div className=" rounded-full p-6 bg-red-200 absolute w-[20em] h-[20em] animate-ping" />
+              <div className=" rounded-full p-6 bg-red-200 shadow-xl cursor-pointer w-[18em] h-[18em] absolute animate-pulse" />
+              <button
+                onClick={handleTapCounter}
+                disabled={emergency.isPending}
+                className=" rounded-full w-[15em] h-[15em] bg-red-500 disabled:bg-red-300 text-white z-20 hover:scale-105 duration-500 ease-in-out flex flex-col justify-center items-center"
+              >
+                <h1 className="font-bold text-7xl w-fit">
+                  {tapCounter > 0 ? (
+                    emergency.isPending ? (
+                      <PhoneCall size={80} className="animate-pulse" />
+                    ) : (
+                      tapCounter
+                    )
+                  ) : (
+                    "SOS"
+                  )}
+                </h1>
+                <span className="text-sm font-normal">Tap 3 times</span>
+              </button>
+            </div>
           </div>
         </div>
       ) : (
-        <div className=" bottom-0 w-full md:max-w-[25em] lg:max-w-[40em] fixed z-20 p-3 space-y-2 lg:hover:scale-105 duration-500 ease-in-out cursor-pointer">
-          <Badge variant={"destructive"}>HIGH PRIORITY</Badge>
-          <div className="bg-background w-full h-full rounded-xl shadow-2xl flex flex-col items-center gap-2 p-3">
-            <div className="flex items-center justify-between w-full">
-              <CallStatusIdentifier
-                status={callStatus}
-                location={locationName}
-              />
-              <Button
-                onClick={handleCancelCall}
-                variant={"destructive"}
-                className=" rounded-full p-4 h-12 w-12"
-              >
-                <PhoneMissed className="shrink-0" />
-              </Button>
-            </div>
-            {data.callRoom ? (
-              <div className=" bg-black text-white w-full rounded-xl">
-                <CallRoom
-                  room={data.callRoom as string}
-                  name={data.id}
-                  onLeave={handleCancelCall}
-                />
+        <div className="bottom-0 fixed z-20 p-4 w-full md:max-w-[25em] lg:max-w-[40em]">
+          <div className=" bg-background w-full p-3 rounded-xl shadow-xl md:hover:scale-105 duration-500 ease-in-out">
+            {callRoom && userId ? (
+              <div className="w-full">
+                <CallRoom room={callRoom} name={userId} onLeave={cancelCall} />
               </div>
-            ) : null}
+            ) : (
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h1 className=" font-semibold">Pending</h1>
+                  <p className="text-sm text-muted-foreground">
+                    The emergency call is in the queue and has not yet been
+                    connected.
+                  </p>
+                </div>
+                <Button
+                  onClick={cancelCall}
+                  variant={"destructive"}
+                  className=" rounded-full p-4 h-12 w-12"
+                >
+                  <PhoneMissed className="shrink-0" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}

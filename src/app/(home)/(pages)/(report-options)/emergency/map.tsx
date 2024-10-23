@@ -1,14 +1,13 @@
 "use client";
 
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { LatLngExpression, LatLngTuple } from "leaflet";
-
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import UserLocationMarker from "./user-location-marker";
 
 const zoom = 18;
 
-const RealtimeMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
+const Map = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
   return (
     <>
       <MapContainer
@@ -27,4 +26,4 @@ const RealtimeMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
   );
 };
 
-export default RealtimeMap;
+export default Map;

@@ -1,31 +1,23 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { CallStatusEnum, Reports } from "@prisma/client";
-import clsx from "clsx";
-import { LatLngExpression } from "leaflet";
-import { MapPin, PhoneCall, PhoneOff, X } from "lucide-react";
+import { useContext, useState } from "react";
+import { DataContext } from "./data-provider";
+import { MapPin, Phone, PhoneMissed } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { formatDistanceToNow } from "date-fns";
 import { useServerAction } from "zsa-react";
 import { changeCallStatusAction } from "./action";
+import CallRoom from "./call-room";
 
-const EmergencyList = ({
-  closeSidebar,
-  setSelectedPosition,
-  acceptedCall,
-  data,
-}: {
-  closeSidebar: () => void;
-  setSelectedPosition: (position: LatLngExpression) => void;
-  acceptedCall: (room: string) => void;
-
-  data: Reports[];
-}) => {
+const EmergencyList = () => {
+  const [callRoom, setCallRoom] = useState<string>();
+  const { data, setEndPoint } = useContext(DataContext);
   const { execute } = useServerAction(changeCallStatusAction);
 
   const acceptCall = async (id: string) => {
     try {
       await execute({ id, newStatus: "Connected", room: id });
-      acceptedCall(id);
+      setCallRoom(id);
     } catch (error: any) {
       console.error(error.message);
     }
@@ -33,79 +25,104 @@ const EmergencyList = ({
   const cancelCall = async (id: string) => {
     try {
       await execute({ id, newStatus: "Canceled" });
+      setCallRoom("");
     } catch (error: any) {
       console.error(error.message);
     }
   };
   return (
-    <div className="h-screen w-full md:max-w-[500px] fixed z-20 md:right-0 md:p-4">
-      <div className=" backdrop-blur-3xl h-full w-full rounded-xl shadow-2xl p-6">
-        <div className="flex items-center justify-between">
-          <h1 className=" text-2xl font-medium">All Emergencies</h1>
-          <button onClick={closeSidebar}>
-            <X />
-          </button>
+    <>
+      {callRoom ? (
+        <div className="bottom-0 fixed z-20 p-4 w-full md:max-w-[25em] lg:max-w-[40em]">
+          <div className=" bg-background w-full p-3 rounded-xl shadow-xl md:hover:scale-105 duration-500 ease-in-out">
+            <div className="w-full">
+              <CallRoom
+                room={callRoom}
+                name={"Emergency Team"}
+                onLeave={() => cancelCall(callRoom)}
+              />
+            </div>
+          </div>
         </div>
-        <div className="mt-4 space-y-4 overflow-y-auto h-[800px]">
-          {data.map(
-            (
-              { callStatus, location, createdAt, id, gpsCoordinates, callRoom },
-              index
-            ) => {
-              const position: [number, number] | null = gpsCoordinates
-                ? (gpsCoordinates
-                    .split(",")
-                    .map((coord) => parseFloat(coord.trim())) as [
-                    number,
-                    number
-                  ])
-                : null;
+      ) : (
+        <div className="z-20 fixed p-4 right-0 w-full max-w-[30em]">
+          <div className="bg-background p-3 rounded-xl shadow-xl">
+            <h1 className="text-xl font-medium">Emergencies</h1>
+            <p className="text-muted-foreground text-sm">
+              List of users that has been calling
+            </p>
+            <div className=" bg-muted rounded-xl p-3 mt-4 space-y-2">
+              <div className="text-sm pl-2">
+                Pending Calls
+                <span className="font-bold pl-2 text-primary">
+                  {data.length}
+                </span>
+              </div>
+              {data.map(
+                (
+                  {
+                    id,
+                    createdAt,
+                    location,
+                    callStatus,
+                    gpsCoordinates,
+                    userId,
+                  },
+                  index
+                ) => {
+                  const position: [number, number] | null = gpsCoordinates
+                    ? (gpsCoordinates
+                        .split(",")
+                        .map((coord) => parseFloat(coord.trim())) as [
+                        number,
+                        number
+                      ])
+                    : null;
 
-              if (!position || position.length !== 2) return null; // Handle invalid coordinates
-              return (
-                <div
-                  key={index}
-                  onClick={() => setSelectedPosition(position)}
-                  className=" border rounded-xl p-4 space-y-2 lg:hover:scale-95 duration-500 ease-in-out cursor-pointer shadow-md bg-background"
-                >
-                  <div className="flex items-center justify-between">
-                    <Badge variant={"destructive"}>HIGH PRIORITY</Badge>
-                    <Badge>{callStatus}</Badge>
-                  </div>
-                  <div className="w-full">
-                    <span className="text-xs flex items-start gap-1">
-                      <MapPin size={15} />
-                      {location}
-                    </span>
-                    <h1 className=" font-semibold">
-                      {createdAt.toLocaleString()}
-                    </h1>
-                    <p className="text-sm text-muted-foreground">Id: {id}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => acceptCall(id)}
-                      className={clsx(
-                        "bg-primary text-white w-[3em] h-[3em] rounded-full flex items-center justify-center flex-shrink-0",
-                        { "animate-pulse": callStatus === "Pending" }
-                      )}
+                  if (!position || position.length !== 2) return null;
+                  return (
+                    <div
+                      onClick={() => setEndPoint(position)}
+                      key={index}
+                      className=" bg-background rounded-xl p-4 space-y-2 md:hover:scale-105 duration-500 ease-in-out"
                     >
-                      <PhoneCall />
-                    </button>
-                    <button
-                      onClick={() => cancelCall(id)}
-                      className="bg-red-500 text-white w-[3em] h-[3em] rounded-full flex items-center justify-center flex-shrink-0"
-                    >
-                      <PhoneOff />
-                    </button>
-                  </div>
-                </div>
-              );
-            }
-          )}
+                      <div className="text-sm">
+                        <div className="text-muted-foreground flex items-start gap-1">
+                          <MapPin size={15} />
+                          <span>{location}</span>
+                        </div>
+                        <h1>
+                          {formatDistanceToNow(new Date(createdAt), {
+                            addSuffix: true,
+                          })}
+                        </h1>
+                      </div>
+
+                      <div className="flex items-center w-full gap-2">
+                        <Button
+                          onClick={() => acceptCall(id)}
+                          className=" rounded-full h-[3em] w-full space-x-2 animate-pulse duration-500"
+                        >
+                          <Phone size={25} className="flex-shrink-0" />
+                          <span>Answer Call</span>
+                        </Button>
+                        <Button
+                          onClick={() => cancelCall(id)}
+                          variant={"destructive"}
+                          className=" rounded-full h-[3em] w-[3em]"
+                        >
+                          <PhoneMissed size={25} className="flex-shrink-0" />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

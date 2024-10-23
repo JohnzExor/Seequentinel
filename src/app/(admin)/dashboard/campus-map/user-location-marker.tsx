@@ -1,22 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
-import L, { LatLngExpression } from "leaflet";
-import { userIcon } from "./icons";
+import L from "leaflet";
+import { userIcon } from "../campus-map/icons";
+import { DataContext } from "./data-provider";
 
-const UserLocationMarker = ({
-  setUserPosition,
-}: {
-  setUserPosition: (position: LatLngExpression) => void;
-}) => {
-  const [position, setPosition] = useState<LatLngExpression>([0, 0]);
+const UserLocationMarker = () => {
+  const { startPoint, setStartPoint } = useContext(DataContext);
   const [bbox, setBbox] = useState<string[]>([]);
 
   const map = useMap();
 
   useEffect(() => {
     map.locate().on("locationfound", (e) => {
-      setPosition(e.latlng);
-      setUserPosition(e.latlng);
+      setStartPoint(e.latlng);
       // map.flyTo(e.latlng, map.getZoom());
       const radius = e.accuracy;
       const circle = L.circle(e.latlng, radius);
@@ -26,7 +22,7 @@ const UserLocationMarker = ({
   }, [map]);
 
   return (
-    <Marker position={position} icon={userIcon}>
+    <Marker position={startPoint} icon={userIcon}>
       <Popup>
         You are here. <br />
         Map bbox: <br />

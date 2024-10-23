@@ -1,36 +1,25 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { LatLngExpression } from "leaflet";
+import CurrentLocation from "./current-location";
+import EmergencyCall from "./emergency-call";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
-import EmergencyCall from "./emergency-call";
-import { CallStatusEnum, Reports } from "@prisma/client";
-import { getCurrentCallStatusUseCase } from "@/use-cases/report";
+import { DataProvider } from "./data-provider";
 
-const RealtimeMap = dynamic(() => import("./realtime-map"), {
+const Map = dynamic(() => import("./map"), {
   ssr: false,
   loading: () => <Skeleton className=" h-full w-full" />,
 });
 
-const page = async () => {
-  let currentStatus: CallStatusEnum = "None";
-  let data: Reports = {} as Reports;
+const palsuLatlng: LatLngExpression = [9.7769525, 118.7341474];
 
-  try {
-    const session = await getServerSession(authOptions);
-    if (session?.user) {
-      const res = await getCurrentCallStatusUseCase(session?.user.id);
-      if (res?.callStatus) {
-        currentStatus = res.callStatus;
-        data = res;
-      }
-    }
-  } catch (error: any) {
-    console.error(error.message);
-  }
+const page = async () => {
   return (
-    <div className="w-full flex flex-col items-center justify-center h-screen">
-      <EmergencyCall status={currentStatus} callData={data} />
-      <RealtimeMap posix={[9.776904, 118.733746]} />
+    <div className="w-full h-screen flex flex-col justify-center items-center">
+      <DataProvider>
+        <CurrentLocation />
+        <EmergencyCall />
+        <Map posix={palsuLatlng} />
+      </DataProvider>
     </div>
   );
 };

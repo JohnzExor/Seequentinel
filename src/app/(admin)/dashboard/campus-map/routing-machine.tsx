@@ -1,11 +1,14 @@
 import L, { LatLngExpression } from "leaflet";
 import "leaflet-routing-machine";
 import "leaflet/dist/leaflet.css";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useMap } from "react-leaflet";
-import { pinIcon } from "./icons";
+import { pinIcon } from "../campus-map/icons";
+import { DataContext } from "./data-provider";
 
-const RoutingMachine = ({ waypoints }: { waypoints: LatLngExpression[] }) => {
+const RoutingMachine = () => {
+  const { startPoint, endPoint } = useContext(DataContext);
+  const waypoints: LatLngExpression[] = [startPoint, endPoint];
   const map = useMap();
   useEffect(() => {
     const waypointsWithLatLng = waypoints.map((point) => L.latLng(point));

@@ -5,19 +5,31 @@ import {
   FindAllEmergenciesOnTheMap,
   FindAllReports,
   FindAllUserReports,
-  findCurrentCallStatus,
   FindMonthlyReportsCounts,
   FindReportById,
   FindReportsByStatus,
   FindReportTypeReports,
   updateCurrentCallStatus,
+  updateEmergencyLocation,
   UpdateReportAssignee,
   UpdateReportStatus,
 } from "@/data-access/report";
-import { reportSchema, reportTypeEnum, statusEnum } from "@/lib/zod";
+import {
+  reportSchema,
+  reportTypeEnum,
+  statusEnum,
+  updateLocationSchema,
+} from "@/lib/zod";
 import { z } from "zod";
 import { ReportResponse } from "./send-email";
 import { CallStatusEnum } from "@prisma/client";
+
+export const updateEmergencyLocationUseCase = async (
+  values: z.infer<typeof updateLocationSchema>
+) => {
+  const data = await updateEmergencyLocation(values);
+  return data;
+};
 
 export const updateCurrentCallStatusUseCase = async (
   id: string,
@@ -25,11 +37,6 @@ export const updateCurrentCallStatusUseCase = async (
   room?: string
 ) => {
   const data = await updateCurrentCallStatus(id, newStatus, room);
-  return data;
-};
-
-export const getCurrentCallStatusUseCase = async (userId: string) => {
-  const data = await findCurrentCallStatus(userId);
   return data;
 };
 
