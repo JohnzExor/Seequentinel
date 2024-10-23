@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AudioConference,
   ConnectionState,
   ControlBar,
   LiveKitRoom,
@@ -49,13 +50,7 @@ const CallRoom = ({
     >
       <ConnectionState className="text-center py-2 uppercase" />
       <RoomAudioRenderer />
-      <ControlBar
-        variation={"minimal"}
-        controls={{
-          camera: false,
-          screenShare: false,
-        }}
-      />
+      <AudioConference />
     </LiveKitRoom>
   );
 };

@@ -57,17 +57,19 @@ const CurrentLocation = () => {
   }, [coordinates, locationName, data.id, execute]);
 
   return (
-    <div className="fixed z-30 top-0 p-4">
-      <div className=" bg-background p-3 rounded-xl text-sm shadow-xl md:hover:scale-105 duration-500 ease-in-out">
-        {locationName ? (
-          <div className="flex gap-2 items-center">
-            <MapPin size={15} />
-            <span>{locationName}</span>
-          </div>
-        ) : (
-          <Locate size={15} className=" animate-pulse" />
-        )}
-      </div>
+    <div>
+      <h1 className="font-medium">Your current location</h1>
+      {locationName ? (
+        <div className="flex items-center gap-1 text-sm text-primary">
+          <MapPin size={20} />
+          <span>{locationName}</span>
+        </div>
+      ) : (
+        <div className="flex items-center gap-1 animate-pulse  text-sm text-primary">
+          <Locate size={20} />
+          <span>Getting your location..</span>
+        </div>
+      )}
     </div>
   );
 };

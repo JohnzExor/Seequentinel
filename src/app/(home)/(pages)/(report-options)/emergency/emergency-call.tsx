@@ -56,62 +56,61 @@ const EmergencyCall = () => {
   return (
     <>
       {!id ? (
-        <div className=" h-screen w-full z-20 flex flex-col gap-4 items-center justify-center fixed bg-white dark:bg-black dark:bg-opacity-80 bg-opacity-80 backdrop-blur-md">
-          <div className="bg-background max-w-[30em] rounded-xl p-4 shadow-lg">
-            <h1 className=" text-xl font-medium">Are you in an emergency?</h1>
-            <p className=" text-muted-foreground text-sm">
-              Press the SOS button, your live location will be shared with the
-              nearest help centre and your emergency contacts
-            </p>
-            <div className=" rounded-xl bg-muted mt-4 h-[20em] flex items-center justify-center overflow-hidden">
-              <div className=" rounded-full p-6 bg-red-200 absolute w-[20em] h-[20em] animate-ping" />
-              <div className=" rounded-full p-6 bg-red-200 shadow-xl cursor-pointer w-[18em] h-[18em] absolute animate-pulse" />
-              <button
-                onClick={handleTapCounter}
-                disabled={emergency.isPending}
-                className=" rounded-full w-[15em] h-[15em] bg-red-500 disabled:bg-red-300 text-white z-20 hover:scale-105 duration-500 ease-in-out flex flex-col justify-center items-center"
-              >
-                <h1 className="font-bold text-7xl w-fit">
-                  {tapCounter > 0 ? (
-                    emergency.isPending ? (
-                      <PhoneCall size={80} className="animate-pulse" />
-                    ) : (
-                      tapCounter
-                    )
+        <div className="h-[17em] flex justify-center items-center relative">
+          <div className="flex flex-col justify-center items-center">
+            <div className=" absolute rounded-full bg-red-100 h-[15em] w-[15em] animate-pulse shadow-xl" />
+            <div className=" absolute rounded-full bg-red-300 h-[12em] w-[12em] animate-pulse shadow-xl" />
+            <button
+              onClick={handleTapCounter}
+              disabled={emergency.isPending}
+              className="flex flex-col justify-center items-center rounded-full bg-red-500 text-white h-[10em] w-[10em] z-20 shadow-xl hover:scale-105 duration-500 ease-out"
+            >
+              <span className="text-5xl font-bold">
+                {tapCounter > 0 ? (
+                  emergency.isPending ? (
+                    <PhoneCall size={80} className="animate-pulse" />
                   ) : (
-                    "SOS"
-                  )}
-                </h1>
-                <span className="text-sm font-normal">Tap 3 times</span>
-              </button>
-            </div>
+                    tapCounter
+                  )
+                ) : (
+                  "SOS"
+                )}
+              </span>
+              <span className="text-sm">tap 3 times</span>
+            </button>
           </div>
         </div>
       ) : (
-        <div className="bottom-0 fixed z-20 p-4 w-full md:max-w-[25em] lg:max-w-[40em]">
-          <div className=" bg-background w-full p-3 rounded-xl shadow-xl md:hover:scale-105 duration-500 ease-in-out">
-            {callRoom && userId ? (
-              <div className="w-full">
-                <CallRoom room={callRoom} name={userId} onLeave={cancelCall} />
-              </div>
-            ) : (
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h1 className=" font-semibold">Pending</h1>
-                  <p className="text-sm text-muted-foreground">
-                    The emergency call is in the queue and has not yet been
-                    connected.
-                  </p>
+        <div className="flex justify-center">
+          <div className="z-20 p-4 w-full md:max-w-[25em] lg:max-w-[40em]">
+            <div className=" bg-background w-full p-3 rounded-xl shadow-xl md:hover:scale-105 duration-500 ease-in-out">
+              {callRoom && userId ? (
+                <div className="w-full">
+                  <CallRoom
+                    room={callRoom}
+                    name={userId}
+                    onLeave={cancelCall}
+                  />
                 </div>
-                <Button
-                  onClick={cancelCall}
-                  variant={"destructive"}
-                  className=" rounded-full p-4 h-12 w-12"
-                >
-                  <PhoneMissed className="shrink-0" />
-                </Button>
-              </div>
-            )}
+              ) : (
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h1 className=" font-semibold">Pending</h1>
+                    <p className="text-sm text-muted-foreground">
+                      The emergency call is in the queue and has not yet been
+                      connected.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={cancelCall}
+                    variant={"destructive"}
+                    className=" rounded-full p-4 h-12 w-12"
+                  >
+                    <PhoneMissed className="shrink-0" />
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
