@@ -52,9 +52,16 @@ export const DataProvider = ({
         async (payload) => {
           const res = payload.new as Reports;
           setData((prevData) => {
+            const findIndex = data.findIndex((prev) => {
+              prev.id === res.id;
+            });
             if (res.callStatus === "Canceled") {
               return prevData.filter(({ id }) => id !== res.id);
             }
+            if (findIndex) {
+              data[findIndex] === res;
+            }
+
             return [...prevData, res];
           });
         }

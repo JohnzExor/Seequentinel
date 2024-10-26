@@ -27,7 +27,6 @@ const EmergencyList = ({
     try {
       setActiveCallId(id); // Set the active call ID
       selectPeerId(peerId);
-      await execute({ id, newStatus: "Connected" });
     } catch (error: any) {
       console.error(error.message);
     }
