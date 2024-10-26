@@ -69,7 +69,7 @@ model Reports {
 
   // Emergency-specific fields
   callStatus     CallStatusEnum? @default(None)
-  callRoom       String?
+  peerId         String?
   gpsCoordinates String? // For storing GPS coordinates as a string (latitude, longitude)
 
   // Shared media/evidence field

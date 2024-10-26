@@ -1,11 +1,11 @@
 import { LatLngExpression } from "leaflet";
 import CurrentLocation from "./current-location";
-import EmergencyCall from "./emergency-call";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataProvider } from "./data-provider";
 import PageDetails from "./page-details";
 import { Separator } from "@/components/ui/separator";
+import EmergencyCall from "./emergency-call";
 
 const Map = dynamic(() => import("./map"), {
   ssr: false,
@@ -22,7 +22,7 @@ const page = async () => {
       <DataProvider>
         <EmergencyCall />
         <CurrentLocation />
-        <div className="h-full max-h-[20em] md:max-h-[40em] w-full">
+        <div className="h-full max-h-[20em] md:max-h-[40em] w-full pb-6">
           <Map posix={palsuLatlng} />
         </div>
       </DataProvider>

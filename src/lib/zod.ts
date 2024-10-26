@@ -47,6 +47,7 @@ export const reportSchema = z.object({
 
   // Emergency-specific fields
   callStatus: callStatusEnum,
+  peerId: z.string().optional(),
   gpsCoordinates: z.string().optional(),
 
   // Shared media/evidence field

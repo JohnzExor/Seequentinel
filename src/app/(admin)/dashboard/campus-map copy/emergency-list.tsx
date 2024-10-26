@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { DataContext } from "./data-provider";
 import { MapPin, PhoneCall } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
@@ -12,22 +12,15 @@ import { changeCallStatusAction } from "./actions";
 
 const peer = initializePeer();
 
-const EmergencyList = ({
-  selectPeerId,
-  children,
-}: {
-  selectPeerId: (peerId: string) => void;
-  children: ReactNode;
-}) => {
+const EmergencyList = () => {
   const { data, setEndPoint } = useContext(DataContext);
   const [activeCallId, setActiveCallId] = useState<string | null>(null); // Use a call ID instead of peerId
   const { execute } = useServerAction(changeCallStatusAction);
 
   const acceptCall = async (id: string, peerId: string) => {
     try {
+      // await execute({ id, newStatus: "Connected" });
       setActiveCallId(id); // Set the active call ID
-      selectPeerId(peerId);
-      await execute({ id, newStatus: "Connected" });
     } catch (error: any) {
       console.error(error.message);
     }
@@ -89,7 +82,11 @@ const EmergencyList = ({
               </div>
 
               {activeCallId === id ? ( // Compare activeCallId with the current call ID
-                children
+                <PeerAudioCall
+                  selectedPeerId={peerId as string}
+                  peer={peer}
+                  endCallStatus={() => cancelCall(id)}
+                />
               ) : (
                 <div className="flex items-center gap-3">
                   <Button

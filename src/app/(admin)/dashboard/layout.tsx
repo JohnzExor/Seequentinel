@@ -18,7 +18,7 @@ export default async function RootLayout({
       <SideNavigations session={session} />
       <main className="md:overflow-y-auto w-full">
         <Header />
-        <div className=" p-4 md:p-10">{children}</div>
+        {children}
       </main>
     </div>
   );

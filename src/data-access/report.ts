@@ -25,14 +25,12 @@ export const updateEmergencyLocation = async ({
 
 export const updateCurrentCallStatus = async (
   id: string,
-  newStatus: CallStatusEnum,
-  room?: string
+  newStatus: CallStatusEnum
 ) => {
   const data = await prisma.reports.update({
     where: { id },
     data: {
       callStatus: newStatus,
-      callRoom: room,
     },
   });
   return data;

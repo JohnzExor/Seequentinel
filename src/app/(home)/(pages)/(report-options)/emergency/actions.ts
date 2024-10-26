@@ -1,7 +1,6 @@
 "use server";
 
 import { callStatusEnum, reportSchema, updateLocationSchema } from "@/lib/zod";
-import { getParticipantTokenUseCase } from "@/use-cases/live-kit";
 import {
   postReportUseCase,
   updateCurrentCallStatusUseCase,
@@ -25,13 +24,6 @@ export const changeCallStatusAction = createServerAction()
       input.id,
       input.newStatus as CallStatusEnum
     );
-    return data;
-  });
-
-export const getParticipantTokenAction = createServerAction()
-  .input(z.object({ room: z.string(), name: z.string() }))
-  .handler(async ({ input }) => {
-    const data = await getParticipantTokenUseCase(input.room, input.name);
     return data;
   });
 

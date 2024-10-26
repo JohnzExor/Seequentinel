@@ -2,23 +2,31 @@
 
 import { Button } from "@/components/ui/button";
 import { Reports } from "@prisma/client";
-import { useContext, useState } from "react";
-import CallRoom from "./call-room";
+import { useContext, useEffect, useState } from "react";
 import { useServerAction } from "zsa-react";
 import { changeCallStatusAction, emergencyCallAction } from "./actions";
 import { useSession } from "next-auth/react";
 import { PhoneCall, PhoneMissed } from "lucide-react";
 import { DataContext } from "./data-provider";
+import { initializePeer } from "@/lib/peer";
+import PeerAudioCall from "./peer-audio-call";
+
+const peer = initializePeer();
 
 const EmergencyCall = () => {
   const session = useSession();
   const { data, setData } = useContext(DataContext);
+  const [peerId, setPeerId] = useState<string>();
   const [tapCounter, setTapCounter] = useState<number>(0);
 
-  const { id, callRoom, userId } = data;
+  const { id } = data;
 
   const emergency = useServerAction(emergencyCallAction);
   const changeCallStatus = useServerAction(changeCallStatusAction);
+
+  useEffect(() => {
+    peer.on("open", setPeerId);
+  }, []);
 
   const postEmergency = async () => {
     try {
@@ -28,6 +36,7 @@ const EmergencyCall = () => {
         callStatus: "Pending",
         location: "none",
         gpsCoordinates: "none",
+        peerId: peerId,
         userId: session.data?.user.id,
         attachments: [],
       });
@@ -62,8 +71,8 @@ const EmergencyCall = () => {
             <div className=" absolute rounded-full bg-red-300 h-[12em] w-[12em] animate-pulse shadow-xl" />
             <button
               onClick={handleTapCounter}
-              disabled={emergency.isPending}
-              className="flex flex-col justify-center items-center rounded-full bg-red-500 text-white h-[10em] w-[10em] z-20 shadow-xl hover:scale-105 duration-500 ease-out"
+              disabled={emergency.isPending || !peerId}
+              className="flex flex-col justify-center items-center rounded-full bg-red-500 disabled:bg-red-300  text-white h-[10em] w-[10em] z-20 shadow-xl hover:scale-105 duration-500 ease-out"
             >
               <span className="text-5xl font-bold">
                 {tapCounter > 0 ? (
@@ -84,32 +93,10 @@ const EmergencyCall = () => {
         <div className="flex justify-center">
           <div className="z-20 p-4 w-full md:max-w-[25em] lg:max-w-[40em]">
             <div className=" bg-background w-full p-3 rounded-xl shadow-xl md:hover:scale-105 duration-500 ease-in-out">
-              {callRoom && userId ? (
-                <div className="w-full">
-                  <CallRoom
-                    room={callRoom}
-                    name={userId}
-                    onLeave={cancelCall}
-                  />
-                </div>
-              ) : (
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h1 className=" font-semibold">Pending</h1>
-                    <p className="text-sm text-muted-foreground">
-                      The emergency call is in the queue and has not yet been
-                      connected.
-                    </p>
-                  </div>
-                  <Button
-                    onClick={cancelCall}
-                    variant={"destructive"}
-                    className=" rounded-full p-4 h-12 w-12"
-                  >
-                    <PhoneMissed className="shrink-0" />
-                  </Button>
-                </div>
-              )}
+              <PeerAudioCall peer={peer} endCallStatus={cancelCall} />
+              <span className="text-xs text-muted-foreground pl-4">
+                Peer ID: {peerId}
+              </span>
             </div>
           </div>
         </div>

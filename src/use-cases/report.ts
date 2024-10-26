@@ -33,10 +33,9 @@ export const updateEmergencyLocationUseCase = async (
 
 export const updateCurrentCallStatusUseCase = async (
   id: string,
-  newStatus: CallStatusEnum,
-  room?: string
+  newStatus: CallStatusEnum
 ) => {
-  const data = await updateCurrentCallStatus(id, newStatus, room);
+  const data = await updateCurrentCallStatus(id, newStatus);
   return data;
 };
 

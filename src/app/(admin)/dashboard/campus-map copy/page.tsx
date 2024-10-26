@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Reports } from "@prisma/client";
 import { getAllEmergenciesOnTheMapUseCase } from "@/use-cases/report";
 import { LatLngExpression } from "leaflet";
-import PeerAudioCall from "./peer-audio-call";
 
 const Map = dynamic(() => import("./map"), {
   ssr: false,
@@ -32,7 +31,7 @@ const page = async () => {
       <Separator className=" w-full" />
       <DataProvider emergencyData={data}>
         <div className="flex flex-col md:flex-row items-start gap-4 h-full">
-          <PeerAudioCall />
+          <EmergencyList />
           <div className="h-full max-h-[20em] md:max-h-[50em] w-full pb-6">
             <Map posix={palsuLatlng} />
           </div>

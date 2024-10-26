@@ -2,8 +2,8 @@
 import { Locate, MapPin } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useServerAction } from "zsa-react";
-import { updateEmergencyLocationAction } from "./actions";
 import { DataContext } from "./data-provider";
+import { updateEmergencyLocationAction } from "./actions";
 
 const fetchLocationName = async (lat: number, lon: number) => {
   const res = await fetch(
