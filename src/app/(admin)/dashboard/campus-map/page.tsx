@@ -27,11 +27,11 @@ const page = async () => {
   }
 
   return (
-    <div className="w-full h-screen p-4 md:p-6 space-y-4">
+    <div className="w-full h-screen space-y-4">
       <PageDetails />
       <Separator className=" w-full" />
       <DataProvider emergencyData={data}>
-        <div className="flex flex-col md:flex-row items-start gap-4 h-full">
+        <div className="flex flex-col lg:flex-row items-start gap-4 h-full">
           <PeerAudioCall />
           <div className="h-full max-h-[20em] md:max-h-[50em] w-full pb-6">
             <Map posix={palsuLatlng} />

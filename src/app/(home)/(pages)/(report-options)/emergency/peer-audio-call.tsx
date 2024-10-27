@@ -93,10 +93,10 @@ const PeerAudioCall = ({
   }, [currentCall]);
 
   const endCall = () => {
+    endCallStatus();
     if (currentCall) {
       currentCall.close();
       setIsRemoteConnected(false);
-      endCallStatus();
       if (remoteAudioRef.current) remoteAudioRef.current.srcObject = null;
     }
   };
@@ -141,8 +141,7 @@ const PeerAudioCall = ({
               <MicOff className="flex-shrink-0" />
             ) : (
               <Mic className="flex-shrink-0" />
-            )}{" "}
-            {/* Conditional rendering of icons */}
+            )}
           </Button>
           <Button
             onClick={endCall}

@@ -63,45 +63,47 @@ const EmergencyCall = () => {
     postEmergency();
   };
   return (
-    <>
-      {!id ? (
-        <div className="h-[17em] flex justify-center items-center relative">
-          <div className="flex flex-col justify-center items-center">
-            <div className=" absolute rounded-full bg-red-100 h-[15em] w-[15em] animate-pulse shadow-xl" />
-            <div className=" absolute rounded-full bg-red-300 h-[12em] w-[12em] animate-pulse shadow-xl" />
-            <button
-              onClick={handleTapCounter}
-              disabled={emergency.isPending || !peerId}
-              className="flex flex-col justify-center items-center rounded-full bg-red-500 disabled:bg-red-300  text-white h-[10em] w-[10em] z-20 shadow-xl hover:scale-105 duration-500 ease-out"
-            >
-              <span className="text-5xl font-bold">
-                {tapCounter > 0 ? (
-                  emergency.isPending ? (
-                    <PhoneCall size={80} className="animate-pulse" />
+    <div className="bg-muted rounded-xl p-4">
+      <h1 className="text-2xl font-semibold">Emergency Call</h1>
+      <p className="text-sm text-muted-foreground">
+        The emergency team will answer your call
+      </p>
+      <div className=" bg-background rounded-xl p-4 mt-4">
+        {!id ? (
+          <div className="h-[17em] flex justify-center items-center relative">
+            <div className="flex flex-col justify-center items-center">
+              <div className=" absolute rounded-full bg-red-100 h-[15em] w-[15em] animate-pulse shadow-xl" />
+              <div className=" absolute rounded-full bg-red-300 h-[12em] w-[12em] animate-pulse shadow-xl" />
+              <button
+                onClick={handleTapCounter}
+                disabled={emergency.isPending || !peerId}
+                className="flex flex-col justify-center items-center rounded-full bg-red-500 disabled:bg-red-300  text-white h-[10em] w-[10em] z-20 shadow-xl hover:scale-105 duration-500 ease-out"
+              >
+                <span className="text-5xl font-bold">
+                  {tapCounter > 0 ? (
+                    emergency.isPending ? (
+                      <PhoneCall size={80} className="animate-pulse" />
+                    ) : (
+                      tapCounter
+                    )
                   ) : (
-                    tapCounter
-                  )
-                ) : (
-                  "SOS"
-                )}
-              </span>
-              <span className="text-sm">tap 3 times</span>
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex justify-center">
-          <div className="z-20 p-4 w-full md:max-w-[25em] lg:max-w-[40em]">
-            <div className=" bg-background w-full p-3 rounded-xl shadow-xl md:hover:scale-105 duration-500 ease-in-out">
-              <PeerAudioCall peer={peer} endCallStatus={cancelCall} />
-              <span className="text-xs text-muted-foreground pl-4">
-                Peer ID: {peerId}
-              </span>
+                    "SOS"
+                  )}
+                </span>
+                <span className="text-sm">tap 3 times</span>
+              </button>
             </div>
           </div>
-        </div>
-      )}
-    </>
+        ) : (
+          <>
+            <PeerAudioCall peer={peer} endCallStatus={cancelCall} />
+            <span className="text-xs text-muted-foreground pl-4">
+              Peer ID: {peerId}
+            </span>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 

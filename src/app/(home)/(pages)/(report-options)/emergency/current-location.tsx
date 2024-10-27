@@ -6,13 +6,17 @@ import { DataContext } from "./data-provider";
 import { updateEmergencyLocationAction } from "./actions";
 
 const fetchLocationName = async (lat: number, lon: number) => {
-  const res = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
-  );
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+    );
 
-  const { display_name } = await res.json();
+    const { display_name } = await res.json();
 
-  return display_name;
+    return display_name;
+  } catch (error: any) {
+    console.error(error.message);
+  }
 };
 
 const CurrentLocation = () => {
