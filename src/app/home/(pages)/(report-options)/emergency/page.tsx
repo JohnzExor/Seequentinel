@@ -1,8 +1,6 @@
 import { LatLngExpression } from "leaflet";
-import CurrentLocation from "./current-location";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DataProvider } from "./data-provider";
 import PageDetails from "./page-details";
 import { Separator } from "@/components/ui/separator";
 import EmergencyCall from "./emergency-call";
@@ -17,15 +15,12 @@ const palsuLatlng: LatLngExpression = [9.7769525, 118.7341474];
 const page = async () => {
   return (
     <div className="w-full h-screen p-4 md:p-6 space-y-4">
-      <PageDetails />
-      <Separator className=" w-full" />
-      <DataProvider>
+      <div className="flex flex-col xl:flex-row xl:h-full gap-4 pb-4 xl:pb-0">
         <EmergencyCall />
-        <CurrentLocation />
-        <div className="h-full max-h-[20em] md:max-h-[40em] w-full pb-6">
+        <div className="h-[20em] xl:h-full w-full relative">
           <Map posix={palsuLatlng} />
         </div>
-      </DataProvider>
+      </div>
     </div>
   );
 };

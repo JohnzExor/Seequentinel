@@ -1,72 +1,18 @@
 "use client";
 import { Locate, MapPin } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
-import { useServerAction } from "zsa-react";
-import { DataContext } from "./data-provider";
-import { updateEmergencyLocationAction } from "./actions";
-
-const fetchLocationName = async (lat: number, lon: number) => {
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
-    );
-
-    const { display_name } = await res.json();
-
-    return display_name;
-  } catch (error: any) {
-    console.error(error.message);
-  }
-};
+import { useContext } from "react";
+import { EmergencyContext } from "@/app/home/emergency-data-provider";
 
 const CurrentLocation = () => {
-  const [coordinates, setCoordinates] = useState<string>();
-  const [locationName, setLocationName] = useState<string>();
-
-  const { execute } = useServerAction(updateEmergencyLocationAction);
-  const { data } = useContext(DataContext);
-
-  useEffect(() => {
-    // Execute the action when coordinates and locationName are available
-    const updateLocation = async () => {
-      if (data.id && coordinates && locationName) {
-        await execute({
-          id: data.id,
-          gpsCoordinates: coordinates,
-          location: locationName,
-        });
-      }
-    };
-
-    updateLocation(); // Call the update function
-
-    if (!coordinates && !locationName) {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          async ({ coords }) => {
-            const { latitude, longitude } = coords;
-            setCoordinates(`${latitude},${longitude}`);
-            const name = await fetchLocationName(latitude, longitude);
-            setLocationName(name);
-
-            // Execute the action only if coordinates and locationName are both set
-          },
-          (error) => {
-            console.error("Geolocation error:", error);
-          },
-          { enableHighAccuracy: true }
-        );
-      }
-    }
-  }, [coordinates, locationName, data.id, execute]);
+  const { data } = useContext(EmergencyContext);
 
   return (
     <div>
       <h1 className="font-medium">Your current location</h1>
-      {locationName ? (
+      {data.location ? (
         <div className="flex items-center gap-1 text-sm text-primary">
           <MapPin size={20} />
-          <span>{locationName}</span>
+          <span>{data.location}</span>
         </div>
       ) : (
         <div className="flex items-center gap-1 animate-pulse  text-sm text-primary">

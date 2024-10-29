@@ -1,19 +1,15 @@
 "use client";
 
+import { EmergencyContext } from "@/app/home/emergency-data-provider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
-import { Mic, MicOff, PhoneMissed } from "lucide-react"; // Import MicOff
-import Peer from "peerjs";
-import React, { useEffect, useRef, useState } from "react";
+import { Mic, MicOff, PhoneMissed, User, UserRoundCog } from "lucide-react"; // Import MicOff
+import React, { useContext, useEffect, useRef, useState } from "react";
 
-const PeerAudioCall = ({
-  peer,
-  endCallStatus,
-}: {
-  peer: Peer;
-  endCallStatus: () => void;
-}) => {
-  const [peerId, setPeerId] = useState<string>();
+const PeerAudioCall = ({ endCallStatus }: { endCallStatus: () => void }) => {
+  const { peer, location, peerId } = useContext(EmergencyContext);
+
   const [mediaStream, setMediaStream] = useState<MediaStream>();
   const [localAudioActive, setLocalAudioActive] = useState(false);
   const [remoteAudioActive, setRemoteAudioActive] = useState(false);
@@ -52,10 +48,6 @@ const PeerAudioCall = ({
       setMediaStream(stream);
       if (audioRef.current) audioRef.current.srcObject = stream;
       monitorAudioActivity(stream, setLocalAudioActive);
-
-      peer.on("open", (id) => {
-        setPeerId(id); // Set the peer ID when the connection is established
-      });
 
       peer.on("call", (call) => {
         call.answer(stream); // Answer the call with the local stream
@@ -112,50 +104,82 @@ const PeerAudioCall = ({
   };
 
   return (
-    <div
-      className={clsx("border-4 rounded-2xl px-4 py-3", {
-        "border-primary": remoteAudioActive,
-      })}
-    >
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col items-center gap-4">
+      <div className=" flex items-center flex-col gap-2">
+        <VoiceDetailsUI
+          location={location}
+          name="You"
+          isActive={localAudioActive}
+        />
         {isRemoteConnected ? (
-          <div>
-            <span className="text-sm text-primary font-medium">Connected</span>
-            <h1 className="text-2xl font-bold">Emergency Team</h1>
-          </div>
-        ) : (
-          <div>
-            <span className="text-sm text-primary font-medium">
-              Not connected
-            </span>
-            <h1 className="text-2xl font-bold">Emergency Team</h1>
-          </div>
-        )}
-        <div className="flex items-center gap-2">
-          <Button
-            variant={"outline"}
-            className="h-[3em] w-[3em] rounded-full"
-            onClick={toggleMute}
-          >
-            {isMuted ? (
-              <MicOff className="flex-shrink-0" />
-            ) : (
-              <Mic className="flex-shrink-0" />
-            )}
-          </Button>
-          <Button
-            onClick={endCall}
-            variant={"destructive"}
-            className="h-[3em] w-[3em] rounded-full"
-          >
-            <PhoneMissed className="flex-shrink-0" />
-          </Button>
-        </div>
+          <VoiceDetailsUI
+            location={location}
+            name="Emergency Team"
+            isActive={remoteAudioActive}
+            isAdmin={true}
+          />
+        ) : null}
       </div>
+      <div className="flex items-center justify-evenly gap-2 bg-black  p-4 rounded-xl w-full max-w-[20em]">
+        <Button
+          variant={"outline"}
+          className="h-[3em] w-[3em] rounded-full"
+          onClick={toggleMute}
+        >
+          {isMuted ? (
+            <MicOff className="flex-shrink-0" />
+          ) : (
+            <Mic className="flex-shrink-0" />
+          )}
+        </Button>
+        <span className="text-white tracking-tighter">
+          {isRemoteConnected ? "Connected" : "Not Connected"}
+        </span>
+        <Button
+          onClick={endCall}
+          variant={"destructive"}
+          className="h-[3em] w-[3em] rounded-full"
+        >
+          <PhoneMissed className="flex-shrink-0" />
+        </Button>
+      </div>
+      <span className="text-xs text-muted-foreground pl-4">
+        Peer ID: {peerId}
+      </span>
       <>
         <audio ref={audioRef} autoPlay muted={true} />
         <audio ref={remoteAudioRef} autoPlay muted={false} />
       </>
+    </div>
+  );
+};
+
+const VoiceDetailsUI = ({
+  name,
+  location,
+  isActive,
+  isAdmin,
+}: {
+  name: string;
+  location: string | undefined;
+  isActive: boolean;
+  isAdmin?: boolean;
+}) => {
+  return (
+    <div
+      className={clsx(" border-4 p-4 rounded-xl flex items-center gap-2", {
+        "border-primary": isActive,
+      })}
+    >
+      <Avatar className="w-[4em] h-[4em]">
+        <AvatarFallback>
+          {isAdmin ? <UserRoundCog size={30} /> : <User size={30} />}
+        </AvatarFallback>
+      </Avatar>
+      <div className="-space-y-3">
+        <h1 className="font-semibold text-xl">{name}</h1>
+        <span className="text-muted-foreground text-xs">{location}</span>
+      </div>
     </div>
   );
 };

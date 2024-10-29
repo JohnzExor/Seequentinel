@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Header from "./header";
 import SideNavigations from "./side-nav";
+import EmergencyDataProvider from "./emergency-data-provider";
 
 export default async function RootLayout({
   children,
@@ -15,7 +16,7 @@ export default async function RootLayout({
       <SideNavigations session={session} />
       <main className="md:overflow-y-auto w-full">
         <Header />
-        {children}
+        <EmergencyDataProvider>{children}</EmergencyDataProvider>
       </main>
     </div>
   );
