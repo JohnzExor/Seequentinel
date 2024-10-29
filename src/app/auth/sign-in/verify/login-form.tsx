@@ -15,55 +15,59 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import checkUserEmailAction from "./actions";
-import { emailSchema } from "@/lib/zod";
-import { useRouter } from "next/navigation";
+import { loginSchema } from "@/lib/zod";
+import loginUserAction from "./actions";
 import { LoaderCircle } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const EmailForm = () => {
+const LoginForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const emailHref = searchParams.get("email");
   const { execute, isError, error, isPending, isSuccess } =
-    useServerAction(checkUserEmailAction);
+    useServerAction(loginUserAction);
 
-  const form = useForm<z.infer<typeof emailSchema>>({
-    resolver: zodResolver(emailSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      email: emailHref as string,
+      password: "",
     },
   });
 
-  const onSubmit = async ({ email }: z.infer<typeof emailSchema>) => {
-    const res = await execute({ email });
+  const onSubmit = async ({ email, password }: z.infer<typeof loginSchema>) => {
+    const res = await execute({ email, password });
     if (res[1]) {
-      form.setError("email", {
+      form.setError("password", {
         type: "manual",
         message: res[1].message,
       });
       return;
     }
-    router.push(`/sign-in/verify/?email=${encodeURIComponent(email)}`);
+    router.push("/home");
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="px-6">
         <div className="flex flex-col space-y-2 text-center mb-5">
           <h1 className="text-2xl font-semibold tracking-tight">
-            Sign in your account
+            Enter your password
           </h1>
           <p className="text-sm text-muted-foreground">
-            Make sure your account is validated and registered.
+            We make sure that your password is secured and encrypted
           </p>
         </div>
         <FormField
           control={form.control}
-          name="email"
+          name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Corporate Email</FormLabel>
+              <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
-                  type="email"
-                  placeholder="Enter your corporate email"
+                  type="password"
+                  placeholder="Enter your password"
                   {...field}
                   disabled={isPending || isSuccess}
                   autoFocus
@@ -82,7 +86,7 @@ const EmailForm = () => {
           {isPending || isSuccess ? (
             <LoaderCircle className=" animate-spin" />
           ) : (
-            "Next"
+            "Login"
           )}
         </Button>
       </form>
@@ -90,4 +94,4 @@ const EmailForm = () => {
   );
 };
 
-export default EmailForm;
+export default LoginForm;

@@ -32,7 +32,7 @@ const ReportsTab = ({ reports }: { reports: Reports[] }) => {
           status: status,
           createdAt: createdAt,
           icon: icons[reportType],
-          path: `/report-progress/${id}`,
+          path: `/home/report-progress/${id}`,
         };
       })
       .reverse();

@@ -3,7 +3,7 @@ import "leaflet-routing-machine";
 import "leaflet/dist/leaflet.css";
 import { useContext, useEffect } from "react";
 import { useMap } from "react-leaflet";
-import { pinIcon } from "../campus-map/icons";
+import { pinIcon } from "./icons";
 import { DataContext } from "./data-provider";
 
 const RoutingMachine = () => {

@@ -11,7 +11,7 @@ import EmergenciesImage from "/public/images/erl.jpg";
 const options = [
   {
     name: "Campus Maintenance Request",
-    link: "/campus-maintenance",
+    link: "/home/campus-maintenance",
     icon: ConstructionIcon,
     image: CampusMaintenanceImage,
     description:
@@ -19,7 +19,7 @@ const options = [
   },
   {
     name: "Handbook Violation Report",
-    link: "/handbook-violation",
+    link: "/home/handbook-violation",
     icon: Book,
     image: HandBookViolationImage,
     description:
@@ -27,7 +27,7 @@ const options = [
   },
   {
     name: "Emergency",
-    link: "/emergency",
+    link: "/home/emergency",
     icon: Siren,
     image: EmergenciesImage,
   },

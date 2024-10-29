@@ -4,11 +4,11 @@ import { SidebarNav } from "./side-nav";
 const sidebarNavItems = [
   {
     title: "Account",
-    href: "/dashboard/settings",
+    href: "/admin/dashboard/settings",
   },
   {
     title: "Appearance",
-    href: "/dashboard/settings/appearance",
+    href: "/admin/dashboard/settings/appearance",
   },
 ];
 

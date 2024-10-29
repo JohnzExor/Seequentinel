@@ -30,23 +30,23 @@ import {
 const links = [
   {
     name: "Dashboard",
-    path: "/dashboard",
+    path: "/admin/dashboard",
     icon: LayoutDashboard,
   },
   {
     name: "Realtime Reports",
-    path: "/dashboard/realtime-reports",
+    path: "/admin/dashboard/realtime-reports",
     icon: ChevronsRight,
   },
 
   {
     name: "Campus Map",
-    path: "/dashboard/campus-map",
+    path: "/admin/dashboard/campus-map",
     icon: MapPinned,
   },
   {
     name: "Assigned Reports",
-    path: "/dashboard/assigned-reports",
+    path: "/admin/dashboard/assigned-reports",
     icon: BookMarked,
   },
   {
@@ -55,44 +55,44 @@ const links = [
     children: [
       {
         name: "Campus Maintenance",
-        path: "/dashboard/campus-maintenance",
+        path: "/admin/dashboard/campus-maintenance",
         icon: HousePlug,
       },
       {
         name: "Handbook Violation",
-        path: "/dashboard/handbook-violation",
+        path: "/admin/dashboard/handbook-violation",
         icon: UserPen,
       },
       {
         name: "Emergencies",
-        path: "/dashboard/emergencies",
+        path: "/admin/dashboard/emergencies",
         icon: Flag,
       },
     ],
   },
   {
     name: "Audit Logs",
-    path: "/dashboard/audit-logs",
+    path: "/admin/dashboard/audit-logs",
     icon: Scroll,
   },
   {
     name: "Admins",
-    path: "/dashboard/admins",
+    path: "/admin/dashboard/admins",
     icon: Shield,
   },
   {
     name: "Users",
-    path: "/dashboard/users",
+    path: "/admin/dashboard/users",
     icon: User,
   },
   {
     name: "Notifications",
-    path: "/dashboard/notifications",
+    path: "/admin/dashboard/notifications",
     icon: Bell,
   },
   {
     name: "Settings",
-    path: "/dashboard/settings",
+    path: "/admin/dashboard/settings",
     icon: Settings,
   },
 ];
@@ -116,11 +116,7 @@ const NavLinks = ({
   };
 
   const isActive = (path: string, children?: { path: string }[]) => {
-    if (
-      (pathname === "/dashboard" && pathname.startsWith(path)) ||
-      (path !== "/dashboard" && pathname.startsWith(path))
-    )
-      return true;
+    if (pathname === path) return true;
 
     return false;
   };

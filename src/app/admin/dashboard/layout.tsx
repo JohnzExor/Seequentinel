@@ -10,16 +10,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
-
-  if (!session?.user) {
-    redirect("/welcome");
+  if (session?.user && session.user.type !== "admin") {
+    redirect("/");
   }
   return (
     <div className="flex h-screen">
       <SideNavigations session={session} />
-      <main className="md:overflow-y-auto w-full">
+      <main className="md:overflow-y-auto w-full ">
         <Header />
-        {children}
+        <div className="p-4 md:p-10 ">{children}</div>
       </main>
     </div>
   );

@@ -16,22 +16,22 @@ import { Dispatch, SetStateAction } from "react";
 
 const links = [
   {
-    path: "/",
+    path: "/home",
     name: "Report",
     icon: <ClipboardPlus />,
     children: [
       {
-        path: "/campus-maintenance",
+        path: "/home/campus-maintenance",
         name: "Campus Maintenance",
         icon: <ConstructionIcon />,
       },
       {
-        path: "/handbook-violation",
+        path: "/home/handbook-violation",
         name: "Handbook Violation",
         icon: <Book />,
       },
       {
-        path: "/emergency",
+        path: "/home/emergency",
         name: "Emergency",
         icon: <Siren />,
       },
@@ -39,17 +39,17 @@ const links = [
   },
 
   {
-    path: "/report-progress",
+    path: "/home/report-progress",
     name: "Report progress",
     icon: <Flag />,
   },
   {
-    path: "/handbook-overview",
+    path: "/home/handbook-overview",
     name: "Student Handbook",
     icon: <Book />,
   },
   {
-    path: "/settings",
+    path: "/home/settings",
     name: "Settings",
     icon: <Settings />,
   },
@@ -73,11 +73,7 @@ const NavLinks = ({
   };
 
   const isActive = (path: string, children?: { path: string }[]) => {
-    if (
-      (pathname === "/" && pathname.startsWith(path)) ||
-      (path !== "/" && pathname.startsWith(path))
-    )
-      return true;
+    if (pathname === path) return true;
     if (children) {
       return children.some((child) => pathname === child.path);
     }
