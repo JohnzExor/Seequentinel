@@ -9,18 +9,18 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  if (token) {
+    if (pathname.startsWith("/auth")) {
+      return NextResponse.redirect(new URL("/home", request.url));
+    }
+  }
+
   if (!token) {
     if (pathname.startsWith("/home")) {
       return NextResponse.redirect(new URL("/auth/sign-in", request.url));
     }
     if (pathname.startsWith("/admin")) {
       return NextResponse.redirect(new URL("/auth/sign-in", request.url));
-    }
-  }
-
-  if (token) {
-    if (pathname.startsWith("/auth")) {
-      return NextResponse.redirect(new URL("/home", request.url));
     }
   }
 }
