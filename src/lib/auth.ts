@@ -5,7 +5,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const BASE_PATH = "/api/auth";
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/auth/sign-in",
+    signOut: "/",
+  },
   session: {
     strategy: "jwt",
   },
