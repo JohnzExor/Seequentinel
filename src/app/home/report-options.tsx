@@ -74,7 +74,7 @@ const ReportingOptions = () => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 h-screen">
-      <div className="px-8 pb-4 pt-4 md:pb-0 md:p-10 bg-muted flex flex-col items-center">
+      <div className="px-8 pb-4 pt-4 md:pb-0 md:p-10 lg:hover:bg-muted duration-500 ease-in-out flex flex-col items-center">
         <div className="space-y-4 w-full">
           <div className=" space-y-4">
             <h1 className="md:text-2xl text-lg font-semibold flex items-center gap-2 text-red-500">
