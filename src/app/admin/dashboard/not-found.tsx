@@ -14,7 +14,7 @@ const NotFound = () => {
           This page was not found. You may have mistyped the address or the page
           may have moved.
         </p>
-        <Link href={"/dashboard"} className=" text-blue-400 text-sm">
+        <Link href={"/admin/dashboard"} className=" text-blue-400 text-sm">
           Take me to the dashboard
         </Link>
       </div>
