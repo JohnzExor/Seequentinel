@@ -1,17 +1,10 @@
 import clsx from "clsx";
 import Peer, { MediaConnection } from "peerjs";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Avatar, AvatarFallback } from "../../../../../components/ui/avatar";
-import {
-  Mic,
-  MicOff,
-  PhoneCall,
-  PhoneMissed,
-  User,
-  UserRoundCog,
-} from "lucide-react";
-import { Button } from "../../../../../components/ui/button";
+import { Mic, MicOff, PhoneMissed, User, UserRoundCog } from "lucide-react";
 import { EmergencyContext } from "@/app/home/emergency-data-provider";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const PeerJSComponent = ({
   peer,
@@ -57,18 +50,6 @@ const PeerJSComponent = ({
     detectAudio();
   };
 
-  const getAudio = async () => {
-    try {
-      const stream: MediaStream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
-      setMediaStream(stream);
-      monitorAudioActivity(stream, setLocalAudioActive);
-    } catch (error: any) {
-      console.error(error.message);
-    }
-  };
-
   const handleRemote = (call: MediaConnection) => {
     call.on("stream", (remoteStream) => {
       console.log("remote is connected");
@@ -94,16 +75,21 @@ const PeerJSComponent = ({
   };
 
   useEffect(() => {
-    getAudio();
     if (!peer) return;
 
-    if (setPeerId) {
-      peer.on("open", setPeerId);
-    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      setMediaStream(stream);
+      if (audioRef.current) audioRef.current.srcObject = stream;
+      monitorAudioActivity(stream, setLocalAudioActive);
 
-    peer.on("call", (call) => {
-      call.answer(mediaStream as MediaStream);
-      handleRemote(call);
+      if (setPeerId) {
+        peer.on("open", setPeerId);
+      }
+
+      peer.on("call", (call) => {
+        call.answer(stream);
+        handleRemote(call);
+      });
     });
 
     peer.on("error", (error) => {

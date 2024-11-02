@@ -59,18 +59,6 @@ const PeerJSComponent = ({
     detectAudio();
   };
 
-  const getAudio = async () => {
-    try {
-      const stream: MediaStream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
-      setMediaStream(stream);
-      monitorAudioActivity(stream, setLocalAudioActive);
-    } catch (error: any) {
-      console.error(error.message);
-    }
-  };
-
   const handleRemote = (call: MediaConnection) => {
     setIsRemoteConnected(true);
 
@@ -96,8 +84,13 @@ const PeerJSComponent = ({
   };
 
   useEffect(() => {
-    getAudio();
     if (!peer) return;
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      setMediaStream(stream);
+      if (audioRef.current) audioRef.current.srcObject = stream;
+      monitorAudioActivity(stream, setLocalAudioActive);
+    });
 
     peer.on("error", (error) => {
       console.error(error);
