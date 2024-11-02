@@ -46,6 +46,7 @@ const EmergencyDataProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     peer.on("open", setPeerId);
+    peer.on("error", (error) => console.error(error));
   }, []);
 
   useEffect(() => {
