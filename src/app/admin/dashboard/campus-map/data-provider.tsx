@@ -1,8 +1,10 @@
 "use client";
 
+import { initializePeer } from "@/lib/peer";
 import supabase from "@/lib/storage";
-import { Reports } from "@prisma/client";
+import { Emergencies, Reports } from "@prisma/client";
 import { LatLngExpression } from "leaflet";
+import Peer from "peerjs";
 import React, {
   createContext,
   Dispatch,
@@ -13,7 +15,9 @@ import React, {
 } from "react";
 
 type TContext = {
-  data: Reports[];
+  peer: Peer | null;
+  adminPeerId: string | null;
+  data: Emergencies[];
   startPoint: LatLngExpression;
   endPoint: LatLngExpression;
   setStartPoint: Dispatch<SetStateAction<L.LatLngExpression>>;
@@ -21,6 +25,8 @@ type TContext = {
 };
 
 export const DataContext = createContext<TContext>({
+  peer: null,
+  adminPeerId: null,
   data: [],
   startPoint: [0, 0],
   endPoint: [0, 0],
@@ -28,18 +34,22 @@ export const DataContext = createContext<TContext>({
   setEndPoint: () => {},
 });
 
+const peer = initializePeer();
+
 export const DataProvider = ({
   emergencyData,
   children,
 }: {
-  emergencyData: Reports[];
+  emergencyData: Emergencies[];
   children: ReactNode;
 }) => {
   const [data, setData] = useState(emergencyData);
+  const [adminPeerId, setPeerId] = useState<string | null>(null);
   const [startPoint, setStartPoint] = useState<LatLngExpression>([0, 0]);
   const [endPoint, setEndPoint] = useState<LatLngExpression>([0, 0]);
 
   useEffect(() => {
+    peer.on("open", setPeerId);
     const channel = supabase
       .channel("emergency-db-changes")
       .on(
@@ -47,17 +57,22 @@ export const DataProvider = ({
         {
           event: "*",
           schema: "public",
-          table: "Reports",
+          table: "Emergencies",
         },
         async (payload) => {
-          const res = payload.new as Reports;
+          const res = payload.new as Emergencies;
+
           setData((prevData) => {
+            if (res.status === "CANCELED") {
+              return prevData.filter(({ id }) => id !== res.id);
+            }
+            if (res.status !== "PENDING") {
+              return [...prevData, {} as Emergencies];
+            }
             const findIndex = data.findIndex((prev) => {
               prev.id === res.id;
             });
-            if (res.callStatus === "Canceled") {
-              return prevData.filter(({ id }) => id !== res.id);
-            }
+
             if (findIndex) {
               data[findIndex] === res;
             }
@@ -74,7 +89,15 @@ export const DataProvider = ({
 
   return (
     <DataContext.Provider
-      value={{ data, startPoint, endPoint, setStartPoint, setEndPoint }}
+      value={{
+        peer,
+        adminPeerId,
+        data,
+        startPoint,
+        endPoint,
+        setStartPoint,
+        setEndPoint,
+      }}
     >
       {children}
     </DataContext.Provider>

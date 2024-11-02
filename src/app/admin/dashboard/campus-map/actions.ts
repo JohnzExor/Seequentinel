@@ -1,23 +1,27 @@
 "use server";
 
-import { callStatusEnum } from "@/lib/zod";
-import { updateCurrentCallStatusUseCase } from "@/use-cases/report";
-import { CallStatusEnum } from "@prisma/client";
+import { emergencyStatusEnum } from "@/lib/zod";
+import {
+  acceptCallUseCase,
+  updateEmergencyStatusUseCase,
+} from "@/use-cases/emergencies";
+import { EmergencyStatusEnum } from "@prisma/client";
 import { z } from "zod";
 import { createServerAction } from "zsa";
 
-export const changeCallStatusAction = createServerAction()
-  .input(
-    z.object({
-      id: z.string(),
-      newStatus: callStatusEnum,
-      room: z.string().optional(),
-    })
-  )
+export const acceptCallAction = createServerAction()
+  .input(z.object({ id: z.string(), recieverId: z.string() }))
   .handler(async ({ input }) => {
-    const data = await updateCurrentCallStatusUseCase(
+    const data = await acceptCallUseCase(input.id, input.recieverId);
+    return data;
+  });
+
+export const updateEmergencyStatusAction = createServerAction()
+  .input(z.object({ id: z.string(), newStatus: emergencyStatusEnum }))
+  .handler(async ({ input }) => {
+    const data = await updateEmergencyStatusUseCase(
       input.id,
-      input.newStatus as CallStatusEnum
+      input.newStatus as EmergencyStatusEnum
     );
     return data;
   });

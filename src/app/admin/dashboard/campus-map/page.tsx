@@ -1,13 +1,10 @@
-import { Separator } from "@/components/ui/separator";
-import PageDetails from "./page-details";
 import { DataProvider } from "./data-provider";
-import EmergencyList from "./emergency-list";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Reports } from "@prisma/client";
-import { getAllEmergenciesOnTheMapUseCase } from "@/use-cases/report";
+import { Emergencies } from "@prisma/client";
 import { LatLngExpression } from "leaflet";
-import PeerAudioCall from "./peer-audio-call";
+import { getAllEmergenciesUseCase } from "@/use-cases/emergencies";
+import EmergencyList from "./emergency-list";
 
 const Map = dynamic(() => import("./map"), {
   ssr: false,
@@ -17,23 +14,21 @@ const Map = dynamic(() => import("./map"), {
 const palsuLatlng: LatLngExpression = [9.7769525, 118.7341474];
 
 const page = async () => {
-  let data: Reports[] = [];
+  let data: Emergencies[] = [];
 
   try {
-    const res = await getAllEmergenciesOnTheMapUseCase();
+    const res = await getAllEmergenciesUseCase();
     data = res;
   } catch (error: any) {
     console.error(error.message);
   }
 
   return (
-    <div className="w-full h-screen space-y-4">
-      <PageDetails />
-      <Separator className=" w-full" />
+    <div className="w-full h-screen md:p-4 md:-m-10 space-y-4">
       <DataProvider emergencyData={data}>
-        <div className="flex flex-col lg:flex-row items-start gap-4 h-full">
-          <PeerAudioCall />
-          <div className="h-full max-h-[20em] md:max-h-[50em] w-full pb-6">
+        <div className="flex flex-col xl:flex-row xl:h-full gap-4 pb-4 xl:pb-0">
+          <EmergencyList />
+          <div className="h-[20em] xl:h-full w-full relative">
             <Map posix={palsuLatlng} />
           </div>
         </div>

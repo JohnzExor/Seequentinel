@@ -9,21 +9,22 @@ export async function middleware(request: NextRequest) {
   });
 
   if (!token) {
-    if (pathname.startsWith("/home")) {
-      return NextResponse.redirect(new URL("/auth/sign-in", request.url));
-    }
-    if (pathname.startsWith("/admin")) {
+    if (pathname.startsWith("/home") || pathname.startsWith("/admin")) {
       return NextResponse.redirect(new URL("/auth/sign-in", request.url));
     }
   }
 
   if (token) {
-    if (pathname.startsWith("/auth") || pathname === "/") {
+    if (
+      pathname.startsWith("/auth") ||
+      pathname === "/" ||
+      (pathname.startsWith("/admin") && token.type === "user")
+    ) {
       return NextResponse.redirect(new URL("/home", request.url));
     }
   }
 }
 
 export const config = {
-  matcher: ["/", "/home/:path*", "/admin/:path*"],
+  matcher: ["/", "/home/:path*", "/admin/:path*", "/auth/:path*"],
 };

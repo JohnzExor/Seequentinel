@@ -9,11 +9,11 @@ import HandBookViolationImage from "/public/images/hvr.jpg";
 import CurrentLocation from "./current-location";
 import { useContext, useState } from "react";
 import { EmergencyContext } from "./emergency-data-provider";
-import { Reports } from "@prisma/client";
+import { Emergencies, Reports } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useServerAction } from "zsa-react";
-import { emergencyCallAction } from "./(pages)/(report-options)/emergency/actions";
 import { useRouter } from "next/navigation";
+import { postEmergencyAction } from "./(pages)/(report-options)/emergency/actions";
 
 const options = [
   {
@@ -40,23 +40,20 @@ const ReportingOptions = () => {
   const { peerId, setData, gpsCoordinates, location } =
     useContext(EmergencyContext);
 
-  const emergency = useServerAction(emergencyCallAction);
+  const emergency = useServerAction(postEmergencyAction);
 
   const [tapCounter, setTapCounter] = useState<number>(0);
 
   const handleEmergencyRequest = async () => {
     try {
       const res = await emergency.execute({
-        reportType: "Emergencies",
-        problemType: "Emergency",
-        callStatus: "Pending",
-        location: location,
-        gpsCoordinates: gpsCoordinates,
+        userId: session.data?.user.id as string,
         peerId: peerId,
-        userId: session.data?.user.id,
-        attachments: [],
+        gpsCoordinates: gpsCoordinates,
+        location: location,
       });
-      setData(res[0] as Reports);
+
+      setData(res[0] as Emergencies);
       router.push("/home/emergency");
 
       setTapCounter(0);

@@ -3,14 +3,14 @@ import "leaflet-routing-machine";
 import "leaflet/dist/leaflet.css";
 import { useContext, useEffect } from "react";
 import { useMap } from "react-leaflet";
-import { pinIcon } from "./icons";
 import { DataContext } from "./data-provider";
 
 const RoutingMachine = () => {
   const { startPoint, endPoint } = useContext(DataContext);
-  const waypoints: LatLngExpression[] = [startPoint, endPoint];
   const map = useMap();
+
   useEffect(() => {
+    const waypoints: LatLngExpression[] = [startPoint, endPoint];
     const waypointsWithLatLng = waypoints.map((point) => L.latLng(point));
     const routingControl = L.Routing.control({
       waypoints: waypointsWithLatLng, // Use the waypoints prop here
@@ -43,7 +43,7 @@ const RoutingMachine = () => {
       // Cleanup the routing control on component unmount
       map.removeControl(routingControl);
     };
-  }, [waypoints, map]); // Add waypoints to the dependency array to update on changes
+  }, [startPoint, endPoint, map]); // Add waypoints to the dependency array to update on changes
 
   return null;
 };

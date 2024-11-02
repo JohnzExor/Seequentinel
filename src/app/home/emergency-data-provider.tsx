@@ -10,12 +10,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Reports } from "@prisma/client";
+import { Emergencies } from "@prisma/client";
 import supabase from "@/lib/storage";
 
 type TContext = {
-  data: Reports;
-  setData: Dispatch<SetStateAction<Reports>>;
+  data: Emergencies;
+  setData: Dispatch<SetStateAction<Emergencies>>;
   peer: Peer;
   peerId: string | undefined;
   location: string | undefined;
@@ -25,7 +25,7 @@ type TContext = {
 };
 
 export const EmergencyContext = createContext<TContext>({
-  data: {} as Reports,
+  data: {} as Emergencies,
   setData: () => {},
   peer: {} as Peer,
   peerId: undefined,
@@ -39,7 +39,7 @@ const peer = initializePeer();
 
 const EmergencyDataProvider = ({ children }: { children: ReactNode }) => {
   const [peerId, setPeerId] = useState<string>();
-  const [data, setData] = useState<Reports>({} as Reports);
+  const [data, setData] = useState<Emergencies>({} as Emergencies);
   const [location, setLocation] = useState<string>();
   const [gpsCoordinates, setGpscoordinates] = useState<string>();
   const { id } = data;
@@ -57,14 +57,14 @@ const EmergencyDataProvider = ({ children }: { children: ReactNode }) => {
         {
           event: "*",
           schema: "public",
-          table: "Reports",
+          table: "Emergencies",
           filter: `id=eq.${id}`,
         },
         async (payload) => {
-          const res = payload.new as Reports;
+          const res = payload.new as Emergencies;
 
-          if (res.callStatus === "Canceled") {
-            return setData({} as Reports);
+          if (res.status === "CANCELED") {
+            return setData({} as Emergencies);
           }
           setData(res);
         }

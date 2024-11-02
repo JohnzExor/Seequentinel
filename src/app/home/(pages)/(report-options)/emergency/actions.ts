@@ -1,35 +1,26 @@
 "use server";
 
-import { callStatusEnum, reportSchema, updateLocationSchema } from "@/lib/zod";
+import { emergencySchema, emergencyStatusEnum } from "@/lib/zod";
 import {
-  postReportUseCase,
-  updateCurrentCallStatusUseCase,
-  updateEmergencyLocationUseCase,
-} from "@/use-cases/report";
-import { CallStatusEnum } from "@prisma/client";
+  postEmergencyUseCase,
+  updateEmergencyStatusUseCase,
+} from "@/use-cases/emergencies";
+import { EmergencyStatusEnum } from "@prisma/client";
 import { z } from "zod";
 import { createServerAction } from "zsa";
 
-export const emergencyCallAction = createServerAction()
-  .input(reportSchema)
+export const postEmergencyAction = createServerAction()
+  .input(emergencySchema)
   .handler(async ({ input }) => {
-    const data = await postReportUseCase(input);
+    const data = await postEmergencyUseCase(input);
     return data;
   });
-
-export const changeCallStatusAction = createServerAction()
-  .input(z.object({ id: z.string(), newStatus: callStatusEnum }))
+export const updateEmergencyStatusAction = createServerAction()
+  .input(z.object({ id: z.string(), newStatus: emergencyStatusEnum }))
   .handler(async ({ input }) => {
-    const data = await updateCurrentCallStatusUseCase(
+    const data = await updateEmergencyStatusUseCase(
       input.id,
-      input.newStatus as CallStatusEnum
+      input.newStatus as EmergencyStatusEnum
     );
-    return data;
-  });
-
-export const updateEmergencyLocationAction = createServerAction()
-  .input(updateLocationSchema)
-  .handler(async ({ input }) => {
-    const data = await updateEmergencyLocationUseCase(input);
     return data;
   });

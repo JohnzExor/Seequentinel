@@ -1,32 +1,21 @@
 "use client";
 
-import { ReactNode, useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import { DataContext } from "./data-provider";
-import { MapPin, PhoneCall } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { initializePeer } from "@/lib/peer";
-import PeerAudioCall from "./peer-audio-call";
 import { useServerAction } from "zsa-react";
-import { changeCallStatusAction } from "./actions";
+import { acceptCallAction, updateEmergencyStatusAction } from "./actions";
+import PeerJSComponent from "./peerjs-component";
 
-const peer = initializePeer();
+const EmergencyList = () => {
+  const { data, setEndPoint, peer, adminPeerId } = useContext(DataContext);
+  const { execute } = useServerAction(updateEmergencyStatusAction);
+  const acceptCallId = useServerAction(acceptCallAction);
 
-const EmergencyList = ({
-  selectPeerId,
-  children,
-}: {
-  selectPeerId: (peerId: string) => void;
-  children: ReactNode;
-}) => {
-  const { data, setEndPoint } = useContext(DataContext);
-  const [activeCallId, setActiveCallId] = useState<string | null>(null); // Use a call ID instead of peerId
-  const { execute } = useServerAction(changeCallStatusAction);
-
-  const acceptCall = async (id: string, peerId: string) => {
+  const acceptCall = async (id: string) => {
     try {
-      setActiveCallId(id); // Set the active call ID
-      selectPeerId(peerId);
+      acceptCallId.execute({ id, recieverId: adminPeerId as string });
     } catch (error: any) {
       console.error(error.message);
     }
@@ -34,16 +23,18 @@ const EmergencyList = ({
 
   const cancelCall = async (id: string) => {
     try {
-      setActiveCallId(null); // Reset the active call ID
-      await execute({ id, newStatus: "Canceled" });
+      await execute({ id, newStatus: "CANCELED" });
     } catch (error: any) {
       console.error(error.message);
     }
   };
 
   return (
-    <div className="w-full max-w-[30em] bg-muted rounded-xl p-4 space-y-4">
+    <div className="w-full max-w-[25em] bg-muted rounded-xl p-4 space-y-4">
       <div>
+        <span className="text-sm text-primary">
+          Peer ID: {adminPeerId ? adminPeerId : "Getting Peer ID..."}
+        </span>
         <h1 className="font-semibold text-2xl">Incoming Calls</h1>
         <p className="text-muted-foreground text-sm">
           List of incoming calls from the users
@@ -54,7 +45,7 @@ const EmergencyList = ({
           Pending Calls{" "}
           <span className="text-primary font-bold">{data.length}</span>
         </div>
-        {data.map(({ id, location, createdAt, peerId, gpsCoordinates }) => {
+        {data.map(({ id, location, callStart, peerId, gpsCoordinates }) => {
           const position: [number, number] | null = gpsCoordinates
             ? (gpsCoordinates
                 .split(",")
@@ -70,7 +61,7 @@ const EmergencyList = ({
             >
               <div className=" flex items-start justify-between">
                 <span className="text-primary font-medium">
-                  {formatDistanceToNow(new Date(createdAt), {
+                  {formatDistanceToNow(new Date(callStart), {
                     addSuffix: true,
                   })}
                 </span>
@@ -81,35 +72,16 @@ const EmergencyList = ({
                   View Route
                 </button>
               </div>
-
               <div className="flex items-start gap-1 text-sm">
                 <MapPin size={20} />
                 <span>{location}</span>
               </div>
-
-              {activeCallId === id ? ( // Compare activeCallId with the current call ID
-                children
-              ) : (
-                <div className="flex items-center gap-3">
-                  <Button
-                    onClick={() => acceptCall(id, peerId as string)}
-                    className="rounded-full h-[3em] w-full gap-1 animate-pulse duration-1000"
-                  >
-                    <PhoneCall className="flex-shrink-0" />
-                    Answer Call
-                  </Button>
-                  <Button
-                    onClick={() => cancelCall(id)}
-                    variant={"destructive"}
-                    className="rounded-full h-[3em] w-[3em]"
-                  >
-                    <PhoneCall className="flex-shrink-0" />
-                  </Button>
-                </div>
-              )}
-              <span className="text-xs text-muted-foreground">
-                Peer ID {peerId}
-              </span>
+              <PeerJSComponent
+                peer={peer}
+                remotePeerId={peerId}
+                acceptCall={() => acceptCall(id)}
+                cancelCall={() => cancelCall(id)}
+              />
             </li>
           );
         })}

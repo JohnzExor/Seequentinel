@@ -14,6 +14,26 @@ export const callStatusEnum = z
   .enum(["None", "Pending", "Connected", "Disconnected", "Canceled", "Failed"])
   .optional();
 
+export const emergencyStatusEnum = z
+  .enum([
+    "PENDING", // Call is initiated but not answered yet
+    "ACTIVE", // Call is ongoing
+    "COMPLETED", // Call has ended successfully
+    "CANCELED", // Call was canceled before being completed
+    "FAILED", // Call failed due to technical issues
+  ])
+  .optional();
+
+export const emergencySchema = z.object({
+  userId: z.string(),
+
+  peerId: z.string().optional(),
+  recieverId: z.string().optional(),
+
+  location: z.string().optional(),
+  gpsCoordinates: z.string().optional(),
+});
+
 export const updateLocationSchema = z.object({
   id: z.string(),
   gpsCoordinates: z.string(),

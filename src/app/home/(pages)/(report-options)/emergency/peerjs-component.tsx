@@ -1,26 +1,40 @@
-"use client";
-
-import { EmergencyContext } from "@/app/home/emergency-data-provider";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import clsx from "clsx";
-import { Mic, MicOff, PhoneMissed, User, UserRoundCog } from "lucide-react"; // Import MicOff
+import Peer, { MediaConnection } from "peerjs";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { Avatar, AvatarFallback } from "../../../../../components/ui/avatar";
+import {
+  Mic,
+  MicOff,
+  PhoneCall,
+  PhoneMissed,
+  User,
+  UserRoundCog,
+} from "lucide-react";
+import { Button } from "../../../../../components/ui/button";
+import { EmergencyContext } from "@/app/home/emergency-data-provider";
 
-const PeerAudioCall = ({ endCallStatus }: { endCallStatus: () => void }) => {
-  const { peer, location, peerId } = useContext(EmergencyContext);
+const PeerJSComponent = ({
+  peer,
+  setPeerId,
+  cancelCall,
+}: {
+  peer: Peer | null;
+  setPeerId?: (id: string) => void;
+  cancelCall: () => void;
+}) => {
+  const { location, peerId } = useContext(EmergencyContext);
 
-  const [mediaStream, setMediaStream] = useState<MediaStream>();
-  const [localAudioActive, setLocalAudioActive] = useState(false);
-  const [remoteAudioActive, setRemoteAudioActive] = useState(false);
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [isRemoteConnected, setIsRemoteConnected] = useState(false);
   const [currentCall, setCurrentCall] = useState<any>(null);
   const [isMuted, setIsMuted] = useState(false); // New state for mute/unmute
 
+  const [localAudioActive, setLocalAudioActive] = useState(false);
+  const [remoteAudioActive, setRemoteAudioActive] = useState(false);
+
   const audioRef = useRef<HTMLAudioElement>(null);
   const remoteAudioRef = useRef<HTMLAudioElement>(null);
 
-  // Monitors audio activity using Web Audio API
   const monitorAudioActivity = (stream: MediaStream, setActive: Function) => {
     const audioContext = new AudioContext();
     const analyser = audioContext.createAnalyser();
@@ -43,63 +57,90 @@ const PeerAudioCall = ({ endCallStatus }: { endCallStatus: () => void }) => {
     detectAudio();
   };
 
-  useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      setMediaStream(stream);
-      if (audioRef.current) audioRef.current.srcObject = stream;
-      monitorAudioActivity(stream, setLocalAudioActive);
-
-      peer.on("call", (call) => {
-        call.answer(stream); // Answer the call with the local stream
-        setCurrentCall(call);
-        setIsRemoteConnected(true);
-
-        call.on("stream", (remoteStream) => {
-          if (remoteAudioRef.current)
-            remoteAudioRef.current.srcObject = remoteStream;
-          monitorAudioActivity(remoteStream, setRemoteAudioActive);
-        });
-
-        call.on("close", () => {
-          console.log("Remote call disconnected");
-          setIsRemoteConnected(false);
-          if (remoteAudioRef.current) remoteAudioRef.current.srcObject = null;
-        });
+  const getAudio = async () => {
+    try {
+      const stream: MediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
       });
-
-      // Handle tab close/disconnection
-      const handleTabClose = () => {
-        if (currentCall) {
-          currentCall.close();
-          setIsRemoteConnected(false);
-          if (remoteAudioRef.current) remoteAudioRef.current.srcObject = null;
-        }
-      };
-
-      window.addEventListener("beforeunload", handleTabClose);
-
-      return () => {
-        window.removeEventListener("beforeunload", handleTabClose);
-      };
-    });
-  }, [currentCall]);
-
-  const endCall = () => {
-    endCallStatus();
-    if (currentCall) {
-      currentCall.close();
-      setIsRemoteConnected(false);
-      if (remoteAudioRef.current) remoteAudioRef.current.srcObject = null;
+      setMediaStream(stream);
+      monitorAudioActivity(stream, setLocalAudioActive);
+    } catch (error: any) {
+      console.error(error.message);
     }
   };
 
-  // Mute/Unmute functionality
+  const handleRemote = (call: MediaConnection) => {
+    call.on("stream", (remoteStream) => {
+      console.log("remote is connected");
+      setIsRemoteConnected(true);
+      setCurrentCall(call);
+
+      if (remoteAudioRef.current) {
+        remoteAudioRef.current.srcObject = remoteStream;
+        monitorAudioActivity(remoteStream, setRemoteAudioActive);
+      }
+    });
+
+    call.on("close", () => {
+      console.log("Remote disconnected");
+      setIsRemoteConnected(false);
+      cancelCall();
+      if (remoteAudioRef.current) remoteAudioRef.current.srcObject = null;
+    });
+
+    call.on("error", (error) => {
+      console.error(error);
+    });
+  };
+
+  useEffect(() => {
+    getAudio();
+    if (!peer) return;
+
+    if (setPeerId) {
+      peer.on("open", setPeerId);
+    }
+
+    peer.on("call", (call) => {
+      call.answer(mediaStream as MediaStream);
+      handleRemote(call);
+    });
+
+    peer.on("error", (error) => {
+      console.error(error);
+    });
+
+    // Handle tab close/disconnection
+    const handleTabClose = () => {
+      if (currentCall) {
+        currentCall.close();
+        setIsRemoteConnected(false);
+        if (remoteAudioRef.current) remoteAudioRef.current.srcObject = null;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleTabClose);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  }, []);
+
   const toggleMute = () => {
     if (mediaStream) {
       mediaStream.getAudioTracks().forEach((track) => {
         track.enabled = !track.enabled; // Toggle enabled property
       });
       setIsMuted((prev) => !prev); // Update isMuted state
+    }
+  };
+
+  const endCall = () => {
+    cancelCall();
+    if (currentCall) {
+      currentCall.close();
+      setIsRemoteConnected(false);
+      if (remoteAudioRef.current) remoteAudioRef.current.srcObject = null;
     }
   };
 
@@ -111,6 +152,7 @@ const PeerAudioCall = ({ endCallStatus }: { endCallStatus: () => void }) => {
           name="You"
           isActive={localAudioActive}
         />
+        <audio ref={audioRef} autoPlay muted={true} />
         {isRemoteConnected ? (
           <VoiceDetailsUI
             location={location}
@@ -119,6 +161,7 @@ const PeerAudioCall = ({ endCallStatus }: { endCallStatus: () => void }) => {
             isAdmin={true}
           />
         ) : null}
+        <audio ref={remoteAudioRef} autoPlay muted={false} />
       </div>
       <div className="flex items-center justify-evenly gap-2 bg-black  p-4 rounded-xl w-full max-w-[20em]">
         <Button
@@ -143,13 +186,10 @@ const PeerAudioCall = ({ endCallStatus }: { endCallStatus: () => void }) => {
           <PhoneMissed className="flex-shrink-0" />
         </Button>
       </div>
+
       <span className="text-xs text-muted-foreground pl-4">
         Peer ID: {peerId}
       </span>
-      <>
-        <audio ref={audioRef} autoPlay muted={true} />
-        <audio ref={remoteAudioRef} autoPlay muted={false} />
-      </>
     </div>
   );
 };
@@ -184,4 +224,4 @@ const VoiceDetailsUI = ({
   );
 };
 
-export default PeerAudioCall;
+export default PeerJSComponent;

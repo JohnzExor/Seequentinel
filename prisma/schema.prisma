@@ -36,14 +36,15 @@ enum CallStatusEnum {
 }
 
 model User {
-  id              String    @id @default(cuid())
+  id              String        @id @default(cuid())
   type            String
   status          String
-  createdAt       DateTime  @default(now())
-  email           String    @unique
+  createdAt       DateTime      @default(now())
+  email           String        @unique
   password        String
-  reports         Reports[] @relation(name: "Reports")
-  assignedReports Reports[] @relation(name: "Assigned")
+  reports         Reports[]     @relation(name: "Reports")
+  emergencies     Emergencies[] @relation(name: "Emergencies")
+  assignedReports Reports[]     @relation(name: "Assigned")
 }
 
 model Reports {
@@ -76,10 +77,31 @@ model Reports {
   attachments String[] // Combined field for both media and evidence
 }
 
-model Administrator {
-  id       String @id @default(cuid())
-  email    String
-  password String
+enum EmergencyStatusEnum {
+  PENDING // Call is initiated but not answered yet
+  ACTIVE // Call is ongoing
+  COMPLETED // Call has ended successfully
+  CANCELED // Call was canceled before being completed
+  FAILED // Call failed due to technical issues
+}
+
+model Emergencies {
+  id     String              @id @default(cuid())
+  userId String
+  user   User?               @relation(name: "Emergencies", fields: [userId], references: [id])
+  status EmergencyStatusEnum @default(PENDING)
+
+  // Call duration
+  callStart DateTime  @default(now())
+  callEnd   DateTime?
+
+  // Peer
+  peerId     String?
+  recieverId String?
+
+  //GPS Coordinates
+  location       String?
+  gpsCoordinates String? // For storing GPS coordinates as a string (latitude, longitude)
 }
 
 model AuditLog {

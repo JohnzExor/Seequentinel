@@ -14,10 +14,7 @@ const AuthDesign = ({
       <header className=" absolute z-20 w-full flex items-center justify-between p-6 md:p-16">
         <div className="overflow-hidden flex items-center gap-1 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
           <BringToFront size={20} className="text-primary" />
-          <Link
-            href={"/welcome"}
-            className="text-xl font-semibold tracking-tighter "
-          >
+          <Link href={"/"} className="text-xl font-semibold tracking-tighter ">
             Seequentinel
           </Link>
         </div>

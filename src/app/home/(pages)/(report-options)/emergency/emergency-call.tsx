@@ -1,26 +1,26 @@
 "use client";
 
-import { Reports } from "@prisma/client";
-import { useContext, useEffect, useState } from "react";
+import { Emergencies } from "@prisma/client";
+import { useContext } from "react";
 import { useServerAction } from "zsa-react";
-import { changeCallStatusAction } from "./actions";
-import PeerAudioCall from "./peer-audio-call";
 import { EmergencyContext } from "@/app/home/emergency-data-provider";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { updateEmergencyStatusAction } from "./actions";
+import PeerJSComponent from "./peerjs-component";
 
 const EmergencyCall = () => {
-  const { data, setData } = useContext(EmergencyContext);
+  const { data, setData, peer } = useContext(EmergencyContext);
 
   const { id } = data;
 
-  const changeCallStatus = useServerAction(changeCallStatusAction);
+  const changeCallStatus = useServerAction(updateEmergencyStatusAction);
 
   const cancelCall = async () => {
     try {
-      setData({} as Reports);
-      await changeCallStatus.execute({ id, newStatus: "Canceled" });
+      setData({} as Emergencies);
+      await changeCallStatus.execute({ id: id, newStatus: "CANCELED" });
     } catch (error: any) {
       console.error(error.message);
     }
@@ -35,7 +35,7 @@ const EmergencyCall = () => {
             The emergency team will answer your call
           </p>
           <div className=" bg-background rounded-xl p-4 mt-4">
-            <PeerAudioCall endCallStatus={cancelCall} />
+            <PeerJSComponent peer={peer} cancelCall={cancelCall} />
           </div>
         </>
       ) : (
