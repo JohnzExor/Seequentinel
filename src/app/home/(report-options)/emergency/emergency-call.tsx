@@ -32,7 +32,8 @@ const EmergencyCall = () => {
         <>
           <h1 className="text-2xl font-semibold">Emergency Call</h1>
           <p className="text-sm text-muted-foreground">
-            The emergency team will answer your call
+            Please wait while we're connecting your call to the emergency
+            response team.
           </p>
           <div className=" bg-background rounded-xl p-4 mt-4">
             <PeerJSComponent peer={peer} cancelCall={cancelCall} />
@@ -43,7 +44,7 @@ const EmergencyCall = () => {
           <div>
             <h1 className="text-2xl font-semibold">Call Ended</h1>
             <p className="text-sm text-muted-foreground">
-              Your call is already ended
+              Your call has ended.
             </p>
           </div>
           <Link className={cn(buttonVariants())} href={"/home/"}>

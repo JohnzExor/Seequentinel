@@ -4,6 +4,7 @@ import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { useMediaQuery } from "usehooks-ts";
 import { easeInOut, motion } from "framer-motion";
+import backgroundImage from "/public/images/bg.png";
 
 const AboutSection = () => {
   const matches = useMediaQuery("(min-width: 640px)");
@@ -33,8 +34,9 @@ const AboutSection = () => {
               alt="Campus map with incident markers"
               className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full  shadow-xl"
               height="310"
-              src="/images/bg.jpeg"
+              src={backgroundImage}
               width="550"
+              placeholder="blur"
             />
           </motion.div>
 
