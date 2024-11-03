@@ -18,6 +18,7 @@ export default async function RootLayout({
             src={backgroundImage}
             alt="bg"
             fill
+            placeholder="blur"
             className=" object-cover rounded-s-xl hover:scale-105 duration-500 ease-out"
           />
           <div className=" absolute z-20 bottom-0 text-white p-4 flex items-center gap-1 text-xs">
