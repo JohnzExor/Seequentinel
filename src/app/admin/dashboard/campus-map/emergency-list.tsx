@@ -30,7 +30,7 @@ const EmergencyList = () => {
   };
 
   return (
-    <div className="w-full max-w-[25em] bg-muted rounded-xl p-4 space-y-4">
+    <div className="w-full xl:max-w-[25em] bg-muted rounded-xl p-4 space-y-4">
       <div>
         <span className="text-sm text-primary">
           Peer ID: {adminPeerId ? adminPeerId : "Getting Peer ID..."}

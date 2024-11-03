@@ -33,16 +33,6 @@ const ThemeSwitcher = () => {
       value: "dark",
     },
     {
-      name: "Red",
-      colorClasses: {
-        bg: "bg-red-950",
-        innerBg: "bg-red-800",
-        rounded: "bg-red-400",
-      },
-      value: "red",
-    },
-
-    {
       name: "System",
       colorClasses: {
         bg: systemTheme === "light" ? "bg-[#ecedef]" : "bg-slate-950",

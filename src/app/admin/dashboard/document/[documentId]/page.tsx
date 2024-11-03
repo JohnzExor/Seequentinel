@@ -11,7 +11,7 @@ const page = async ({ params }: { params: Params }) => {
   }
 
   return (
-    <div className="space-y-6 md:space-y-8">
+    <div className="space-y-6 md:space-y-8  p-4 md:p-7 xl:p-10">
       <ReportInformation data={data} />
     </div>
   );

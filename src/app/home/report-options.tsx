@@ -9,11 +9,11 @@ import HandBookViolationImage from "/public/images/hvr.jpg";
 import CurrentLocation from "./current-location";
 import { useContext, useState } from "react";
 import { EmergencyContext } from "./emergency-data-provider";
-import { Emergencies, Reports } from "@prisma/client";
+import { Emergencies } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useServerAction } from "zsa-react";
 import { useRouter } from "next/navigation";
-import { postEmergencyAction } from "./(pages)/(report-options)/emergency/actions";
+import { postEmergencyAction } from "./(report-options)/emergency/actions";
 
 const options = [
   {

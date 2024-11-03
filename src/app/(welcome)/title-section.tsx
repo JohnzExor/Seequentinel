@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { TypeAnimation } from "react-type-animation";
 import { easeInOut, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const texts = [
   "Real-time incident reporting",
@@ -17,6 +18,7 @@ const texts = [
 ];
 
 const TitleSection = () => {
+  const router = useRouter();
   return (
     <motion.section
       initial={{ height: 0, y: -40 }}
@@ -48,8 +50,10 @@ const TitleSection = () => {
         transition={{ delay: 1.5, duration: 1 }}
         className="space-x-4"
       >
-        <Button>Get Started</Button>
-        <Button variant="outline">Learn More</Button>
+        <Button onClick={() => router.push("#contact")}>Get Started</Button>
+        <Button onClick={() => router.push("#about")} variant="outline">
+          Learn More
+        </Button>
       </motion.div>
       <motion.span
         initial={{ opacity: 0 }}

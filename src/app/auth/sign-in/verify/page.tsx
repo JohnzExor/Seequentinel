@@ -2,9 +2,9 @@ import LoginForm from "./login-form";
 
 const page = () => {
   return (
-    <div>
+    <>
       <LoginForm />
-    </div>
+    </>
   );
 };
 

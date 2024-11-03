@@ -14,14 +14,14 @@ const page = async () => {
     console.error(error.message);
   }
   return (
-    <>
+    <div className=" p-4 md:p-7 xl:p-10 ">
       <div>
         <h1 className=" text-xl font-bold">List of Admins</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>
       </div>
       <AddUser />
       <DataTable columns={columns} data={data} />
-    </>
+    </div>
   );
 };
 

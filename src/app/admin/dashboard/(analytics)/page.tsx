@@ -30,7 +30,7 @@ const page = async () => {
   }
 
   return (
-    <div className=" space-y-4">
+    <div className=" space-y-4  p-4 md:p-7 xl:p-10">
       <div>
         <h1 className=" text-xl font-bold">Dashboard Data Analytics</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>

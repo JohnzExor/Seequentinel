@@ -13,7 +13,7 @@ const page = async () => {
     console.error(error.message);
   }
   return (
-    <div>
+    <div className=" p-4 md:p-7 xl:p-10">
       <div>
         <h1 className=" text-xl font-bold">Emergencies</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>

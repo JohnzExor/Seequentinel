@@ -21,7 +21,7 @@ const page = async () => {
   }
 
   return (
-    <div>
+    <div className=" p-4 md:p-7 xl:p-10">
       <div className="space-y-0.5">
         <h2 className="text-2xl font-bold tracking-tight">Assigned Reports</h2>
         <p className="text-muted-foreground">
