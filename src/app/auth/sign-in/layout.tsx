@@ -1,8 +1,8 @@
-import { BringToFront } from "lucide-react";
+import { BringToFront, Camera } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 
-import backgroundImage from "/public/images/bg.jpeg";
+import backgroundImage from "/public/images/bg.png";
 import Image from "next/image";
 
 export default async function RootLayout({
@@ -11,18 +11,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className=" h-screen lg:p-[5em] flex flex-col items-center">
-      <div className="h-full flex items-center shadow-2xl w-full max-w-[90em] rounded-xl dark:border">
-        <div className="relative h-full w-full hidden lg:block rounded-s-xl overflow-hidden brightness-90 dark:brightness-75">
+    <div className=" h-screen lg:py-[5em] md:px-[1em] flex flex-col items-center">
+      <div className="h-full flex items-center shadow-2xl w-full max-w-[90em] rounded-xl border">
+        <div className="relative h-full w-full hidden lg:block rounded-s-xl overflow-hidden">
           <Image
             src={backgroundImage}
             alt="bg"
             fill
             className=" object-cover rounded-s-xl hover:scale-105 duration-500 ease-out"
           />
+          <div className=" absolute z-20 bottom-0 text-white p-4 flex items-center gap-1 text-xs">
+            <Camera size={20} />
+            <span>Carole Quinto</span>
+          </div>
         </div>
         <div className="flex flex-col items-center h-full w-full rounded-e-xl overflow-hidden">
-          <header className="flex justify-between px-10 pt-10 w-full">
+          <header className="flex justify-between px-10 pt-10 w-full z-20">
             <div className="overflow-hidden flex items-center gap-1 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
               <BringToFront size={20} className="text-primary" />
               <Link
@@ -34,7 +38,7 @@ export default async function RootLayout({
             </div>
             <ModeToggle />
           </header>
-          <div className="flex flex-col items-center justify-center h-screen w-full">
+          <div className="flex flex-col items-center -m-[10em]  justify-center h-screen w-full">
             <div className=" space-y-5 max-w-[400px]">
               <div className=" w-full">{children}</div>
               <p className="px-8 text-center text-sm text-muted-foreground">
@@ -58,7 +62,7 @@ export default async function RootLayout({
           </div>
         </div>
       </div>
-      <footer className=" absolute bottom-0 pb-8">
+      <footer className=" absolute bottom-0 pb-8 text-center">
         <p className="text-xs text-muted-foreground">
           © 2024 Seequentinel. All rights reserved. Palawan State University
         </p>

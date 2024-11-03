@@ -26,6 +26,7 @@ const EmergencyList = () => {
   const cancelCall = async (emergencyId: string) => {
     try {
       setData((prev) => prev.filter(({ id }) => id !== emergencyId));
+      setEndPoint([0, 0]);
       await execute({ id: emergencyId, newStatus: "CANCELED" });
     } catch (error: any) {
       console.error(error.message);
