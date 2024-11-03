@@ -1,47 +1,6 @@
 import prisma from "@/lib/db";
-import {
-  reportSchema,
-  reportTypeEnum,
-  statusEnum,
-  updateLocationSchema,
-} from "@/lib/zod";
-import { CallStatusEnum } from "@prisma/client";
+import { reportSchema, reportTypeEnum, statusEnum } from "@/lib/zod";
 import { z } from "zod";
-
-export const updateEmergencyLocation = async ({
-  id,
-  gpsCoordinates,
-  location,
-}: z.infer<typeof updateLocationSchema>) => {
-  const data = await prisma.reports.update({
-    where: { id },
-    data: {
-      gpsCoordinates,
-      location,
-    },
-  });
-  return data;
-};
-
-export const updateCurrentCallStatus = async (
-  id: string,
-  newStatus: CallStatusEnum
-) => {
-  const data = await prisma.reports.update({
-    where: { id },
-    data: {
-      callStatus: newStatus,
-    },
-  });
-  return data;
-};
-
-export const FindAllEmergenciesOnTheMap = async () => {
-  const data = await prisma.reports.findMany({
-    where: { reportType: "Emergencies", callStatus: "Pending" },
-  });
-  return data;
-};
 
 export const UpdateReportAssignee = async (
   documentId: string,

@@ -24,7 +24,7 @@ const page = async () => {
   }
 
   return (
-    <div className="w-full h-screen p-4 md:p-7 xl:p-10 space-y-4">
+    <div className="w-full h-screen p-4 md:p-7 space-y-4">
       <DataProvider emergencyData={data}>
         <div className="flex flex-col xl:flex-row xl:h-full gap-4 pb-4 xl:pb-0">
           <EmergencyList />

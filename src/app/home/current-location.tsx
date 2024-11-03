@@ -27,7 +27,7 @@ const CurrentLocation = () => {
         navigator.geolocation.getCurrentPosition(
           async ({ coords }) => {
             const { latitude, longitude } = coords;
-            setGpsCoordinates(`${latitude},${longitude}`);
+            setGpsCoordinates([latitude, longitude]);
             const name = await fetchLocationName(latitude, longitude);
             setLocation(name);
 

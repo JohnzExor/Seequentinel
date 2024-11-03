@@ -7,8 +7,8 @@ const page = async () => {
   let data: Reports[] = [];
 
   try {
-    const res = await await getReportTypeReportsUseCase("Emergencies");
-    data = res;
+    // const res = await await getReportTypeReportsUseCase("Emergencies");
+    // data = res;
   } catch (error: any) {
     console.error(error.message);
   }

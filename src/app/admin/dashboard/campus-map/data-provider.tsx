@@ -2,7 +2,7 @@
 
 import { initializePeer } from "@/lib/peer";
 import supabase from "@/lib/storage";
-import { Emergencies, Reports } from "@prisma/client";
+import { Emergencies, EmergencyStatusEnum } from "@prisma/client";
 import { LatLngExpression } from "leaflet";
 import Peer from "peerjs";
 import React, {
@@ -20,6 +20,7 @@ type TContext = {
   data: Emergencies[];
   startPoint: LatLngExpression;
   endPoint: LatLngExpression;
+  setData: Dispatch<SetStateAction<Emergencies[]>>;
   setStartPoint: Dispatch<SetStateAction<L.LatLngExpression>>;
   setEndPoint: Dispatch<SetStateAction<L.LatLngExpression>>;
 };
@@ -30,6 +31,7 @@ export const DataContext = createContext<TContext>({
   data: [],
   startPoint: [0, 0],
   endPoint: [0, 0],
+  setData: () => {},
   setStartPoint: () => {},
   setEndPoint: () => {},
 });
@@ -62,30 +64,62 @@ export const DataProvider = ({
         async (payload) => {
           const res = payload.new as Emergencies;
 
+          // Validate that res.status is a valid EmergencyStatusEnum
+          if (!Object.values(EmergencyStatusEnum).includes(res.status)) {
+            console.error(`Invalid status received: ${res.status}`);
+            return; // Skip processing this entry
+          }
+
           setData((prevData) => {
-            if (res.status === "CANCELED") {
-              return prevData.filter(({ id }) => id !== res.id);
-            }
-            if (res.status !== "PENDING") {
-              return [...prevData, {} as Emergencies];
-            }
-            const findIndex = data.findIndex((prev) => {
-              prev.id === res.id;
-            });
+            switch (res.status) {
+              case EmergencyStatusEnum.CANCELED:
+                // Remove the item if its status is "CANCELED"
+                return prevData.filter(({ id }) => id !== res.id);
 
-            if (findIndex) {
-              data[findIndex] === res;
-            }
+              case EmergencyStatusEnum.COMPLETED:
+              case EmergencyStatusEnum.FAILED:
+              case EmergencyStatusEnum.ACTIVE:
+                // Update or add the item if its status is "ACTIVE", "COMPLETED", or "FAILED"
+                return prevData.map((prev) => {
+                  if (prev.id === res.id) {
+                    return { ...prev, ...res }; // Update the existing entry
+                  }
+                  return prev; // Return the existing entry as is
+                });
 
-            return [...prevData, res];
+              case EmergencyStatusEnum.PENDING:
+                // Check if the item already exists in the array
+                const existingItem = prevData.find(
+                  (prev) => prev.id === res.id
+                );
+                if (existingItem) {
+                  // Update if it exists
+                  return prevData.map((prev) => {
+                    if (prev.id === res.id) {
+                      return { ...prev, ...res }; // Update the existing entry
+                    }
+                    return prev; // Return the existing entry as is
+                  });
+                } else {
+                  // If it doesn't exist, add the new entry
+                  return [...prevData, res];
+                }
+
+              default:
+                console.error(`Unhandled status: ${res.status}`);
+                return prevData; // Default return if unhandled
+            }
           });
+
+          setEndPoint(res.gpsCoordinates as unknown as LatLngExpression);
         }
       )
       .subscribe();
+
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [data, setData]);
+  }, [setData]);
 
   return (
     <DataContext.Provider
@@ -95,6 +129,7 @@ export const DataProvider = ({
         data,
         startPoint,
         endPoint,
+        setData,
         setStartPoint,
         setEndPoint,
       }}

@@ -2,16 +2,11 @@ import { z } from "zod";
 
 export const reportTypeEnum = z.enum([
   "CampusMaintenance",
-  "Emergencies",
   "HandbookViolation",
 ]);
 
 export const statusEnum = z
   .enum(["Request", "Reviewing", "Accepted", "Completed"])
-  .optional();
-
-export const callStatusEnum = z
-  .enum(["None", "Pending", "Connected", "Disconnected", "Canceled", "Failed"])
   .optional();
 
 export const emergencyStatusEnum = z
@@ -31,13 +26,7 @@ export const emergencySchema = z.object({
   recieverId: z.string().optional(),
 
   location: z.string().optional(),
-  gpsCoordinates: z.string().optional(),
-});
-
-export const updateLocationSchema = z.object({
-  id: z.string(),
-  gpsCoordinates: z.string(),
-  location: z.string(),
+  gpsCoordinates: z.tuple([z.number(), z.number()]),
 });
 
 export const changeStatusSchema = z.object({
@@ -64,11 +53,6 @@ export const reportSchema = z.object({
       invalid_type_error: "That's not a date",
     })
     .optional(),
-
-  // Emergency-specific fields
-  callStatus: callStatusEnum,
-  peerId: z.string().optional(),
-  gpsCoordinates: z.string().optional(),
 
   // Shared media/evidence field
   attachments: z.array(z.string()),

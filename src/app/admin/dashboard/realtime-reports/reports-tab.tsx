@@ -40,7 +40,7 @@ const ReportsTab = ({ reports }: { reports: Reports[] }) => {
   const allReports = MapReports();
   const maintenanceReports = MapReports("CampusMaintenance");
   const violationReports = MapReports("HandbookViolation");
-  const emergencyReports = MapReports("Emergencies");
+  // const emergencyReports = MapReports("Emergencies");
 
   return (
     <Tabs defaultValue="all" className="w-full">
@@ -59,11 +59,11 @@ const ReportsTab = ({ reports }: { reports: Reports[] }) => {
             <span>Handbook Violations</span>
             <Badge>{violationReports.length}</Badge>
           </TabsTrigger>
-          <TabsTrigger value="emergencies" className="flex items-center gap-1">
+          {/* <TabsTrigger value="emergencies" className="flex items-center gap-1">
             <Siren size={15} />
             <span>Emergencies</span>
             <Badge>{emergencyReports.length}</Badge>
-          </TabsTrigger>
+          </TabsTrigger> */}
         </TabsList>
       </div>
       <TabsContent value="all">
@@ -75,9 +75,9 @@ const ReportsTab = ({ reports }: { reports: Reports[] }) => {
       <TabsContent value="violations">
         <ReportsCard data={violationReports} />
       </TabsContent>
-      <TabsContent value="emergencies">
+      {/* <TabsContent value="emergencies">
         <ReportsCard data={emergencyReports} />
-      </TabsContent>
+      </TabsContent> */}
     </Tabs>
   );
 };

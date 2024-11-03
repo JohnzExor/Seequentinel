@@ -15,7 +15,6 @@ datasource db {
 
 enum ReportTypeEnum {
   CampusMaintenance
-  Emergencies
   HandbookViolation
 }
 
@@ -24,15 +23,6 @@ enum StatusEnum {
   Reviewing
   Accepted
   Completed
-}
-
-enum CallStatusEnum {
-  None
-  Pending
-  Connected
-  Disconnected
-  Canceled
-  Failed
 }
 
 model User {
@@ -68,11 +58,6 @@ model Reports {
   violatorName  String?
   violationDate DateTime?
 
-  // Emergency-specific fields
-  callStatus     CallStatusEnum? @default(None)
-  peerId         String?
-  gpsCoordinates String? // For storing GPS coordinates as a string (latitude, longitude)
-
   // Shared media/evidence field
   attachments String[] // Combined field for both media and evidence
 }
@@ -101,7 +86,7 @@ model Emergencies {
 
   //GPS Coordinates
   location       String?
-  gpsCoordinates String? // For storing GPS coordinates as a string (latitude, longitude)
+  gpsCoordinates Decimal[] // For storing GPS coordinates as a string (latitude, longitude)
 }
 
 model AuditLog {

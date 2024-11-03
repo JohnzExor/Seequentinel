@@ -49,7 +49,7 @@ const ReportingOptions = () => {
       const res = await emergency.execute({
         userId: session.data?.user.id as string,
         peerId: peerId,
-        gpsCoordinates: gpsCoordinates,
+        gpsCoordinates: gpsCoordinates as [number, number],
         location: location,
       });
 

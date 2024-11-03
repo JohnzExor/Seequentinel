@@ -50,11 +50,6 @@ const ReportTypes = ({ reports }: { reports: Reports[] }) => {
       count: reportCounter("HandbookViolation"),
       fill: "var(--color-HandbookViolation)",
     },
-    {
-      reportType: "Emergencies",
-      count: reportCounter("Emergencies"),
-      fill: "var(--color-Emergencies)",
-    },
   ];
   return (
     <Card>

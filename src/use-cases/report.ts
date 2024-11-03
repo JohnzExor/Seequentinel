@@ -2,47 +2,19 @@ import {
   ArchiveReport,
   CreateReport,
   FindAllAssignedReports,
-  FindAllEmergenciesOnTheMap,
   FindAllReports,
   FindAllUserReports,
   FindMonthlyReportsCounts,
   FindReportById,
   FindReportsByStatus,
   FindReportTypeReports,
-  updateCurrentCallStatus,
-  updateEmergencyLocation,
   UpdateReportAssignee,
   UpdateReportStatus,
 } from "@/data-access/report";
-import {
-  reportSchema,
-  reportTypeEnum,
-  statusEnum,
-  updateLocationSchema,
-} from "@/lib/zod";
+import { reportSchema, reportTypeEnum, statusEnum } from "@/lib/zod";
+
 import { z } from "zod";
 import { ReportResponse } from "./send-email";
-import { CallStatusEnum } from "@prisma/client";
-
-export const updateEmergencyLocationUseCase = async (
-  values: z.infer<typeof updateLocationSchema>
-) => {
-  const data = await updateEmergencyLocation(values);
-  return data;
-};
-
-export const updateCurrentCallStatusUseCase = async (
-  id: string,
-  newStatus: CallStatusEnum
-) => {
-  const data = await updateCurrentCallStatus(id, newStatus);
-  return data;
-};
-
-export const getAllEmergenciesOnTheMapUseCase = async () => {
-  const data = await FindAllEmergenciesOnTheMap();
-  return data;
-};
 
 export const setReportAssigneeUseCase = async (
   documentId: string,

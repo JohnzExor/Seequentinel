@@ -1,15 +1,17 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { DataContext } from "./data-provider";
 import { MapPin } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useServerAction } from "zsa-react";
 import { acceptCallAction, updateEmergencyStatusAction } from "./actions";
 import PeerJSComponent from "./peerjs-component";
+import { LatLngExpression } from "leaflet";
 
 const EmergencyList = () => {
-  const { data, setEndPoint, peer, adminPeerId } = useContext(DataContext);
+  const { data, setData, setEndPoint, peer, adminPeerId } =
+    useContext(DataContext);
   const { execute } = useServerAction(updateEmergencyStatusAction);
   const acceptCallId = useServerAction(acceptCallAction);
 
@@ -21,9 +23,10 @@ const EmergencyList = () => {
     }
   };
 
-  const cancelCall = async (id: string) => {
+  const cancelCall = async (emergencyId: string) => {
     try {
-      await execute({ id, newStatus: "CANCELED" });
+      setData((prev) => prev.filter(({ id }) => id !== emergencyId));
+      await execute({ id: emergencyId, newStatus: "CANCELED" });
     } catch (error: any) {
       console.error(error.message);
     }
@@ -45,46 +48,38 @@ const EmergencyList = () => {
           Pending Calls{" "}
           <span className="text-primary font-bold">{data.length}</span>
         </div>
-        {data.map(({ id, location, callStart, peerId, gpsCoordinates }) => {
-          const position: [number, number] | null = gpsCoordinates
-            ? (gpsCoordinates
-                .split(",")
-                .map((coord) => parseFloat(coord.trim())) as [number, number])
-            : null;
-
-          if (!position || position.length !== 2) return null;
-
-          return (
-            <li
-              key={id}
-              className="bg-background rounded-xl p-4 space-y-2 text-xs "
-            >
-              <div className=" flex items-start justify-between">
-                <span className="text-primary font-medium">
-                  {formatDistanceToNow(new Date(callStart), {
-                    addSuffix: true,
-                  })}
-                </span>
-                <button
-                  onClick={() => setEndPoint(position)}
-                  className="underline"
-                >
-                  View Route
-                </button>
-              </div>
-              <div className="flex items-start gap-1 text-sm">
-                <MapPin size={20} />
-                <span>{location}</span>
-              </div>
-              <PeerJSComponent
-                peer={peer}
-                remotePeerId={peerId}
-                acceptCall={() => acceptCall(id)}
-                cancelCall={() => cancelCall(id)}
-              />
-            </li>
-          );
-        })}
+        {data.map(({ id, location, callStart, peerId, gpsCoordinates }) => (
+          <li
+            key={id}
+            className="bg-background rounded-xl p-4 space-y-2 text-xs "
+          >
+            <div className=" flex items-start justify-between">
+              <span className="text-primary font-medium">
+                {formatDistanceToNow(new Date(callStart), {
+                  addSuffix: true,
+                })}
+              </span>
+              <button
+                onClick={() =>
+                  setEndPoint(gpsCoordinates as unknown as LatLngExpression)
+                }
+                className="underline"
+              >
+                View Route
+              </button>
+            </div>
+            <div className="flex items-start gap-1 text-sm">
+              <MapPin size={20} />
+              <span>{location}</span>
+            </div>
+            <PeerJSComponent
+              peer={peer}
+              remotePeerId={peerId}
+              acceptCall={() => acceptCall(id)}
+              cancelCall={() => cancelCall(id)}
+            />
+          </li>
+        ))}
       </ul>
     </div>
   );
