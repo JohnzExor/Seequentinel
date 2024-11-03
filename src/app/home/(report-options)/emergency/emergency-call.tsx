@@ -32,7 +32,7 @@ const EmergencyCall = () => {
         <>
           <h1 className="text-2xl font-semibold">Emergency Call</h1>
           <p className="text-sm text-muted-foreground">
-            Please wait while we're connecting your call to the emergency
+            Please wait while we&apos;re connecting your call to the emergency
             response team.
           </p>
           <div className=" bg-background rounded-xl p-4 mt-4">
