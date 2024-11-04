@@ -19,23 +19,6 @@ const links = [
     path: "/home",
     name: "Report",
     icon: <ClipboardPlus />,
-    children: [
-      {
-        path: "/home/campus-maintenance",
-        name: "Campus Maintenance",
-        icon: <ConstructionIcon />,
-      },
-      {
-        path: "/home/handbook-violation",
-        name: "Handbook Violation",
-        icon: <Book />,
-      },
-      {
-        path: "/home/emergency",
-        name: "Emergency",
-        icon: <Siren />,
-      },
-    ],
   },
 
   {
@@ -72,17 +55,13 @@ const NavLinks = ({
     }
   };
 
-  const isActive = (path: string, children?: { path: string }[]) => {
-    if (pathname === path) return true;
-    if (children) {
-      return children.some((child) => pathname === child.path);
-    }
-    return false;
+  const isActive = (path: string) => {
+    return pathname === path || (pathname.startsWith(path) && path !== "/home");
   };
 
   return (
     <>
-      {links.map(({ name, path, icon, children }, index) => (
+      {links.map(({ name, path, icon }, index) => (
         <li key={index}>
           <Link
             href={path}
@@ -90,10 +69,8 @@ const NavLinks = ({
             className={clsx(
               "flex items-center gap-3 text-sm p-3 pr-9 rounded-lg duration-200",
               {
-                "bg-primary shadow-lg text-white hover:bg-primary": isActive(
-                  path,
-                  children
-                ),
+                "bg-primary shadow-lg text-white hover:bg-primary":
+                  isActive(path),
                 "hover:bg-muted": pathname !== path,
               }
             )}

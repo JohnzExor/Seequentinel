@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Card,
   CardDescription,
@@ -8,24 +6,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-import React, { ForwardRefExoticComponent, RefAttributes } from "react";
+import React from "react";
 import Link from "next/link";
-import { LucideProps } from "lucide-react";
+import { TReportProgressCard } from "@/types/definitions";
 
-const ReportsCard = ({
-  data,
-}: {
-  data: {
-    reportType: string;
-    problemType: string | null;
-    status: string | null;
-    createdAt: Date;
-    path: string;
-    icon: ForwardRefExoticComponent<
-      Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-    >;
-  }[];
-}) => {
+const ReportsCard = ({ data }: { data: TReportProgressCard[] }) => {
   return (
     <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
       {data.length > 0 ? (

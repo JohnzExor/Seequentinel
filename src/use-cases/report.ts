@@ -16,6 +16,19 @@ import { reportSchema, reportTypeEnum, statusEnum } from "@/lib/zod";
 import { z } from "zod";
 import { ReportResponse } from "./send-email";
 
+import { Book, ConstructionIcon } from "lucide-react";
+import { Reports } from "@prisma/client";
+
+const titles = {
+  CampusMaintenance: "Campus Maintenance Request",
+  HandbookViolation: "Handbook Violation Report",
+};
+
+const icons = {
+  CampusMaintenance: ConstructionIcon,
+  HandbookViolation: Book,
+};
+
 export const setReportAssigneeUseCase = async (
   documentId: string,
   userId: string
@@ -48,8 +61,53 @@ export const archiveReportUseCase = async (id: string) => {
 };
 
 export const getAllUserReportsUseCase = async (id: string) => {
-  const data = await FindAllUserReports(id);
-  return data;
+  const res = await FindAllUserReports(id);
+
+  if (!res) {
+    return {
+      totalReports: 0,
+      totalCampusMaintenance: 0,
+      totalHandbookViolation: 0,
+      allReports: [],
+      maintenanceReports: [],
+      handbookReports: [],
+    };
+  }
+
+  const mapReportToCard = ({
+    id,
+    reportType,
+    problemType,
+    status,
+    createdAt,
+  }: Reports) => ({
+    id: id,
+    reportType: titles[reportType],
+    problemType: problemType,
+    status: status,
+    createdAt: createdAt,
+    icon: icons[reportType],
+    path: `/home/report-progress/${id}`,
+  });
+
+  const campusMaintenance = res
+    .filter(({ reportType }) => reportType === "CampusMaintenance")
+    .map(mapReportToCard);
+
+  const handbookViolation = res
+    .filter(({ reportType }) => reportType === "HandbookViolation")
+    .map(mapReportToCard);
+
+  const allReports = res.map(mapReportToCard);
+
+  return {
+    totalReports: res.length,
+    totalCampusMaintenance: campusMaintenance.length,
+    totalHandbookViolation: handbookViolation.length,
+    allReports: allReports,
+    maintenanceReports: campusMaintenance,
+    handbookReports: handbookViolation,
+  };
 };
 
 export const getUserReportByIdUseCase = async (id: string) => {

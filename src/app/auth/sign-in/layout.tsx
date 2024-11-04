@@ -11,15 +11,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className=" h-screen lg:py-[5em] md:px-[1em] flex flex-col items-center">
-      <div className="h-full flex items-center shadow-2xl w-full max-w-[90em] rounded-xl border">
+    <div className=" h-screen lg:p-[1em] flex flex-col items-center justify-center">
+      <div className="h-full lg:max-h-[50em] flex items-center shadow-2xl w-full max-w-[90em] rounded-xl border">
         <div className="relative h-full w-full hidden lg:block rounded-s-xl overflow-hidden">
           <Image
             src={backgroundImage}
             alt="bg"
             fill
             placeholder="blur"
-            className=" object-cover rounded-s-xl hover:scale-105 duration-500 ease-out"
+            className=" object-cover rounded-s-xl hover:scale-105 duration-500 ease-out dark:brightness-75"
           />
           <div className=" absolute z-20 bottom-0 text-white p-4 flex items-center gap-1 text-xs">
             <Camera size={20} />

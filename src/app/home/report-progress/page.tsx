@@ -3,16 +3,32 @@ import { Separator } from "@/components/ui/separator";
 import { getServerSession } from "next-auth";
 import { getAllUserReportsUseCase } from "@/use-cases/report";
 import { authOptions } from "@/lib/auth";
-import { Reports } from "@prisma/client";
+import { TReportProgressCard } from "@/types/definitions";
+
+export type TReportProgressData = {
+  totalReports: number;
+  totalCampusMaintenance: number;
+  totalHandbookViolation: number;
+  allReports: TReportProgressCard[];
+  maintenanceReports: TReportProgressCard[];
+  handbookReports: TReportProgressCard[];
+};
 
 const page = async () => {
-  let data: Reports[] = [];
+  let data: TReportProgressData = {
+    totalReports: 0,
+    totalCampusMaintenance: 0,
+    totalHandbookViolation: 0,
+    allReports: [],
+    maintenanceReports: [],
+    handbookReports: [],
+  };
 
   try {
     const session = await getServerSession(authOptions);
-    const res = await getAllUserReportsUseCase(session?.user.id as string);
-
-    data = res as Reports[];
+    if (session?.user) {
+      data = await getAllUserReportsUseCase(session.user.id);
+    }
   } catch (error: any) {
     console.error(error.message);
   }

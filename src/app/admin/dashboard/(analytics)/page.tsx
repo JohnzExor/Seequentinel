@@ -2,32 +2,30 @@ import ReportStatusDistribution from "./report-status-distribution";
 import ReportTypes from "./report-types";
 import ReportsOverview from "./reports-overview";
 import CountCards from "./count-cards";
-import { getAllUserUseCase } from "@/use-cases/user";
 import RecentReports from "./recent-reports";
-import {
-  getAllReportsUseCase,
-  getMonthlyReportsCountsUseCase,
-} from "@/use-cases/report";
+import { getDashboardAnalyticsUseCase } from "@/use-cases/analytics";
 import { Reports, User } from "@prisma/client";
 
+type TData = {
+  reports: Reports[];
+  users: User[];
+  monthlyReport: { [key: string]: number };
+};
+
 const page = async () => {
-  let reports: Reports[] = [];
-  let users: User[] = [];
-  let monthlyReport: {
-    [key: string]: number;
-  } = {};
+  let data: TData = {
+    reports: [],
+    users: [],
+    monthlyReport: {},
+  };
 
   try {
-    const getReports = await getAllReportsUseCase();
-    const getUsers = await getAllUserUseCase();
-    const getMonthlyReport = await getMonthlyReportsCountsUseCase();
-
-    reports = getReports;
-    users = getUsers;
-    monthlyReport = getMonthlyReport;
+    data = await getDashboardAnalyticsUseCase();
   } catch (error: any) {
     console.error(error.message);
   }
+
+  const { reports, users, monthlyReport } = data;
 
   return (
     <div className=" space-y-4  p-4 md:p-7 xl:p-10">

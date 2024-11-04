@@ -50,7 +50,7 @@ export const FindAllUserReports = async (id: string) => {
   const data = await prisma.user.findUnique({
     where: { id },
     include: {
-      reports: { where: { isArchived: false } },
+      reports: { where: { isArchived: false }, orderBy: { createdAt: "desc" } },
     },
   });
   return data?.reports;
