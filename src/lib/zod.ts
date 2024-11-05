@@ -19,6 +19,10 @@ export const emergencyStatusEnum = z
   ])
   .optional();
 
+export const userStatusEnum = z.enum(["ACTIVE", "DISABLED"]);
+
+export const userRoleEnum = z.enum(["USER", "ADMIN", "TESTER"]);
+
 export const emergencySchema = z.object({
   userId: z.string(),
 
@@ -77,8 +81,7 @@ export const changePasswordSchema = z.object({
 export const createUserSchema = z.object({
   email: z.string().min(1, "Corporate email is required").max(50),
   password: z.string().min(1, "Password is required").max(50),
-  status: z.enum(["active", "disabled"]),
-  type: z.enum(["user", "admin"]),
+  role: userRoleEnum,
 });
 
 export const auditLogSchema = z.object({

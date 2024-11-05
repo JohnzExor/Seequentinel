@@ -45,8 +45,7 @@ const AddForm = ({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
       email: "",
-      type: "admin",
-      status: "active",
+      role: "ADMIN",
       password: "123456",
     },
   });

@@ -1,10 +1,11 @@
 import prisma from "@/lib/db";
 import { changePasswordSchema, createUserSchema } from "@/lib/zod";
+import { UserRoleEnum } from "@prisma/client";
 import { compare, hash } from "bcryptjs";
 import { z } from "zod";
 
-export const FindAllUser = async (type: string) => {
-  const data = await prisma.user.findMany({ where: { type } });
+export const FindAllUser = async (role: UserRoleEnum) => {
+  const data = await prisma.user.findMany({ where: { role } });
   return data;
 };
 

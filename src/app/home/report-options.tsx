@@ -86,7 +86,7 @@ const ReportingOptions = () => {
           <CurrentLocation />
         </div>
         <div className="flex flex-col items-center justify-center h-[20em]">
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center relative">
             <div className=" absolute rounded-full bg-red-50 dark:bg-red-300 h-[18em] w-[18em] animate-pulse shadow-xl" />
             <div className=" absolute rounded-full bg-red-100 dark:bg-red-400 h-[15em] w-[15em] animate-pulse shadow-xl" />
             <div className=" absolute rounded-full bg-red-300 dark:bg-red-500 h-[12em] w-[12em] animate-pulse shadow-xl" />

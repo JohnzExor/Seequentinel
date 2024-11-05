@@ -20,16 +20,18 @@ import { useServerAction } from "zsa-react";
 import { changePasswordAction } from "./action";
 import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
+import { Session } from "next-auth";
 
-const ChangePasswordForm = ({ userId }: { userId: string | undefined }) => {
+const ChangePasswordForm = ({ session }: { session: Session | null }) => {
   const { toast } = useToast();
 
   const { execute, isPending } = useServerAction(changePasswordAction);
+  const user = session?.user;
 
   const form = useForm<z.infer<typeof changePasswordSchema>>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
-      id: userId,
+      id: user?.id,
       currentPassword: "",
       newPassword: "",
       confirmNewPassword: "",
@@ -37,6 +39,14 @@ const ChangePasswordForm = ({ userId }: { userId: string | undefined }) => {
   });
 
   const onSubmit = async (values: z.infer<typeof changePasswordSchema>) => {
+    if (user && user.role === "TESTER") {
+      return toast({
+        variant: "destructive",
+        title: "Tester Account",
+        description:
+          "You are logged in with a tester account. Some features may be restricted.",
+      });
+    }
     const comparePassword = values.newPassword === values.confirmNewPassword;
     if (!comparePassword)
       return toast({

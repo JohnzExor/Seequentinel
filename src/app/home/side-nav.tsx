@@ -3,7 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { easeInOut, motion } from "framer-motion";
 import NavLinks from "./nav-links";
-import { BringToFront, PanelLeftDashed, PanelRightClose } from "lucide-react";
+import {
+  ArrowUpRight,
+  BringToFront,
+  PanelLeftDashed,
+  PanelRightClose,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import clsx from "clsx";
 import { ModeToggle } from "@/components/theme/mode-toggle";
@@ -11,6 +16,8 @@ import Logout from "@/components/logout";
 import { Session } from "next-auth";
 
 import { useLocalStorage } from "usehooks-ts";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 const MotionDiv = [
   {
@@ -165,6 +172,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
             transition={{ delay: 0.3 }}
             className="flex flex-col"
           >
+            <Badge className="w-fit">{session?.user.role} Account</Badge>
             <label className=" font-medium text-sm">{user?.email}</label>
             <span className=" text-muted-foreground text-xs">
               ID: {user?.id}

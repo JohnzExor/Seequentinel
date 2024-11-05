@@ -16,6 +16,7 @@ import React, { useState } from "react";
 import { Session } from "next-auth";
 import Logout from "@/components/logout";
 import { ModeToggle } from "@/components/theme/mode-toggle";
+import { Badge } from "@/components/ui/badge";
 
 const SideNavToggle = ({ session }: { session: Session | null }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,6 +42,7 @@ const SideNavToggle = ({ session }: { session: Session | null }) => {
         <SheetFooter className="gap-2">
           <Logout text="Sign out" />
           <div className="flex flex-col">
+            <Badge className="w-fit">{session?.user.role} Account</Badge>
             <label className=" font-medium text-sm">{user?.email}</label>
             <span className=" text-muted-foreground text-xs">
               ID: {user?.id}

@@ -12,15 +12,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { WelcomeUser } from "./send-email";
 
-import { compare, hash } from "bcryptjs";
+import { compare } from "bcryptjs";
 
 export const getAllUserUseCase = async () => {
-  const data = await FindAllUser("user");
+  const data = await FindAllUser("USER");
   return data;
 };
 
 export const getAllAdminUseCase = async () => {
-  const data = await FindAllUser("admin");
+  const data = await FindAllUser("ADMIN");
   return data;
 };
 
@@ -41,10 +41,10 @@ export const createUserUseCase = async (
         eventType: "create",
         userId: session?.user.id as string,
         ipAddress: "",
-        objectType: data.type,
+        objectType: data.role,
         objectId: data.id,
         status: data ? "success" : "failed",
-        description: `Added ${data.type}`,
+        description: `Added ${data.role}`,
         source: "",
       });
 

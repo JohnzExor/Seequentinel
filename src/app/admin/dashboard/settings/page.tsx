@@ -29,7 +29,7 @@ const page = async () => {
         <p className="text-sm text-muted-foreground pb-4">
           To secure your account, please change your password.
         </p>
-        <ChangePasswordForm userId={session?.user.id} />
+        <ChangePasswordForm session={session} />
       </div>
     </div>
   );

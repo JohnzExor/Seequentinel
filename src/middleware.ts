@@ -15,6 +15,9 @@ export async function middleware(request: NextRequest) {
   }
 
   if (token) {
+    if (pathname === "/admin") {
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
     if (
       pathname.startsWith("/auth") ||
       pathname === "/" ||

@@ -128,7 +128,7 @@ const NavLinks = ({
           {children?.length ? (
             <Accordion type="single" collapsible>
               <AccordionItem value="item" className=" border-b-0 text-sm">
-                <AccordionTrigger className="px-3 font-normal hover:no-underline hover:bg-primary-foreground rounded-lg duration-200">
+                <AccordionTrigger className="px-3 font-normal hover:no-underline hover:bg-primary-foreground rounded-lg duration-200 dark:hover:bg-muted">
                   <div className=" flex items-center gap-3">
                     <Icon />
                     <motion.div

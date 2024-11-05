@@ -9,6 +9,7 @@ import clsx from "clsx";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import Logout from "@/components/logout";
 import { Session } from "next-auth";
+import { Badge } from "@/components/ui/badge";
 
 const MotionDiv = [
   {
@@ -106,7 +107,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
             Main Menu
           </motion.span>
         </span>
-        <ul className=" space-y-1">
+        <ul className=" space-y-2 h-[34em] overflow-y-auto">
           <NavLinks isMinimized={isMinimized} />
         </ul>
       </div>
@@ -165,6 +166,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
             transition={{ delay: 0.3 }}
             className="flex flex-col"
           >
+            <Badge className="w-fit">{session?.user.role} Account</Badge>
             <label className=" font-medium text-sm">{user?.email}</label>
             <span className=" text-muted-foreground text-xs">
               ID: {user?.id}
