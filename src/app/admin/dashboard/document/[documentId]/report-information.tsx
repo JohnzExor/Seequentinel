@@ -42,6 +42,7 @@ const ReportInformation = ({ data }: { data: Reports }) => {
         "postgres_changes",
         { event: "*", schema: "public", table: "Reports" },
         async (payload) => {
+          console.log(payload);
           setReports(payload.new as Reports);
         }
       )
@@ -82,7 +83,9 @@ const ReportInformation = ({ data }: { data: Reports }) => {
           <div className="text-sm text-muted-foreground mt-1">
             <span>ID: {id}</span>
             <br />
-            <span>Created {createdAt.toLocaleString()}</span>
+            {createdAt ? (
+              <span>Created {createdAt.toLocaleString()}</span>
+            ) : null}
           </div>
           <Button variant="outline" className="mt-2">
             <FileText className="w-4 h-4 mr-2" />

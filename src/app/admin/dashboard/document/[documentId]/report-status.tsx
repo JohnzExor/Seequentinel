@@ -23,12 +23,14 @@ const ReportStatus = ({
           <span>Assigned to:</span>
           <Badge>{assigned ? assigned : "Pending"}</Badge>
         </div>
-        <div className="flex items-center gap-1 font-medium text-muted-foreground">
-          <span>Updated:</span>
-          <Badge className=" bg-muted-foreground text-white">
-            {updatedAt.toLocaleString()}
-          </Badge>
-        </div>
+        {updatedAt ? (
+          <div className="flex items-center gap-1 font-medium text-muted-foreground">
+            <span>Updated:</span>
+            <Badge className=" bg-muted-foreground text-white">
+              {updatedAt.toLocaleString()}
+            </Badge>
+          </div>
+        ) : null}
       </div>
 
       <ul className="flex gap-10">
