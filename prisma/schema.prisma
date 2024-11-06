@@ -98,6 +98,12 @@ model Emergencies {
   //GPS Coordinates
   location       String?
   gpsCoordinates Decimal[] // For storing GPS coordinates as a string (latitude, longitude)
+
+  //Admin Inputs
+  emergencyType    String?
+  callerName       String?
+  emergencyStatus  String?
+  emergencyDetails String?
 }
 
 model AuditLog {

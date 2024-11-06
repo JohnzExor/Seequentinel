@@ -6,8 +6,10 @@ import { z } from "zod";
 
 const ProvidedDetails = ({
   values,
+  isUploading,
 }: {
   values: z.infer<typeof reportSchema>;
+  isUploading: boolean;
 }) => {
   const { problemType, attachments, location, details } = values;
 
@@ -49,7 +51,9 @@ const ProvidedDetails = ({
                   </div>
                 ))
               ) : (
-                <span>No media attachments</span>
+                <span>
+                  {isUploading ? "Uploading..." : "No media attachments"}
+                </span>
               )}
             </div>
           ) : (

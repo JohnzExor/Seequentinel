@@ -6,8 +6,10 @@ import { z } from "zod";
 
 const ProvidedDetails = ({
   values,
+  isUploading,
 }: {
   values: z.infer<typeof reportSchema>;
+  isUploading: boolean;
 }) => {
   const {
     attachments,
@@ -46,24 +48,24 @@ const ProvidedDetails = ({
           </span>
           {value === attachments ? (
             <div className=" grid grid-cols-4 gap-2">
-              {attachments.length > 0 ? (
-                attachments.map((path, index) => (
-                  <div
-                    className="relative rounded-xl border border-primary mt-1"
-                    key={index}
-                  >
-                    <Image
-                      src={fileUrl + path}
-                      width={100}
-                      height={100}
-                      alt="Rounded picture"
-                      className="rounded-xl object-cover"
-                    />
-                  </div>
-                ))
-              ) : (
-                <span>No evidence attachments</span>
-              )}
+              {attachments.length > 0
+                ? attachments.map((path, index) => (
+                    <div
+                      className="relative rounded-xl border border-primary mt-1"
+                      key={index}
+                    >
+                      <Image
+                        src={fileUrl + path}
+                        width={100}
+                        height={100}
+                        alt="Rounded picture"
+                        className="rounded-xl object-cover"
+                      />
+                    </div>
+                  ))
+                : isUploading
+                ? "Uploading..."
+                : "No media attachments"}
             </div>
           ) : (
             <h1 className=" font-medium">

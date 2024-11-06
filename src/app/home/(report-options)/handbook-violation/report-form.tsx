@@ -188,6 +188,12 @@ const ReportForm = ({
   };
 
   const onSubmit = async (values: z.infer<typeof reportSchema>) => {
+    if (isUploading) {
+      toast({
+        description: "Media is still uploading...",
+      });
+      return;
+    }
     const validatedInput = reportSchema.parse({
       ...values,
       userId: data?.user.id,
@@ -418,7 +424,10 @@ const ReportForm = ({
         ) : null}
 
         {currentStep === 6 ? (
-          <ProvidedDetails values={form.getValues()} />
+          <ProvidedDetails
+            values={form.getValues()}
+            isUploading={isUploading}
+          />
         ) : null}
 
         <div className="flex justify-between mt-4">

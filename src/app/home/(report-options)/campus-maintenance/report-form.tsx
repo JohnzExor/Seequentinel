@@ -175,6 +175,12 @@ const ReportForm = ({
   };
 
   const onSubmit = async (values: z.infer<typeof reportSchema>) => {
+    if (isUploading) {
+      toast({
+        description: "Media is still uploading...",
+      });
+      return;
+    }
     const res = await execute({
       ...values,
       userId: data?.user.id,
@@ -333,7 +339,10 @@ const ReportForm = ({
         ) : null}
 
         {currentStep === 4 ? (
-          <ProvidedDetails values={form.getValues()} />
+          <ProvidedDetails
+            values={form.getValues()}
+            isUploading={isUploading}
+          />
         ) : null}
 
         <div className="flex items-center justify-between">
