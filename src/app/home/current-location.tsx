@@ -1,6 +1,6 @@
 "use client";
 import { Locate, MapPin } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { EmergencyContext } from "./emergency-data-provider";
 
 const fetchLocationName = async (lat: number, lon: number) => {

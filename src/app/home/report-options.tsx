@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { useServerAction } from "zsa-react";
 import { useRouter } from "next/navigation";
 import { postEmergencyAction } from "./(report-options)/emergency/actions";
+import { Phone, MapPin, Zap, Mic } from "lucide-react";
 
 const options = [
   {
@@ -34,10 +35,33 @@ const options = [
   },
 ];
 
+const features = [
+  {
+    name: "Call",
+    icon: Phone,
+    description: "Initiate a voice call for emergencies.",
+  },
+  {
+    name: "Location",
+    icon: MapPin,
+    description: "Track real-time location during emergencies.",
+  },
+  {
+    name: "Response",
+    icon: Zap,
+    description: "Ensure fast response to emergency calls.",
+  },
+  {
+    name: "Record",
+    icon: Mic,
+    description: "Record audio for emergency calls.",
+  },
+];
+
 const ReportingOptions = () => {
   const session = useSession();
   const router = useRouter();
-  const { peerId, setData, gpsCoordinates, location } =
+  const { peerId, setData, gpsCoordinates, peerError } =
     useContext(EmergencyContext);
 
   const emergency = useServerAction(postEmergencyAction);
@@ -50,7 +74,6 @@ const ReportingOptions = () => {
         userId: session.data?.user.id as string,
         peerId: peerId,
         gpsCoordinates: gpsCoordinates as [number, number],
-        location: location,
       });
 
       setData(res[0] as Emergencies);
@@ -71,7 +94,7 @@ const ReportingOptions = () => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 h-screen">
-      <div className="px-8 pb-4 pt-4 md:pb-0 md:p-10 lg:hover:bg-muted duration-500 ease-in-out flex flex-col items-center">
+      <div className="px-8 pb-4 pt-4 md:pb-0 md:p-10 lg:hover:bg-muted duration-500 ease-in-out flex flex-col items-center md:gap-7">
         <div className="space-y-4 w-full">
           <div className=" space-y-4">
             <h1 className="md:text-2xl text-lg font-semibold flex items-center gap-2 text-red-500">
@@ -82,7 +105,6 @@ const ReportingOptions = () => {
               Press the button below and help will reach you soon.
             </p>
           </div>
-
           <CurrentLocation />
         </div>
         <div className="flex flex-col items-center justify-center h-[20em]">
@@ -92,7 +114,7 @@ const ReportingOptions = () => {
             <div className=" absolute rounded-full bg-red-300 dark:bg-red-500 h-[12em] w-[12em] animate-pulse shadow-xl" />
             <button
               onClick={handleTapCounter}
-              disabled={emergency.isPending || !peerId || !location}
+              disabled={emergency.isPending || !peerId || !gpsCoordinates}
               className="flex flex-col justify-center items-center rounded-full bg-red-500 dark:bg-red-700 disabled:bg-red-300  text-white h-[10em] w-[10em] z-20 shadow-xl hover:scale-105 duration-500 ease-out"
             >
               <span className="text-5xl font-bold">
@@ -110,9 +132,21 @@ const ReportingOptions = () => {
             </button>
           </div>
         </div>
-        <span className="text-xs text-muted-foreground mt-auto md:pb-4">
-          Peer ID: {peerId ? peerId : "Getting Peer ID...."}
+        <span className="text-xs text-muted-foreground">
+          Peer ID:{" "}
+          {peerError ? peerError : peerId ? peerId : "Getting Peer ID...."}
         </span>
+        <ul className="grid grid-cols-2 gap-4 mt-6">
+          {features.map(({ icon: Icon, name, description }, index) => (
+            <li key={index} className="text-sm p-4">
+              <div className="flex gap-1">
+                <Icon className="w-5 h-5 shrink-0 text-primary" />
+                <span className="font-medium">{name}</span>
+              </div>
+              <span className="text-xs">{description}</span>
+            </li>
+          ))}
+        </ul>
       </div>
       {options.map(({ name, link, icon: Icon, image, description }, index) => (
         <Link href={link} key={index} className=" relative h-[18em] xl:h-full">

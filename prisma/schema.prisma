@@ -96,10 +96,10 @@ model Emergencies {
   recieverId String?
 
   //GPS Coordinates
-  location       String?
   gpsCoordinates Decimal[] // For storing GPS coordinates as a string (latitude, longitude)
 
   //Admin Inputs
+  location         String?
   emergencyType    String?
   callerName       String?
   emergencyStatus  String?

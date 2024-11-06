@@ -107,7 +107,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
             Main Menu
           </motion.span>
         </span>
-        <ul className=" space-y-2 h-[34em] overflow-y-auto">
+        <ul className=" space-y-2">
           <NavLinks isMinimized={isMinimized} />
         </ul>
       </div>

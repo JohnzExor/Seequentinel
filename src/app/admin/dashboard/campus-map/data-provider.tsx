@@ -16,6 +16,7 @@ import React, {
 
 type TContext = {
   peer: Peer | null;
+  peerError: string | null;
   adminPeerId: string | null;
   data: Emergencies[];
   startPoint: LatLngExpression;
@@ -27,6 +28,7 @@ type TContext = {
 
 export const DataContext = createContext<TContext>({
   peer: null,
+  peerError: null,
   adminPeerId: null,
   data: [],
   startPoint: [0, 0],
@@ -49,9 +51,12 @@ export const DataProvider = ({
   const [adminPeerId, setPeerId] = useState<string | null>(null);
   const [startPoint, setStartPoint] = useState<LatLngExpression>([0, 0]);
   const [endPoint, setEndPoint] = useState<LatLngExpression>([0, 0]);
+  const [peerError, setPeerError] = useState<string | null>(null);
 
   useEffect(() => {
     peer.on("open", setPeerId);
+    peer.on("error", () => setPeerError("Error getting peer id"));
+
     const channel = supabase
       .channel("emergency-db-changes")
       .on(
@@ -125,6 +130,7 @@ export const DataProvider = ({
     <DataContext.Provider
       value={{
         peer,
+        peerError,
         adminPeerId,
         data,
         startPoint,

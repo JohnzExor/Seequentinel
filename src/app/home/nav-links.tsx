@@ -78,7 +78,7 @@ const NavLinks = ({
                 }
               )}
             >
-              <Icon />
+              <Icon className="shrink-0" />
               <motion.div
                 initial={{
                   width: isMinimized ? 0 : 200,

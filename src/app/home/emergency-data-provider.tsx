@@ -18,6 +18,7 @@ type TContext = {
   setData: Dispatch<SetStateAction<Emergencies>>;
   peer: Peer;
   peerId: string | undefined;
+  peerError: string | null;
   location: string | undefined;
   setLocation: React.Dispatch<React.SetStateAction<string | undefined>>;
   gpsCoordinates: [number, number] | null;
@@ -30,6 +31,7 @@ export const EmergencyContext = createContext<TContext>({
   data: {} as Emergencies,
   setData: () => {},
   peer: {} as Peer,
+  peerError: null,
   peerId: undefined,
   location: undefined,
   setLocation: () => {},
@@ -46,11 +48,12 @@ const EmergencyDataProvider = ({ children }: { children: ReactNode }) => {
   const [gpsCoordinates, setGpscoordinates] = useState<[number, number] | null>(
     null
   );
+  const [peerError, setPeerError] = useState<string | null>(null);
   const { id } = data;
 
   useEffect(() => {
     peer.on("open", setPeerId);
-    peer.on("error", (error) => console.error(error));
+    peer.on("error", () => setPeerError("Error getting peer id"));
   }, []);
 
   useEffect(() => {
@@ -87,6 +90,7 @@ const EmergencyDataProvider = ({ children }: { children: ReactNode }) => {
         setData: setData,
         peer: peer,
         peerId: peerId,
+        peerError: peerError,
         location: location,
         setLocation: setLocation,
         gpsCoordinates: gpsCoordinates,

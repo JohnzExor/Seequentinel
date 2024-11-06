@@ -1,19 +1,36 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DataContext } from "./data-provider";
-import { MapPin } from "lucide-react";
+import { LoaderCircle, Locate, MapPin } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useServerAction } from "zsa-react";
 import { acceptCallAction, updateEmergencyStatusAction } from "./actions";
 import PeerJSComponent from "./peerjs-component";
 import { LatLngExpression } from "leaflet";
+import { Decimal } from "@prisma/client/runtime/library";
+
+const fetchLocationName = async (coordinates: Decimal[]) => {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates[0]}&lon=${coordinates[1]}`
+    );
+
+    const { display_name } = await res.json();
+
+    return display_name;
+  } catch (error: any) {
+    console.error(error.message);
+  }
+};
 
 const EmergencyList = () => {
   const { data, setData, setEndPoint, peer, adminPeerId } =
     useContext(DataContext);
   const { execute } = useServerAction(updateEmergencyStatusAction);
   const acceptCallId = useServerAction(acceptCallAction);
+
+  const [locations, setLocations] = useState<{ [key: string]: string }>({});
 
   const acceptCall = async (id: string) => {
     try {
@@ -33,6 +50,29 @@ const EmergencyList = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const locationPromises = data.map(async ({ id, gpsCoordinates }) => {
+        if (gpsCoordinates) {
+          const locationName = await fetchLocationName(gpsCoordinates);
+          return { id, locationName };
+        }
+        return { id, locationName: "No GPS data" };
+      });
+
+      const resolvedLocations = await Promise.all(locationPromises);
+      const locationMap = resolvedLocations.reduce(
+        (acc, { id, locationName }) => ({ ...acc, [id]: locationName }),
+        {}
+      );
+      setLocations(locationMap);
+    };
+
+    if (data.length) {
+      fetchLocations();
+    }
+  }, [data]);
+
   return (
     <div className="w-full xl:max-w-[25em] bg-muted rounded-xl p-4 space-y-4">
       <div>
@@ -49,7 +89,7 @@ const EmergencyList = () => {
           Pending Calls{" "}
           <span className="text-primary font-bold">{data.length}</span>
         </div>
-        {data.map(({ id, location, callStart, peerId, gpsCoordinates }) => (
+        {data.map(({ id, callStart, peerId, gpsCoordinates }) => (
           <li
             key={id}
             className="bg-background rounded-xl p-4 space-y-2 text-xs "
@@ -69,10 +109,17 @@ const EmergencyList = () => {
                 View Route
               </button>
             </div>
-            <div className="flex items-start gap-1 text-sm">
-              <MapPin size={20} />
-              <span>{location}</span>
-            </div>
+            {locations[id] ? (
+              <div className="flex gap-1 text-sm">
+                <MapPin size={20} />
+                <span>{locations[id]}</span>
+              </div>
+            ) : (
+              <div className="flex gap-1 animate-pulse text-sm">
+                <Locate size={20} />
+                <span>Getting location..</span>
+              </div>
+            )}
             <PeerJSComponent
               peer={peer}
               remotePeerId={peerId}
