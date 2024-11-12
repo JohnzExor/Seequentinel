@@ -2,20 +2,17 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { ArrowUpDown, Flag, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Button } from "@/components/ui/button";
+import { User, UserStatusEnum } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
+import AccountStatusToggle from "./account-status-toggle";
+import { formatDistanceToNow } from "date-fns";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-
-export type User = {
-  id: string;
-  email: string;
-  createdAt: Date;
-  status: string;
-};
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -47,6 +44,15 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => {
+      const status: UserStatusEnum = row.getValue("status");
+
+      return (
+        <Badge variant={status === "ACTIVE" ? "default" : "destructive"}>
+          {status}
+        </Badge>
+      );
+    },
   },
   {
     accessorKey: "email",
@@ -66,20 +72,22 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "createdAt",
     header: "Account created",
+    cell: ({ row }) => {
+      const createdAt: Date = row.getValue("createdAt");
+      return formatDistanceToNow(new Date(createdAt)) + " ago";
+    },
   },
 
   {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const id: string = row.getValue("id");
+      const status: UserStatusEnum = row.getValue("status");
 
       return (
         <div className="flex items-center gap-1">
-          <Button>Deactivate</Button>
-          <Button variant={"destructive"}>
-            <Flag />
-          </Button>
+          <AccountStatusToggle userId={id} status={status} />
         </div>
       );
     },

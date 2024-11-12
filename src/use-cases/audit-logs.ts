@@ -1,15 +1,6 @@
-import { CreateAuditLog, FindAllAuditlogs } from "@/data-access/audit-logs";
-import { auditLogSchema } from "@/lib/zod";
-import { z } from "zod";
+import { findAllAuditLogs } from "@/data-access/audit-logs";
 
-export const createAuditLogsUseCase = async (
-  newAuditLog: z.infer<typeof auditLogSchema>
-) => {
-  const data = await CreateAuditLog(newAuditLog);
-  return data;
-};
-
-export const findAllAuditLogsUseCase = async () => {
-  const data = await FindAllAuditlogs();
+export const getAllAuditLogsUseCase = async () => {
+  const data = await findAllAuditLogs();
   return data;
 };

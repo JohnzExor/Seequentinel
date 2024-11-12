@@ -1,16 +1,17 @@
 import { AuditLog } from "@prisma/client";
-import { DataTable } from "../data-table";
 import { columns } from "./columns";
-import { findAllAuditLogsUseCase } from "@/use-cases/audit-logs";
+import { DataTable } from "./data-table";
+import { getAllAuditLogsUseCase } from "@/use-cases/audit-logs";
 
 const page = async () => {
   let data: AuditLog[] = [];
+  let error;
 
   try {
-    const res = await findAllAuditLogsUseCase();
-    data = res;
-  } catch (error: any) {
-    console.error(error.message);
+    data = await getAllAuditLogsUseCase();
+  } catch (err) {
+    console.error(err);
+    error = "Error fetching data";
   }
   return (
     <div className=" p-4 md:p-7 xl:p-10">
@@ -18,7 +19,7 @@ const page = async () => {
         <h1 className=" text-xl font-bold">Audit Logs</h1>
         <p className="text-sm text-muted-foreground">Updated {Date()}</p>
       </div>
-      <DataTable data={data} columns={columns} />
+      {!error ? <DataTable data={data} columns={columns} /> : error}
     </div>
   );
 };

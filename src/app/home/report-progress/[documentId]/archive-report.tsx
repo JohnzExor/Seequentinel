@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const ArchiveReport = ({ id }: { id: string }) => {
   const { toast } = useToast();
-  const { execute } = useServerAction(ArchiveReportAction);
+  const { execute, isPending } = useServerAction(ArchiveReportAction);
   const handleArchiveReport = async () => {
     const res = await execute({ id });
     if (!res)
@@ -35,7 +35,7 @@ const ArchiveReport = ({ id }: { id: string }) => {
   };
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
+      <AlertDialogTrigger asChild disabled={isPending}>
         <Button variant={"outline"}>
           <Archive className="w-4 h-4 md:mr-2" />
           <span className="hidden lg:block">Archive Report</span>

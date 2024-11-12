@@ -1,4 +1,4 @@
-import { LoginUser } from "@/data-access/user";
+import { loginUser } from "@/data-access/users";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -7,7 +7,7 @@ export const BASE_PATH = "/api/auth";
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/auth/sign-in",
+    signIn: "/sign-in",
     signOut: "/",
   },
   session: {
@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
         try {
           if (!credentials?.email || !credentials?.password) return null;
 
-          const user = await LoginUser(credentials.email, credentials.password);
+          const user = await loginUser(credentials.email, credentials.password);
           return { ...user, error: null };
         } catch (error) {
           throw error;

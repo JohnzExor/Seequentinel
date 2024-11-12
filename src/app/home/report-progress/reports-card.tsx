@@ -1,45 +1,53 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+"use client";
+
 import { Badge } from "@/components/ui/badge";
-
-import React from "react";
+import { Reports } from "@prisma/client";
+import { formatDistanceToNow } from "date-fns";
+import { Book, ConstructionIcon } from "lucide-react";
 import Link from "next/link";
-import { TReportProgressCard } from "@/types/definitions";
 
-const ReportsCard = ({ data }: { data: TReportProgressCard[] }) => {
+const titles = {
+  CampusMaintenance: "Campus Maintenance Request",
+  HandbookViolation: "Handbook Violation Report",
+};
+
+const icons = {
+  CampusMaintenance: ConstructionIcon,
+  HandbookViolation: Book,
+};
+
+const ReportsCard = ({ data }: { data: Reports[] }) => {
   return (
-    <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+    <ul className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
       {data.length > 0 ? (
         data.map(
-          (
-            { problemType, createdAt, status, path, icon: Icon, reportType },
-            index
-          ) => (
-            <Link href={path} key={index}>
-              <Card className="hover:bg-muted duration-500">
-                <CardHeader>
-                  <CardDescription className="flex items-center gap-1">
+          ({ id, reportType, problemType, createdAt, status }, index) => {
+            const Icon = icons[reportType];
+            const title = titles[reportType];
+            return (
+              <li key={index}>
+                <Link
+                  href={`/home/report-progress/${id}`}
+                  className="flex flex-col p-5 border rounded-xl md:hover:bg-muted"
+                >
+                  <div className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
                     <Icon size={15} />
-                    {reportType}
-                  </CardDescription>
-                  <CardTitle>{problemType}</CardTitle>
-                  <span className=" text-sm text-muted-foreground font-normal">
-                    Created {createdAt.toLocaleString()}
+                    <span>{title}</span>
+                  </div>
+                  <h1 className="text-2xl font-bold">{problemType}</h1>
+                  <span className="text-sm text-muted-foreground">
+                    {formatDistanceToNow(new Date(createdAt))} Ago
                   </span>
-                  <Badge className=" w-fit">{status}</Badge>
-                </CardHeader>
-              </Card>
-            </Link>
-          )
+                  <Badge className="w-fit mt-1">{status}</Badge>
+                </Link>
+              </li>
+            );
+          }
         )
       ) : (
-        <div>No Reports Found</div>
+        <span>No reports</span>
       )}
-    </div>
+    </ul>
   );
 };
 

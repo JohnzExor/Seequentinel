@@ -1,7 +1,7 @@
 "use client";
 import { Locate, MapPin } from "lucide-react";
-import { useContext, useEffect } from "react";
-import { EmergencyContext } from "./emergency-data-provider";
+import { useContext, useEffect, useState } from "react";
+import { UserDataContext } from "./data-provider";
 
 const fetchLocationName = async (lat: number, lon: number) => {
   try {
@@ -12,17 +12,18 @@ const fetchLocationName = async (lat: number, lon: number) => {
     const { display_name } = await res.json();
 
     return display_name;
-  } catch (error: any) {
-    console.error(error.message);
+  } catch (error) {
+    console.error(error);
   }
 };
 
 const CurrentLocation = () => {
-  const { location, gpsCoordinates, setGpsCoordinates, setLocation } =
-    useContext(EmergencyContext);
+  const [location, setLocation] = useState<string>();
+
+  const { gpsCoordinates, setGpsCoordinates } = useContext(UserDataContext);
 
   useEffect(() => {
-    if (!gpsCoordinates && !location) {
+    if (!gpsCoordinates && !location && setGpsCoordinates) {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           async ({ coords }) => {
@@ -40,7 +41,7 @@ const CurrentLocation = () => {
         );
       }
     }
-  }, [location, location]);
+  }, [location]);
 
   return (
     <div className="w-full bg-background p-4 rounded-xl shadow-md">

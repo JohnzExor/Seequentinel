@@ -16,10 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, LoaderCircle } from "lucide-react";
 import { useServerAction } from "zsa-react";
-import createUserAction from "./actions";
 import { Dispatch } from "react";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { createUserAction } from "./actions";
 
 const AddForm = ({
   open,
@@ -29,9 +28,7 @@ const AddForm = ({
   setOpen: Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { toast } = useToast();
-  const router = useRouter();
-  const { execute, isError, error, isPending } =
-    useServerAction(createUserAction);
+  const { execute, isPending } = useServerAction(createUserAction);
 
   const closeDialogue = () => {
     if (open && setOpen) {
@@ -50,22 +47,23 @@ const AddForm = ({
   });
 
   const onSubmit = async (values: z.infer<typeof createUserSchema>) => {
-    const validatedInput = await createUserSchema.parse(values);
-    const res = await execute(validatedInput);
-
-    if (res[1]) {
-      form.setError("email", {
-        type: "manual",
-        message: res[1].message,
+    try {
+      const res = await execute(values);
+      if (res[1]) {
+        form.setError("email", {
+          type: "manual",
+          message: res[1].message,
+        });
+        return;
+      }
+      toast({
+        title: "Success",
+        description: "The corporate account is added successfully",
       });
-      return;
+      closeDialogue();
+    } catch (error) {
+      console.error(error);
     }
-    toast({
-      title: "Success",
-      description: "The corporate account is added successfully",
-    });
-    closeDialogue();
-    router.refresh();
   };
 
   return (

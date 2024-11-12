@@ -16,6 +16,7 @@ import { ModeToggle } from "@/components/theme/mode-toggle";
 import Logout from "@/components/logout";
 import { Session } from "next-auth";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const SideNavToggle = ({ session }: { session: Session | null }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,11 +40,11 @@ const SideNavToggle = ({ session }: { session: Session | null }) => {
           </ul>
         </SheetHeader>
         <SheetFooter className="gap-2">
-          <Logout text="Sign out" />
+          <Logout />
           <div className="flex flex-col">
             <Badge className="w-fit">{session?.user.role} Account</Badge>
             <label className=" font-medium text-sm">{user?.email}</label>
-            <span className=" text-muted-foreground text-xs">
+            <span className="text-xs text-muted-foreground">
               ID: {user?.id}
             </span>
           </div>

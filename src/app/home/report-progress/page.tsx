@@ -1,36 +1,25 @@
-import ReportsTab from "./reports-tab";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
+import ReportsTab from "./reports-tab";
+import { Reports } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { getAllUserReportsUseCase } from "@/use-cases/report";
 import { authOptions } from "@/lib/auth";
-import { TReportProgressCard } from "@/types/definitions";
-
-export type TReportProgressData = {
-  totalReports: number;
-  totalCampusMaintenance: number;
-  totalHandbookViolation: number;
-  allReports: TReportProgressCard[];
-  maintenanceReports: TReportProgressCard[];
-  handbookReports: TReportProgressCard[];
-};
+import { getUserReportsUseCase } from "@/use-cases/users";
 
 const page = async () => {
-  let data: TReportProgressData = {
-    totalReports: 0,
-    totalCampusMaintenance: 0,
-    totalHandbookViolation: 0,
-    allReports: [],
-    maintenanceReports: [],
-    handbookReports: [],
+  let data: { reports: Reports[]; cmr: Reports[]; hvr: Reports[] } = {
+    reports: [],
+    cmr: [],
+    hvr: [],
   };
+  let error;
 
   try {
     const session = await getServerSession(authOptions);
-    if (session?.user) {
-      data = await getAllUserReportsUseCase(session.user.id);
-    }
-  } catch (error: any) {
-    console.error(error.message);
+    if (session?.user.id) data = await getUserReportsUseCase(session?.user.id);
+  } catch (err) {
+    console.error(err);
+    error = "Error fetching data";
   }
 
   return (
@@ -42,7 +31,7 @@ const page = async () => {
         </p>
       </div>
       <Separator className="my-6" />
-      <ReportsTab reports={data} />
+      <ReportsTab data={data} />
     </div>
   );
 };

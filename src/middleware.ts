@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
 
   if (!token) {
     if (pathname.startsWith("/home") || pathname.startsWith("/admin")) {
-      return NextResponse.redirect(new URL("/auth/sign-in", request.url));
+      return NextResponse.redirect(new URL("/sign-in", request.url));
     }
   }
 
@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     }
     if (
-      pathname.startsWith("/auth") ||
+      pathname.startsWith("/sign-in") ||
       pathname === "/" ||
       (pathname.startsWith("/admin") && token.type === "user")
     ) {
@@ -29,5 +29,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/home/:path*", "/admin/:path*", "/auth/:path*"],
+  matcher: ["/", "/home/:path*", "/admin/:path*", "/sign-in/:path*"],
 };
