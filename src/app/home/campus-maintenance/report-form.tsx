@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -19,8 +20,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { reportSchema } from "@/lib/zod";
 import { z } from "zod";
 import {
+  Check,
   ChevronLeft,
   ChevronRight,
+  ChevronsUpDown,
   LoaderCircle,
   Send,
   Trash,
@@ -28,7 +31,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -43,6 +46,17 @@ import campusMaintenanceAction from "./actions";
 import { campusLocations } from "@/components/locations";
 import { Textarea } from "@/components/ui/textArea";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverTrigger } from "@/components/ui/popOver";
+import { cn } from "@/lib/utils";
+import { PopoverContent } from "@radix-ui/react-popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 export const problems: {
   level: "critical" | "high" | "medium" | "low";
@@ -160,6 +174,15 @@ const ReportForm = ({
 
   const [searchIssue, setSearchIssue] = useState("");
 
+  const filteredProblems = useMemo(() => {
+    return problems.map(({ level, issues }) => ({
+      level,
+      filteredIssues: issues.filter((issue) =>
+        issue.toLowerCase().includes(searchIssue.toLowerCase())
+      ),
+    }));
+  }, [searchIssue]);
+
   const handleLocationChange = (value: string) => {
     // Use the new value directly, rather than relying on stale state.
     const updatedLocation = { ...rawLocation, room: value };
@@ -227,7 +250,6 @@ const ReportForm = ({
       ...values,
       userId: data?.user.id,
     });
-    console.log(res);
 
     if (!res[0]) {
       toast({
@@ -260,56 +282,87 @@ const ReportForm = ({
       >
         {currentStep === 0 ? (
           <>
+            {/* Display problem levels and descriptions */}
             {problems.map(({ level, description }, index) => (
               <div
                 className="text-sm text-muted-foreground space-x-2"
                 key={index}
               >
-                <Badge variant={level}>level</Badge>
+                <Badge variant={level}>{level}</Badge>
                 <span>{description}</span>
               </div>
             ))}
+
+            {/* Form field for selecting problem types */}
             <FormField
               control={form.control}
               name="problemType"
               render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={isPending}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a issue" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectGroup>
-                        <Input
-                          value={searchIssue}
-                          onChange={(e) => setSearchIssue(e.target.value)}
-                          placeholder="Search a specific issue"
+                <FormItem className="flex flex-col">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "justify-between",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? field.value : "Search a problem"}
+                          <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0 shadow-xl">
+                      <Command>
+                        <CommandInput
+                          placeholder="Search a problem..."
+                          className="h-9"
+                          onValueChange={(value) => setSearchIssue(value)} // Handling search
                         />
-                      </SelectGroup>
-                      {problems.map(({ level, issues }, index) => (
-                        <SelectGroup key={index}>
-                          {issues
-                            .filter((issue) =>
-                              issue
-                                .toLowerCase()
-                                .includes(searchIssue.toLowerCase())
-                            )
-                            .map((issue, index) => (
-                              <SelectItem value={issue} key={index}>
-                                <Badge variant={level}>{level}</Badge>-
-                                <span className="truncate">{issue}</span>
-                              </SelectItem>
-                            ))}
-                        </SelectGroup>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        <CommandList>
+                          <CommandEmpty>No problem found.</CommandEmpty>
+                          {problems.map(({ level, issues }, index) => (
+                            <CommandGroup
+                              key={index}
+                              heading={<Badge variant={level}>{level}</Badge>}
+                            >
+                              {issues
+                                .filter((issue) =>
+                                  issue
+                                    .toLowerCase()
+                                    .includes(searchIssue.toLowerCase())
+                                )
+                                .map((issue, issueIndex) => (
+                                  <CommandItem
+                                    value={issue}
+                                    key={issueIndex}
+                                    onSelect={() => {
+                                      field.onChange(issue);
+                                    }}
+                                  >
+                                    <span>{issue}</span>
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        issue === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          ))}
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    Select the problem you are facing.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -356,6 +409,8 @@ const ReportForm = ({
               id="file"
               disabled={isUploading || isPending}
               type="file"
+              capture="environment"
+              accept="/image/*"
             />
             {isUploading ? (
               <span className="text-xs flex items-center gap-1 ml-auto text-muted-foreground animate-pulse">

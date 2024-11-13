@@ -22,7 +22,7 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
         <ModeToggle />
       </header>
 
-      <ul className="space-y-2 flex-grow">
+      <ul className="space-y-3 flex-grow">
         <span className="pl-4 text-sm text-muted-foreground font-semibold">
           Main Menu
         </span>

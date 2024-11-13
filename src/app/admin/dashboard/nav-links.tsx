@@ -83,20 +83,20 @@ const NavLinks = ({
 
   return (
     <>
-      {links.map(({ name, path, icon: Icon, isUrgent }, index) => (
+      {links.map(({ name, path, icon: Icon }, index) => (
         <li key={index} onClick={handleClick}>
           <Link
             href={path}
             className={clsx(
-              "flex items-center gap-2 rounded-xl px-4 py-3 text-sm border border-muted",
+              "flex items-center gap-3 rounded-lg p-3 text-sm duration-200",
               {
-                "bg-primary text-white shadow-xl font-medium":
+                "bg-primary text-white shadow-lg font-medium":
                   pathname === path,
                 " hover:bg-muted": pathname !== path,
               }
             )}
           >
-            <Icon className="shrink-0 w-5 h-5" />
+            <Icon className="shrink-0" />
             <span>{name}</span>
           </Link>
         </li>

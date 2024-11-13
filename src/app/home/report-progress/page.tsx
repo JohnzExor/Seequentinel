@@ -31,7 +31,7 @@ const page = async () => {
         </p>
       </div>
       <Separator className="my-6" />
-      <ReportsTab data={data} />
+      {!error ? <ReportsTab data={data} /> : error}
     </div>
   );
 };
