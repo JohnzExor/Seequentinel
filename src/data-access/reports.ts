@@ -1,15 +1,19 @@
 import prisma from "@/lib/db";
 import { reportSchema } from "@/lib/zod";
-import { Reports } from "@prisma/client";
 import { z } from "zod";
 
 export const findAllReports = async () => {
-  const data = await prisma.reports.findMany();
+  const data = await prisma.reports.findMany({
+    orderBy: { createdAt: "desc" },
+  });
   return data;
 };
 
 export const findUserReports = async (userId: string) => {
-  const data = await prisma.reports.findMany({ where: { userId } });
+  const data = await prisma.reports.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+  });
   return data;
 };
 

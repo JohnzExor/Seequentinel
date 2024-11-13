@@ -48,12 +48,18 @@ export const updateAccountStatus = async (
 };
 
 export const findAllAdmins = async () => {
-  const data = await prisma.user.findMany({ where: { role: "ADMIN" } });
+  const data = await prisma.user.findMany({
+    where: { role: "ADMIN" },
+    orderBy: { createdAt: "desc" },
+  });
   return data;
 };
 
 export const findAllUsers = async () => {
-  const data = await prisma.user.findMany({ where: { role: "USER" } });
+  const data = await prisma.user.findMany({
+    where: { role: "USER" },
+    orderBy: { createdAt: "desc" },
+  });
   return data;
 };
 

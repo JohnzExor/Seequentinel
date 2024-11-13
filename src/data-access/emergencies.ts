@@ -11,7 +11,9 @@ export const findEmergency = async (emergencyId: string) => {
 };
 
 export const findAllEmergencies = async () => {
-  const data = await prisma.emergencies.findMany();
+  const data = await prisma.emergencies.findMany({
+    orderBy: { callStart: "desc" },
+  });
   return data;
 };
 
