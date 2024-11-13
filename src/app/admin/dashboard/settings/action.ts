@@ -1,7 +1,7 @@
 "use server";
 
 import { changePasswordSchema } from "@/lib/zod";
-import { changeUserPasswordUseCase } from "@/use-cases/user";
+import { changeUserPasswordUseCase } from "@/use-cases/users";
 import { createServerAction } from "zsa";
 
 export const changePasswordAction = createServerAction()

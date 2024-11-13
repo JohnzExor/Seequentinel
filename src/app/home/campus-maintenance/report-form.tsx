@@ -32,6 +32,7 @@ import { useState } from "react";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -39,68 +40,78 @@ import {
 import Image from "next/image";
 import ProvidedDetails from "./provided-details";
 import campusMaintenanceAction from "./actions";
+import { campusLocations } from "@/components/locations";
+import { Textarea } from "@/components/ui/textArea";
+import { Badge } from "@/components/ui/badge";
 
-const options = [
-  // Electrical Issues
+export const problems: {
+  level: "critical" | "high" | "medium" | "low";
+  description: string;
+  issues: string[];
+}[] = [
   {
-    id: 1,
-    name: "Power Outage",
+    level: "critical",
+    description: "Immediate attention needed to avoid serious risks or damage.",
+    issues: [
+      "Leaking Pipe",
+      "Elevator Malfunction",
+      "Overheating Server",
+      "Blocked Fire Exit",
+      "Faulty Fire Alarm",
+      "Electrical Short Circuit",
+      "Gas Leak",
+      "Power Outage",
+      "Collapsed Ceiling",
+      "Sewage Backup",
+    ],
   },
   {
-    id: 2,
-    name: "Faulty Lighting",
-  },
-
-  // Plumbing Issues
-  {
-    id: 3,
-    name: "Leaking Pipe",
-  },
-  {
-    id: 4,
-    name: "Clogged Drain",
-  },
-  {
-    id: 5,
-    name: "No Water Supply",
-  },
-
-  // Structural Issues
-  {
-    id: 6,
-    name: "Broken Window",
+    level: "high",
+    description:
+      "Major issues that can cause serious inconvenience if left unresolved.",
+    issues: [
+      "Broken Air Conditioning",
+      "Faulty Projector",
+      "Unresponsive Security Camera",
+      "Leaking Roof",
+      "Broken Glass Door",
+      "Non-functional Sprinkler System",
+      "Failed Water Heater",
+      "Malfunctioning Entry Gate",
+      "Inoperable Emergency Exit Sign",
+    ],
   },
   {
-    id: 7,
-    name: "Damaged Door",
+    level: "medium",
+    description: "Problems that should be fixed soon but aren't urgent.",
+    issues: [
+      "Flickering Lights",
+      "Clogged Drain",
+      "Defective PA System",
+      "Broken Desk",
+      "Malfunctioning Vending Machine",
+      "Loose Flooring Tile",
+      "Slow Wi-Fi Connection",
+      "Worn-Out Carpeting",
+      "Non-Functioning Restroom Faucet",
+      "Stuck Window",
+    ],
   },
   {
-    id: 8,
-    name: "Cracked Wall",
-  },
-
-  // HVAC Issues
-  {
-    id: 9,
-    name: "Air Conditioning Failure",
-  },
-  {
-    id: 10,
-    name: "Heating System Malfunction",
-  },
-
-  // Grounds Maintenance
-  {
-    id: 11,
-    name: "Overgrown Landscaping",
-  },
-  {
-    id: 12,
-    name: "Potholes",
-  },
-  {
-    id: 13,
-    name: "Debris Cleanup",
+    level: "low",
+    description: "Minor issues that don't require immediate action.",
+    issues: [
+      "Damaged Door",
+      "Cracked Window",
+      "Peeling Paint",
+      "Squeaky Door",
+      "Broken Trash Bin",
+      "Wobbly Chair",
+      "Faded Signage",
+      "Minor Wall Dent",
+      "Unstable Shelving",
+      "Loose Doorknob",
+    ],
   },
 ];
 
@@ -132,6 +143,37 @@ const ReportForm = ({
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+
+  const [rawLocation, setRawLocation] = useState({
+    location: "",
+    building: "",
+    room: "",
+  });
+
+  const selectedLocation = campusLocations.find(
+    ({ name }) => name === rawLocation.location
+  );
+
+  const selectedBuilding = selectedLocation?.buildings.find(
+    ({ name }) => name === rawLocation.building
+  );
+
+  const [searchIssue, setSearchIssue] = useState("");
+
+  const handleLocationChange = (value: string) => {
+    // Use the new value directly, rather than relying on stale state.
+    const updatedLocation = { ...rawLocation, room: value };
+
+    const { location, building, room } = updatedLocation;
+
+    const formatted = [location, building, room]
+      .filter(Boolean) // Filters out any empty or falsy values
+      .join(", ");
+
+    // Update both the form value and the state
+    form.setValue("location", formatted);
+    setRawLocation(updatedLocation);
+  };
 
   const form = useForm<z.infer<typeof reportSchema>>({
     resolver: zodResolver(reportSchema),
@@ -217,37 +259,62 @@ const ReportForm = ({
         className=" space-y-4 w-full max-w-[400px]"
       >
         {currentStep === 0 ? (
-          <FormField
-            control={form.control}
-            name="problemType"
-            render={({ field }) => (
-              <FormItem>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={isPending}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a problem" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {options.map((data, index) => (
-                      <SelectItem
-                        key={index}
-                        value={data.name}
-                        className=" w-full"
-                      >
-                        {data.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <>
+            {problems.map(({ level, description }, index) => (
+              <div
+                className="text-sm text-muted-foreground space-x-2"
+                key={index}
+              >
+                <Badge variant={level}>level</Badge>
+                <span>{description}</span>
+              </div>
+            ))}
+            <FormField
+              control={form.control}
+              name="problemType"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isPending}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a issue" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectGroup>
+                        <Input
+                          value={searchIssue}
+                          onChange={(e) => setSearchIssue(e.target.value)}
+                          placeholder="Search a specific issue"
+                        />
+                      </SelectGroup>
+                      {problems.map(({ level, issues }, index) => (
+                        <SelectGroup key={index}>
+                          {issues
+                            .filter((issue) =>
+                              issue
+                                .toLowerCase()
+                                .includes(searchIssue.toLowerCase())
+                            )
+                            .map((issue, index) => (
+                              <SelectItem value={issue} key={index}>
+                                <Badge variant={level}>{level}</Badge>-
+                                <span className="truncate">{issue}</span>
+                              </SelectItem>
+                            ))}
+                        </SelectGroup>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
         ) : null}
 
         {currentStep === 1 ? (
@@ -299,23 +366,75 @@ const ReportForm = ({
           </div>
         ) : null}
         {currentStep === 2 ? (
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="Location details"
-                    {...field}
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <>
+            {/* Display Selected Values */}
+            <span className="text-primary font-bold">
+              {[rawLocation.location, rawLocation.building, rawLocation.room]
+                .filter(Boolean) // Filters out any empty or falsy values
+                .join(", ")}
+            </span>
+            {/* Location Select */}
+            <Select
+              value={rawLocation.location}
+              onValueChange={(value) =>
+                setRawLocation((prev) => ({
+                  ...prev,
+                  location: value,
+                  building: "",
+                  room: "",
+                }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Location" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusLocations.map(({ name }, index) => (
+                  <SelectItem value={name} key={index}>
+                    {name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* Building Select */}
+            <Select
+              value={rawLocation.building}
+              onValueChange={(value) =>
+                setRawLocation((prev) => ({
+                  ...prev,
+                  building: value,
+                  room: "",
+                }))
+              }
+            >
+              <SelectTrigger disabled={!rawLocation.location}>
+                <SelectValue placeholder="Building" />
+              </SelectTrigger>
+              <SelectContent>
+                {selectedLocation?.buildings.map(({ name }, index) => (
+                  <SelectItem value={name} key={index}>
+                    {name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* Room Select */}
+            <Select
+              value={rawLocation.room}
+              onValueChange={handleLocationChange}
+            >
+              <SelectTrigger disabled={!rawLocation.building}>
+                <SelectValue placeholder="Room" />
+              </SelectTrigger>
+              <SelectContent>
+                {selectedBuilding?.rooms.map((room, index) => (
+                  <SelectItem value={room} key={index}>
+                    {room}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
         ) : null}
 
         {currentStep === 3 ? (
@@ -325,11 +444,11 @@ const ReportForm = ({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    type="text"
+                  <Textarea
                     placeholder="Provide addtional details"
                     {...field}
                     disabled={isPending}
+                    className="h-[15em]"
                   />
                 </FormControl>
                 <FormMessage />

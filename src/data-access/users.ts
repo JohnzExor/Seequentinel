@@ -1,8 +1,25 @@
 import prisma from "@/lib/db";
-import { createUserSchema } from "@/lib/zod";
+import { changePasswordSchema, createUserSchema } from "@/lib/zod";
 import { UserStatusEnum } from "@prisma/client";
 import { compare, hash } from "bcryptjs";
 import { z } from "zod";
+
+export const findUserById = async (id: string) => {
+  const data = await prisma.user.findUnique({ where: { id } });
+  return data;
+};
+
+export const updateUserPassword = async ({
+  id,
+  newPassword,
+}: z.infer<typeof changePasswordSchema>) => {
+  const hashPWD = await hash(newPassword, 10);
+  const data = await prisma.user.update({
+    where: { id },
+    data: { password: hashPWD },
+  });
+  return data;
+};
 
 export const findUserEmail = async (email: string) => {
   const data = await prisma.user.findUnique({ where: { email } });

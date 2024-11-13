@@ -25,6 +25,7 @@ const ProvidedDetails = ({
 
     { name: "Attachments", value: attachments, icon: <Camera size={15} /> },
   ];
+
   return (
     <div className=" space-y-4">
       {inputs.map(({ name, value, icon }, index) => (

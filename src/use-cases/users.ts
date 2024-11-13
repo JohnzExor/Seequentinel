@@ -4,14 +4,45 @@ import {
   findAllAdmins,
   findAllUsers,
   findExistingEmail,
+  findUserById,
   findUserEmail,
   updateAccountStatus,
+  updateUserPassword,
 } from "@/data-access/users";
 import { authOptions } from "@/lib/auth";
-import { createUserSchema } from "@/lib/zod";
+import { changePasswordSchema, createUserSchema } from "@/lib/zod";
 import { UserStatusEnum } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
+import { compare } from "bcryptjs";
+
+export const changeUserPasswordUseCase = async (
+  values: z.infer<typeof changePasswordSchema>
+) => {
+  const user = await findUserById(values.id as string);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const comparePassword = await compare(values.currentPassword, user.password);
+
+  if (!comparePassword) {
+    throw new Error("The current password is wrong.");
+  }
+
+  const compareOldPassword = await compare(values.newPassword, user.password);
+
+  if (compareOldPassword) {
+    throw new Error("You cant use the same password.");
+  }
+
+  const data = await updateUserPassword(values);
+  if (!data) {
+    throw new Error("Error Changing Password");
+  }
+  return data;
+};
 
 export const getUserReportsUseCase = async (userId: string) => {
   const reports = await findUserReports(userId);

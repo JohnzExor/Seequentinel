@@ -3,6 +3,13 @@ import { emergencySchema } from "@/lib/zod";
 import { EmergencyStatusEnum } from "@prisma/client";
 import { z } from "zod";
 
+export const findEmergency = async (emergencyId: string) => {
+  const data = await prisma.emergencies.findUnique({
+    where: { id: emergencyId },
+  });
+  return data;
+};
+
 export const findAllEmergencies = async () => {
   const data = await prisma.emergencies.findMany();
   return data;

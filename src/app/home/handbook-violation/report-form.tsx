@@ -26,7 +26,6 @@ import {
   Trash,
   UploadCloudIcon,
 } from "lucide-react";
-import { Textarea } from "@/components/ui/textArea";
 
 // date picker imports
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -51,6 +50,8 @@ import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 import ProvidedDetails from "./provided-details";
 import handbookViolationAction from "./actions";
+import { Textarea } from "@/components/ui/textArea";
+import { campusLocations } from "@/components/locations";
 
 const behaviors = [
   // Substance Use and Abuse Violations
@@ -142,6 +143,35 @@ const ReportForm = ({
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+
+  const [rawLocation, setRawLocation] = useState({
+    location: "",
+    building: "",
+    room: "",
+  });
+
+  const selectedLocation = campusLocations.find(
+    ({ name }) => name === rawLocation.location
+  );
+
+  const selectedBuilding = selectedLocation?.buildings.find(
+    ({ name }) => name === rawLocation.building
+  );
+
+  const handleLocationChange = (value: string) => {
+    // Use the new value directly, rather than relying on stale state.
+    const updatedLocation = { ...rawLocation, room: value };
+
+    const { location, building, room } = updatedLocation;
+
+    const formatted = [location, building, room]
+      .filter(Boolean) // Filters out any empty or falsy values
+      .join(", ");
+
+    // Update both the form value and the state
+    form.setValue("location", formatted);
+    setRawLocation(updatedLocation);
+  };
 
   const form = useForm<z.infer<typeof reportSchema>>({
     resolver: zodResolver(reportSchema),
@@ -385,23 +415,75 @@ const ReportForm = ({
         ) : null}
 
         {currentStep === 4 ? (
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="Location details"
-                    {...field}
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <>
+            {/* Display Selected Values */}
+            <span className="text-primary font-bold">
+              {[rawLocation.location, rawLocation.building, rawLocation.room]
+                .filter(Boolean) // Filters out any empty or falsy values
+                .join(", ")}
+            </span>
+            {/* Location Select */}
+            <Select
+              value={rawLocation.location}
+              onValueChange={(value) =>
+                setRawLocation((prev) => ({
+                  ...prev,
+                  location: value,
+                  building: "",
+                  room: "",
+                }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Location" />
+              </SelectTrigger>
+              <SelectContent>
+                {campusLocations.map(({ name }, index) => (
+                  <SelectItem value={name} key={index}>
+                    {name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* Building Select */}
+            <Select
+              value={rawLocation.building}
+              onValueChange={(value) =>
+                setRawLocation((prev) => ({
+                  ...prev,
+                  building: value,
+                  room: "",
+                }))
+              }
+            >
+              <SelectTrigger disabled={!rawLocation.location}>
+                <SelectValue placeholder="Building" />
+              </SelectTrigger>
+              <SelectContent>
+                {selectedLocation?.buildings.map(({ name }, index) => (
+                  <SelectItem value={name} key={index}>
+                    {name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* Room Select */}
+            <Select
+              value={rawLocation.room}
+              onValueChange={handleLocationChange}
+            >
+              <SelectTrigger disabled={!rawLocation.building}>
+                <SelectValue placeholder="Room" />
+              </SelectTrigger>
+              <SelectContent>
+                {selectedBuilding?.rooms.map((room, index) => (
+                  <SelectItem value={room} key={index}>
+                    {room}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
         ) : null}
 
         {currentStep === 5 ? (

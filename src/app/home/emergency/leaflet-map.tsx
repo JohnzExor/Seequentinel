@@ -5,15 +5,14 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import UserLocationMarker from "./user-location-marker";
 
-const zoom = 18;
+const zoom = 30;
 
-const Map = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
+const LeafletMap = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
   return (
     <>
       <MapContainer
         center={posix}
         zoom={zoom}
-        scrollWheelZoom={true}
         className=" w-full h-full z-10 rounded-xl"
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -23,4 +22,4 @@ const Map = ({ posix }: { posix: LatLngExpression | LatLngTuple }) => {
   );
 };
 
-export default Map;
+export default LeafletMap;

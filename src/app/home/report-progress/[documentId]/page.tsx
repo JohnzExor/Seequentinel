@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 const page = async ({ params }: { params: Params }) => {
   const { documentId } = params;
 
-  let data: Reports | null = null;
+  let data;
   let error;
 
   try {

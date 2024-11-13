@@ -7,11 +7,9 @@ import React, {
   Dispatch,
   ReactNode,
   SetStateAction,
-  useContext,
   useEffect,
   useState,
 } from "react";
-import { AdminDataContext } from "../../data-provider";
 
 type TContext = {
   data: Emergencies | null;
@@ -51,17 +49,13 @@ export const responders: {
 
 export const EmergencyDataProvider = ({
   children,
-  emergencyId,
+  data,
 }: {
   children: ReactNode;
-  emergencyId: string;
+  data: Emergencies;
 }) => {
   const [startPoint, setStartPoint] = useState<LatLngExpression>([0, 0]);
   const [endPoint, setEndPoint] = useState<LatLngExpression>([0, 0]);
-
-  const { emergencies } = useContext(AdminDataContext);
-
-  const data = emergencies?.find(({ id }) => id === emergencyId) as Emergencies;
 
   useEffect(() => {
     if (responders[0]) {
@@ -69,9 +63,7 @@ export const EmergencyDataProvider = ({
       setStartPoint(coordinates);
     }
 
-    if (emergencies && data.gpsCoordinates) {
-      setEndPoint(data.gpsCoordinates as unknown as LatLngExpression);
-    }
+    setEndPoint(data.gpsCoordinates as unknown as LatLngExpression);
   }, []);
 
   return (

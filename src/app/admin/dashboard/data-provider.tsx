@@ -13,13 +13,7 @@ export const AdminDataContext = createContext<IAdminData>({});
 
 const peer = initializePeer();
 
-const AdminDataProvider = ({
-  children,
-  data,
-}: {
-  children: ReactNode;
-  data: IAdminData;
-}) => {
+const AdminDataProvider = ({ children }: { children: ReactNode }) => {
   const [adminPeerId, setAdminPeerId] = useState<string>();
 
   useEffect(() => {
@@ -28,7 +22,7 @@ const AdminDataProvider = ({
   }, []);
 
   return (
-    <AdminDataContext.Provider value={{ ...data, peer, adminPeerId }}>
+    <AdminDataContext.Provider value={{ peer, adminPeerId }}>
       {children}
     </AdminDataContext.Provider>
   );

@@ -2,9 +2,9 @@ import clsx from "clsx";
 import Peer, { MediaConnection } from "peerjs";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Mic, MicOff, PhoneMissed, User, UserRoundCog } from "lucide-react";
-import { EmergencyContext } from "@/app/home/emergency-data-provider";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UserDataContext } from "../data-provider";
 
 const PeerJSComponent = ({
   peer,
@@ -15,7 +15,7 @@ const PeerJSComponent = ({
   setPeerId?: (id: string) => void;
   cancelCall: () => void;
 }) => {
-  const { location, peerId } = useContext(EmergencyContext);
+  const { userPeerId } = useContext(UserDataContext);
 
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [isRemoteConnected, setIsRemoteConnected] = useState(false);
@@ -132,20 +132,11 @@ const PeerJSComponent = ({
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className=" flex items-center flex-col gap-2">
-        <VoiceDetailsUI
-          location={location}
-          name="You"
-          isActive={localAudioActive}
-        />
+      <div className=" flex items-center gap-2">
+        <VoiceDetailsUI isActive={localAudioActive} />
         <audio ref={audioRef} autoPlay muted={true} />
         {isRemoteConnected ? (
-          <VoiceDetailsUI
-            location={location}
-            name="Emergency Team"
-            isActive={remoteAudioActive}
-            isAdmin={true}
-          />
+          <VoiceDetailsUI isActive={remoteAudioActive} isAdmin={true} />
         ) : null}
         <audio ref={remoteAudioRef} autoPlay muted={false} />
       </div>
@@ -174,26 +165,22 @@ const PeerJSComponent = ({
       </div>
 
       <span className="text-xs text-muted-foreground pl-4">
-        Peer ID: {peerId}
+        Peer ID: {userPeerId}
       </span>
     </div>
   );
 };
 
 const VoiceDetailsUI = ({
-  name,
-  location,
   isActive,
   isAdmin,
 }: {
-  name: string;
-  location: string | undefined;
   isActive: boolean;
   isAdmin?: boolean;
 }) => {
   return (
     <div
-      className={clsx(" border-4 p-4 rounded-xl flex items-center gap-2", {
+      className={clsx(" border-4 p-4 rounded-xl", {
         "border-primary": isActive,
       })}
     >
@@ -202,10 +189,6 @@ const VoiceDetailsUI = ({
           {isAdmin ? <UserRoundCog size={30} /> : <User size={30} />}
         </AvatarFallback>
       </Avatar>
-      <div className="-space-y-3">
-        <h1 className="font-semibold text-xl">{name}</h1>
-        <span className="text-muted-foreground text-xs">{location}</span>
-      </div>
     </div>
   );
 };

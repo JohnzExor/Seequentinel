@@ -4,8 +4,8 @@ import { LatLngExpression, LatLngTuple } from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Emergencies } from "@prisma/client";
-import { Link } from "lucide-react";
 import { emergencyIcon } from "./icons";
+import Link from "next/link";
 
 const zoom = 30;
 
