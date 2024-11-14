@@ -10,7 +10,7 @@ const Header = ({ session }: { session: Session | null }) => {
     <div className="p-4 w-full md:hidden">
       <header
         className={
-          "flex items-center justify-between w-full border bg-white shadow-xl px-4 py-2 rounded-full"
+          "flex items-center justify-between w-full border bg-background shadow-xl px-4 py-2 rounded-full"
         }
       >
         <div className="overflow-hidden flex items-center gap-1 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
