@@ -1,11 +1,12 @@
 import React from "react";
 import NavLinks from "./nav-links";
-import { BringToFront } from "lucide-react";
+import { BringToFront, Shield } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Session } from "next-auth";
 import Logout from "@/components/logout";
 import { ModeToggle } from "@/components/theme/mode-toggle";
+import Link from "next/link";
 
 const SideNavigations = ({ session }: { session: Session | null }) => {
   const user = session?.user;
@@ -28,6 +29,18 @@ const SideNavigations = ({ session }: { session: Session | null }) => {
         </span>
         <NavLinks />
       </ul>
+
+      {user?.role === "ADMIN" && (
+        <Link href="/admin/dashboard" className="bg-muted p-4 rounded-xl">
+          <div className="flex gap-1">
+            <h1 className="font-medium">You have administrative privileges</h1>
+            <Shield className="text-primary" />
+          </div>
+          <span className="text-sm text-muted-foreground">
+            Click here to access the dashboard
+          </span>
+        </Link>
+      )}
 
       <footer className="space-y-4 mt-auto">
         <div className="flex items-center gap-2 w-full text-nowrap">

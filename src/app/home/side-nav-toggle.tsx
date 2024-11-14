@@ -9,7 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Shield } from "lucide-react";
 import NavLinks from "./nav-links";
 import React, { useState } from "react";
 import { ModeToggle } from "@/components/theme/mode-toggle";
@@ -17,6 +17,7 @@ import Logout from "@/components/logout";
 import { Session } from "next-auth";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import Link from "next/link";
 
 const SideNavToggle = ({ session }: { session: Session | null }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,6 +49,19 @@ const SideNavToggle = ({ session }: { session: Session | null }) => {
               ID: {user?.id}
             </span>
           </div>
+          {user?.role === "ADMIN" && (
+            <Link href="/admin/dashboard" className="bg-muted p-3 rounded-xl">
+              <div className="flex gap-1">
+                <h1 className="font-medium text-sm">
+                  You have administrative privileges
+                </h1>
+                <Shield className="text-primary" />
+              </div>
+              <span className="text-xs text-muted-foreground">
+                Click here to access the dashboard
+              </span>
+            </Link>
+          )}
         </SheetFooter>
       </SheetContent>
     </Sheet>
