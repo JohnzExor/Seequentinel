@@ -116,6 +116,13 @@ const behaviors = [
 ];
 
 export const UploadMedia = async (file: File, imageCount: number) => {
+  const maxSizeMB = 50;
+  const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+  // Check if the file size exceeds the 50MB limit
+  if (file.size > maxSizeBytes) {
+    throw new Error(`File is too large. Maximum size is ${maxSizeMB}MB.`);
+  }
   const { data, error } = await supabase.storage
     .from("attachments")
     .upload(`/HandbookViolation/${uuidv4()}/image-${imageCount}.jpg`, file, {
@@ -147,6 +154,7 @@ const ReportForm = ({
     location: "",
     building: "",
     room: "",
+    others: "",
   });
 
   const selectedLocation = campusLocations.find(
@@ -156,6 +164,22 @@ const ReportForm = ({
   const selectedBuilding = selectedLocation?.buildings.find(
     ({ name }) => name === rawLocation.building
   );
+
+  const handleOtherLocationChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const updatedLocation = { ...rawLocation, others: e.target.value }; // Use 'others' correctly here
+    const { location, building, room, others } = updatedLocation;
+
+    // Format the location including the 'others' field
+    const formatted = [location, building, room, others]
+      .filter(Boolean) // Filters out any empty or falsy values
+      .join(", ");
+
+    // Update both the form value and the state
+    form.setValue("location", formatted);
+    setRawLocation(updatedLocation);
+  };
 
   const handleLocationChange = (value: string) => {
     // Use the new value directly, rather than relying on stale state.
@@ -402,6 +426,7 @@ const ReportForm = ({
               id="file"
               disabled={isUploading || isPending}
               type="file"
+              accept="image/*"
             />
             {isUploading ? (
               <span className="text-xs flex items-center gap-1 ml-auto text-muted-foreground animate-pulse">
@@ -481,6 +506,11 @@ const ReportForm = ({
                 ))}
               </SelectContent>
             </Select>
+            <Textarea
+              value={rawLocation.others}
+              onChange={handleOtherLocationChange}
+              placeholder="Others"
+            />
           </>
         ) : null}
 
