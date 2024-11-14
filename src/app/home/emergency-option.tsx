@@ -9,6 +9,7 @@ import { Emergencies } from "@prisma/client";
 import CurrentLocation from "./current-location";
 import { UserDataContext } from "./data-provider";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const features = [
   {
@@ -35,8 +36,9 @@ const features = [
 
 const EmergencyOption = () => {
   const router = useRouter();
+  const { toast } = useToast();
   const { execute, isPending } = useServerAction(postEmergencyAction);
-  const { userPeerId, setActiveEmergency, gpsCoordinates } =
+  const { userPeerId, setActiveEmergency, gpsCoordinates, isOutsideCampus } =
     useContext(UserDataContext);
 
   const session = useSession();
@@ -44,6 +46,13 @@ const EmergencyOption = () => {
   const [tapCounter, setTapCounter] = useState<number>(0);
 
   const handleEmergencyRequest = async () => {
+    if (isOutsideCampus) {
+      toast({
+        title: "You are outside the university",
+        description:
+          "This option will totally disable itself when she *finally* decides to come back",
+      });
+    }
     if (!userPeerId || !setActiveEmergency)
       return console.error("You dont have peer id");
     try {

@@ -21,6 +21,8 @@ type TUserData = {
   setGpsCoordinates?: React.Dispatch<
     React.SetStateAction<[number, number] | undefined>
   >;
+  isOutsideCampus?: boolean;
+  setIsOutsideCampus?: Dispatch<SetStateAction<boolean>>;
 };
 
 export const UserDataContext = createContext<TUserData>({});
@@ -28,6 +30,7 @@ export const UserDataContext = createContext<TUserData>({});
 const peer = initializePeer();
 
 const UserDataProvider = ({ children }: { children: ReactNode }) => {
+  const [isOutsideCampus, setIsOutsideCampus] = useState(true);
   const [userPeerId, setUserPeerId] = useState<string>();
   const [activeEmergency, setActiveEmergency] = useState<
     Emergencies | undefined
@@ -50,6 +53,8 @@ const UserDataProvider = ({ children }: { children: ReactNode }) => {
         setActiveEmergency,
         gpsCoordinates,
         setGpsCoordinates,
+        isOutsideCampus,
+        setIsOutsideCampus,
       }}
     >
       {children}
