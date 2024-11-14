@@ -12,9 +12,11 @@ import { ChevronLeft } from "lucide-react";
 
 const EmergencyCall = () => {
   const { peer, adminPeerId } = useContext(AdminDataContext);
-  const { setEndPoint } = useContext(EmergencyDataContext);
+  const { setEndPoint, data } = useContext(EmergencyDataContext);
   const cancelCallAction = useServerAction(updateEmergencyStatusAction);
   const acceptCallId = useServerAction(acceptCallAction);
+
+  const { peerId, id } = data;
 
   const acceptCall = async (id: string) => {
     try {
@@ -52,9 +54,9 @@ const EmergencyCall = () => {
       </div>
       <PeerJSComponent
         peer={peer}
-        remotePeerId={"500d2c8e-18ce-47a9-8092-2accca2ea751"}
-        acceptCall={() => acceptCall("")}
-        cancelCall={() => cancelCall("1")}
+        remotePeerId={peerId}
+        acceptCall={() => acceptCall(id)}
+        cancelCall={() => cancelCall(id)}
       />
     </div>
   );

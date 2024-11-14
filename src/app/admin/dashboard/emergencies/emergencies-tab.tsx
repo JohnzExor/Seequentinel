@@ -19,7 +19,7 @@ const EmergenciesTab = ({
   const { emergencies, pendings, active, completed } = data;
 
   return (
-    <div className="w-full xl:max-w-[40em] p-4 xl:p-10 space-y-10">
+    <div className="w-full xl:max-w-[40em] max-h-screen overflow-y-auto p-4 xl:p-10 space-y-10">
       <h1 className="font-bold text-2xl">Emergencies</h1>
       <div className="flex justify-evenly items-center">
         <div className="flex flex-col items-center">

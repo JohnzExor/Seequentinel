@@ -35,7 +35,6 @@ import { useMemo, useState } from "react";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -149,7 +148,6 @@ const ReportForm = ({
   nextStep: () => void;
 }) => {
   const { data } = useSession();
-  const router = useRouter();
   const { toast } = useToast();
   const { execute, isError, error, isPending, isSuccess } = useServerAction(
     campusMaintenanceAction
@@ -241,28 +239,27 @@ const ReportForm = ({
 
   const onSubmit = async (values: z.infer<typeof reportSchema>) => {
     if (isUploading) {
-      toast({
+      return toast({
         description: "Media is still uploading...",
       });
-      return;
     }
-    const res = await execute({
-      ...values,
-      userId: data?.user.id,
-    });
 
-    if (!res[0]) {
+    try {
+      const res = await execute({
+        ...values,
+        userId: data?.user.id,
+      });
+      toast({
+        title: "Submited Successfully",
+        description: "Your submitted report is now on request page",
+      });
+      console.log(res);
+    } catch (error) {
+      console.error(error);
       toast({
         description: "Submission failed",
       });
-      return;
     }
-
-    toast({
-      title: "Submited Successfully",
-      description: "Your submitted report is now on request page",
-    });
-    router.push(`/home/report-progress/${res[0]?.id}`);
   };
 
   const disableButton = (index: number) => {

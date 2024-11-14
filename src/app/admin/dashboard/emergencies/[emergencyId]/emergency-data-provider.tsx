@@ -12,7 +12,7 @@ import React, {
 } from "react";
 
 type TContext = {
-  data: Emergencies | null;
+  data: Emergencies;
   startPoint: LatLngExpression;
   endPoint: LatLngExpression;
   setStartPoint: Dispatch<SetStateAction<L.LatLngExpression>>;
@@ -20,7 +20,7 @@ type TContext = {
 };
 
 export const EmergencyDataContext = createContext<TContext>({
-  data: null,
+  data: {} as Emergencies,
   startPoint: [0, 0],
   endPoint: [0, 0],
   setStartPoint: () => {},

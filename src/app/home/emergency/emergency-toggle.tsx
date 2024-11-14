@@ -23,27 +23,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import EmergencyCall from "./emergency-call";
 
 const EmergencyToggle = () => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
 
   return (
-    <div className=" absolute z-30 bottom-0 flex justify-center w-full p-4">
+    <div className="w-full">
       {isDesktop ? (
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger
-            className={cn(
-              buttonVariants({ variant: "destructive" }),
-              "flex flex-col items-center -space-y-2 h-fit w-full max-w-[30em]"
-            )}
-          >
-            <ChevronUp size={30} className="shrink-0" />
-            <div className="flex items-center gap-1">
-              <TriangleAlert />
-              <span>View current call</span>
-            </div>
+          <DialogTrigger className="w-full flex justify-center">
+            <ChevronUp className="shrink-0 animate-bounce text-primary" />
           </DialogTrigger>
 
           <DialogContent className="sm:max-w-[425px]">
@@ -54,22 +44,15 @@ const EmergencyToggle = () => {
                 needed.
               </DialogDescription>
             </DialogHeader>
-            <EmergencyCall />
           </DialogContent>
         </Dialog>
       ) : (
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerTrigger
-            className={cn(
-              buttonVariants({ variant: "destructive" }),
-              "flex flex-col items-center -space-y-2 h-fit w-full max-w-[30em]"
-            )}
-          >
-            <ChevronUp size={30} className="shrink-0" />
-            <div className="flex items-center gap-1">
-              <TriangleAlert />
-              <span>View current call</span>
-            </div>
+          <DrawerTrigger className="w-[20em] flex justify-center">
+            <ChevronUp
+              size={30}
+              className="shrink-0  animate-bounce text-primary"
+            />
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
@@ -79,7 +62,6 @@ const EmergencyToggle = () => {
                 respond.
               </DrawerDescription>
             </DrawerHeader>
-            <EmergencyCall />
           </DrawerContent>
         </Drawer>
       )}

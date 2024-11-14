@@ -9,9 +9,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { updateEmergencyStatusAction } from "./actions";
 import PeerJSComponent from "./peerjs-component";
 import { UserDataContext } from "../data-provider";
+import EmergencyToggle from "./emergency-toggle";
 
 const EmergencyCall = () => {
-  const { activeEmergency, setActiveEmergency, peer } =
+  const { activeEmergency, setActiveEmergency, peer, userPeerId } =
     useContext(UserDataContext);
 
   const changeCallStatus = useServerAction(updateEmergencyStatusAction);
@@ -30,33 +31,29 @@ const EmergencyCall = () => {
   };
 
   return (
-    <div className="bg-muted rounded-xl p-4 w-full">
-      {activeEmergency?.id ? (
-        <>
-          <h1 className="text-2xl font-semibold">Emergency Call</h1>
-          <p className="text-sm text-muted-foreground">
-            Please wait while we&apos;re connecting your call to the emergency
-            response team.
-          </p>
-          {peer ? (
-            <div className=" bg-background rounded-xl p-4 mt-4">
+    <div className=" absolute z-30 bottom-0 flex justify-center w-full p-4">
+      <div className="bg-background w-full max-w-[30em] p-2 flex flex-col items-center justify-center rounded-xl shadow-xl space-y-2">
+        <EmergencyToggle />
+        {activeEmergency?.id ? (
+          <>
+            {peer ? (
               <PeerJSComponent peer={peer} cancelCall={cancelCall} />
+            ) : null}
+          </>
+        ) : (
+          <>
+            <div>
+              <h1 className="text-2xl font-semibold">Call Ended</h1>
+              <p className="text-sm text-muted-foreground">
+                Your call has ended.
+              </p>
             </div>
-          ) : null}
-        </>
-      ) : (
-        <div className="flex flex-col gap-2">
-          <div>
-            <h1 className="text-2xl font-semibold">Call Ended</h1>
-            <p className="text-sm text-muted-foreground">
-              Your call has ended.
-            </p>
-          </div>
-          <Link className={cn(buttonVariants())} href={"/user/home/"}>
-            Go back
-          </Link>
-        </div>
-      )}
+            <Link className={cn(buttonVariants(), "w-full")} href={"/home/"}>
+              Go back
+            </Link>
+          </>
+        )}
+      </div>
     </div>
   );
 };

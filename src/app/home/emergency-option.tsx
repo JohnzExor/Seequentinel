@@ -6,9 +6,9 @@ import { useServerAction } from "zsa-react";
 import { postEmergencyAction } from "./action";
 import { useContext, useState } from "react";
 import { Emergencies } from "@prisma/client";
-import { useRouter } from "next/navigation";
 import CurrentLocation from "./current-location";
 import { UserDataContext } from "./data-provider";
+import { useRouter } from "next/navigation";
 
 const features = [
   {
@@ -34,33 +34,29 @@ const features = [
 ];
 
 const EmergencyOption = () => {
+  const router = useRouter();
   const { execute, isPending } = useServerAction(postEmergencyAction);
   const { userPeerId, setActiveEmergency, gpsCoordinates } =
     useContext(UserDataContext);
 
   const session = useSession();
-  const router = useRouter();
 
   const [tapCounter, setTapCounter] = useState<number>(0);
 
   const handleEmergencyRequest = async () => {
+    if (!userPeerId || !setActiveEmergency)
+      return console.error("You dont have peer id");
     try {
-      if (!userPeerId || !setActiveEmergency)
-        return console.error("You dont have peer id");
       const res = await execute({
         userId: session.data?.user.id as string,
         peerId: userPeerId,
         gpsCoordinates: gpsCoordinates as [number, number],
       });
-
-      if (!res[0]) {
-        return console.error("Error requesting report");
+      if (res[0]) {
+        setActiveEmergency(res[0] as Emergencies);
       }
-
-      setActiveEmergency(res[0] as Emergencies);
-      router.push("/home/emergency");
-
       setTapCounter(0);
+      router.push("/home/emergency");
     } catch (error) {
       console.error(error);
     }

@@ -37,6 +37,7 @@ const DeactivateAccountBtn = ({
         <Button
           onClick={() => handleOnClick("DISABLED")}
           disabled={isPending}
+          variant={"destructive"}
           className="space-x-1"
         >
           <UserRoundCog size={15} />

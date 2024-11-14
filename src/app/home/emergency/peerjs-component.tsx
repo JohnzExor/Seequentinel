@@ -131,19 +131,23 @@ const PeerJSComponent = ({
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className=" flex items-center gap-2">
-        <VoiceDetailsUI isActive={localAudioActive} />
-        <audio ref={audioRef} autoPlay muted={true} />
-        {isRemoteConnected ? (
-          <VoiceDetailsUI isActive={remoteAudioActive} isAdmin={true} />
-        ) : null}
-        <audio ref={remoteAudioRef} autoPlay muted={false} />
+    <div className="flex items-center justify-between w-full md:px-4 md:pb-4">
+      <div className="flex items-center gap-2">
+        <VoiceDetailsUI isActive={remoteAudioActive} isAdmin={true} />
+        <div>
+          <h1 className="md:text-xl font-bold">
+            {isRemoteConnected ? "Connected" : "Not connected"}
+          </h1>
+          <span className="text-xs md:text-sm text-muted-foreground">
+            Emergency Team
+          </span>
+        </div>
       </div>
-      <div className="flex items-center justify-evenly gap-2 bg-black  p-4 rounded-xl w-full max-w-[20em]">
+
+      <div className=" space-x-2">
         <Button
           variant={"outline"}
-          className="h-[3em] w-[3em] rounded-full"
+          className="h-[4em] w-[4em] rounded-full"
           onClick={toggleMute}
         >
           {isMuted ? (
@@ -152,21 +156,19 @@ const PeerJSComponent = ({
             <Mic className="flex-shrink-0" />
           )}
         </Button>
-        <span className="text-white tracking-tighter">
-          {isRemoteConnected ? "Connected" : "Not Connected"}
-        </span>
         <Button
           onClick={endCall}
           variant={"destructive"}
-          className="h-[3em] w-[3em] rounded-full"
+          className="h-[4em] w-[4em] rounded-full"
         >
           <PhoneMissed className="flex-shrink-0" />
         </Button>
       </div>
 
-      <span className="text-xs text-muted-foreground pl-4">
-        Peer ID: {userPeerId}
-      </span>
+      <>
+        <audio ref={audioRef} autoPlay muted={true} />
+        <audio ref={remoteAudioRef} autoPlay muted={false} />
+      </>
     </div>
   );
 };
@@ -180,11 +182,11 @@ const VoiceDetailsUI = ({
 }) => {
   return (
     <div
-      className={clsx(" border-4 p-4 rounded-xl", {
+      className={clsx(" border-2 p-1 rounded-full", {
         "border-primary": isActive,
       })}
     >
-      <Avatar className="w-[4em] h-[4em]">
+      <Avatar className="w-[3em] h-[3em]">
         <AvatarFallback>
           {isAdmin ? <UserRoundCog size={30} /> : <User size={30} />}
         </AvatarFallback>

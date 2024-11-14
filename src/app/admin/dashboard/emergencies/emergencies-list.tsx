@@ -20,11 +20,7 @@ const fetchLocationName = async (coordinates: Decimal[]) => {
   }
 };
 
-const EmergenciesList = ({
-  emergencies,
-}: {
-  emergencies: Emergencies[] | undefined;
-}) => {
+const EmergenciesList = ({ emergencies }: { emergencies: Emergencies[] }) => {
   const [locations, setLocations] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
