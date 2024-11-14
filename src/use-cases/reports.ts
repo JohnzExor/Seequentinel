@@ -3,9 +3,27 @@ import {
   createReport,
   findAllReports,
   findReport,
+  updateReportAssignee,
+  updateReportStatus,
 } from "@/data-access/reports";
-import { reportSchema } from "@/lib/zod";
+import { reportSchema, statusEnum } from "@/lib/zod";
 import { z } from "zod";
+
+export const setReportAssigneeUseCase = async (
+  documentId: string,
+  userId: string
+) => {
+  const data = await updateReportAssignee(documentId, userId);
+  return data;
+};
+
+export const updateReportStatusUseCase = async (
+  documentId: string,
+  newStatus: z.infer<typeof statusEnum>
+) => {
+  const data = await updateReportStatus(documentId, newStatus);
+  return data;
+};
 
 export const getAllReportsUseCase = async () => {
   const data = await findAllReports();

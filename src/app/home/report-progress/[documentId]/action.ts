@@ -10,6 +10,7 @@ export const ArchiveReportAction = createServerAction()
   .input(z.object({ id: z.string() }))
   .handler(async ({ input }) => {
     const data = await archiveReportUseCase(input.id);
-    revalidatePath("/report-progress", redirect("/user/home/report-progress"));
+    console.log(data);
+    revalidatePath("/report-progress", redirect("/home/report-progress"));
     return data;
   });

@@ -5,6 +5,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Reports } from "@prisma/client";
+import Link from "next/link";
+import { Book } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 export const columns: ColumnDef<Reports>[] = [
   {
@@ -44,5 +48,22 @@ export const columns: ColumnDef<Reports>[] = [
   {
     accessorKey: "createdAt",
     header: "Created",
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const id: string = row.getValue("id");
+
+      return (
+        <Link
+          href={`/admin/dashboard/document/${id}`}
+          className={cn(buttonVariants(), " space-x-1")}
+        >
+          <Book size={20} />
+          <span>View Report</span>
+        </Link>
+      );
+    },
   },
 ];

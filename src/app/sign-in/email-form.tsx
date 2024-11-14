@@ -40,14 +40,13 @@ const EmailForm = () => {
     try {
       const res = await execute({ email });
       if (res[1]) {
-        form.setError("email", {
+        return form.setError("email", {
           type: "manual",
           message: res[1].message,
         });
-        return;
       }
       setEmail(email);
-      router.push(`/sign-in/verify`);
+      router.push("/sign-in/verify");
     } catch (error) {
       console.error(error);
     }

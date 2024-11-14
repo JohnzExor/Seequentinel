@@ -1,6 +1,7 @@
 import { findUserReports } from "@/data-access/reports";
 import {
   createUser,
+  findAdminAssignedReports,
   findAllAdmins,
   findAllUsers,
   findExistingEmail,
@@ -11,7 +12,7 @@ import {
 } from "@/data-access/users";
 import { authOptions } from "@/lib/auth";
 import { changePasswordSchema, createUserSchema } from "@/lib/zod";
-import { UserStatusEnum } from "@prisma/client";
+import { Reports, UserStatusEnum } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { compare } from "bcryptjs";
@@ -42,6 +43,21 @@ export const changeUserPasswordUseCase = async (
     throw new Error("Error Changing Password");
   }
   return data;
+};
+
+export const getAdminAssignedReports = async (userId: string) => {
+  const reports = await findAdminAssignedReports(userId);
+  if (!reports)
+    return {} as { reports: Reports[]; cmr: Reports[]; hvr: Reports[] };
+
+  const cmr = reports.filter(
+    ({ reportType }) => reportType === "CampusMaintenance"
+  );
+  const hvr = reports.filter(
+    ({ reportType }) => reportType === "HandbookViolation"
+  );
+
+  return { reports, cmr, hvr };
 };
 
 export const getUserReportsUseCase = async (userId: string) => {
@@ -94,5 +110,8 @@ export const createUserUseCase = async (
 
 export const getExistingEmailUseCase = async (email: string) => {
   const data = await findExistingEmail(email);
+  if (!data) {
+    throw new Error("Email not found");
+  }
   return data;
 };

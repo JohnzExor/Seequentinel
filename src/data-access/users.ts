@@ -4,6 +4,14 @@ import { UserStatusEnum } from "@prisma/client";
 import { compare, hash } from "bcryptjs";
 import { z } from "zod";
 
+export const findAdminAssignedReports = async (userId: string) => {
+  const data = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { assignedReports: true },
+  });
+  return data?.assignedReports;
+};
+
 export const findUserById = async (id: string) => {
   const data = await prisma.user.findUnique({ where: { id } });
   return data;

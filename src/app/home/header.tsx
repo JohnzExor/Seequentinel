@@ -23,7 +23,7 @@ const Header = ({ session }: { session: Session | null }) => {
         <div className="overflow-hidden flex items-center gap-1 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
           <BringToFront size={20} className="text-primary" />
           <Link
-            href={"/admin/dashboard"}
+            href={"/home"}
             className="text-xl font-semibold tracking-tighter "
           >
             Seequentinel

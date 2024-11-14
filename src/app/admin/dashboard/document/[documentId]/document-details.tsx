@@ -15,9 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Stepper, { steps } from "./stepper";
 import FilesPreview from "./files-preview";
-import ArchiveReport from "./archive-report";
 import supabase from "@/lib/storage";
 import { useToast } from "@/hooks/use-toast";
+import ChangeStatusForm from "./change-status-form";
+import AssignReport from "./assign-report";
+import { useSession } from "next-auth/react";
 
 const titles = {
   CampusMaintenance: "Campus Maintenance Request",
@@ -32,6 +34,7 @@ const icons = {
 const DocumentDetails = ({ data }: { data: Reports }) => {
   const { toast } = useToast();
   const [reports, setReports] = useState(data);
+  const session = useSession();
 
   useEffect(() => {
     const channel = supabase
@@ -93,7 +96,15 @@ const DocumentDetails = ({ data }: { data: Reports }) => {
             Download Report
           </Button>
         </div>
-        <ArchiveReport id={id} />
+        {!assginedUserId ? (
+          <AssignReport documentId={id} />
+        ) : session.data?.user.id === assginedUserId ? (
+          status && <ChangeStatusForm oldStatus={status} documentId={id} />
+        ) : (
+          <span className="text-xs text-muted-foreground">
+            This report is currently assigned to another administrator
+          </span>
+        )}
       </section>
 
       <section className="bg-muted rounded-xl p-4 space-y-2">
