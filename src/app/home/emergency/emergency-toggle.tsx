@@ -9,9 +9,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ChevronUp, TriangleAlert } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 
 import { useMediaQuery } from "react-responsive";
 import {
@@ -23,6 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import EmergencyDetails from "./emergency-details";
 
 const EmergencyToggle = () => {
   const [open, setOpen] = useState(false);
@@ -36,32 +35,32 @@ const EmergencyToggle = () => {
             <ChevronUp className="shrink-0 animate-bounce text-primary" />
           </DialogTrigger>
 
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="max-w-[50em] max-h-screen overflow-y-auto bg-muted">
             <DialogHeader>
-              <DialogTitle>Emergency Calls</DialogTitle>
+              <DialogTitle>Emergency Details</DialogTitle>
               <DialogDescription>
-                Review ongoing emergency calls and take appropriate action if
-                needed.
+                Here are the details of the ongoing call.
               </DialogDescription>
             </DialogHeader>
+            <EmergencyDetails />
           </DialogContent>
         </Dialog>
       ) : (
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerTrigger className="w-[20em] flex justify-center">
+          <DrawerTrigger className="w-full flex justify-center">
             <ChevronUp
               size={30}
               className="shrink-0  animate-bounce text-primary"
             />
           </DrawerTrigger>
-          <DrawerContent>
+          <DrawerContent className="max-h-screen overflow-y-auto bg-muted">
             <DrawerHeader>
-              <DrawerTitle>Emergency Calls</DrawerTitle>
+              <DrawerTitle>Emergency Details</DrawerTitle>
               <DrawerDescription>
-                View and manage current emergency calls. Stay alert and ready to
-                respond.
+                Here are the details of the ongoing call.
               </DrawerDescription>
             </DrawerHeader>
+            <EmergencyDetails />
           </DrawerContent>
         </Drawer>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { initializePeer } from "@/lib/peer";
+import supabase from "@/lib/storage";
 import { Emergencies } from "@prisma/client";
 import Peer from "peerjs";
 import {
@@ -42,7 +43,25 @@ const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     peer.on("open", setUserPeerId);
-  }, []);
+    const channel = supabase
+      .channel("reports-db-document-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "Emergencies",
+          filter: `id=eq.${activeEmergency?.id}`,
+        },
+        async (payload) => {
+          setActiveEmergency(payload.new as Emergencies);
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [activeEmergency, setActiveEmergency]);
 
   return (
     <UserDataContext.Provider

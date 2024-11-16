@@ -28,15 +28,14 @@ const SideNavToggle = ({ session }: { session: Session | null }) => {
       <SheetTrigger>
         <Menu className=" hover:rotate-180 duration-500 text-primary" />
       </SheetTrigger>
-      <SheetContent className="flex flex-col justify-between z-50">
+      <SheetContent className="flex flex-col justify-between z-50 max-h-screen overflow-auto">
         <SheetHeader className="text-left">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <ModeToggle /> Theme
           </div>
           <SheetTitle>Seequentinel</SheetTitle>
-          <SheetDescription>Menu</SheetDescription>
-
-          <ul className=" space-y-1">
+          <SheetDescription>Main Menu</SheetDescription>
+          <ul>
             <NavLinks open={isOpen} setOpen={setIsOpen} />
           </ul>
         </SheetHeader>

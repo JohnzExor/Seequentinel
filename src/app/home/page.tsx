@@ -1,9 +1,11 @@
-import { Book, ConstructionIcon } from "lucide-react";
+import { Book, ClipboardPlus, ConstructionIcon } from "lucide-react";
 import CampusMaintenanceImage from "/public/images/cmr.jpg";
 import HandBookViolationImage from "/public/images/hvr.jpg";
 import Link from "next/link";
 import Image from "next/image";
 import EmergencyOption from "./emergency-option";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 const options = [
   {
@@ -38,6 +40,15 @@ const page = () => {
             <p className=" text-sm text-muted dark:text-muted-foreground break-words">
               {description}
             </p>
+            <div
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "w-full gap-2"
+              )}
+            >
+              <ClipboardPlus />
+              <span>{name}</span>
+            </div>
           </div>
           <div className=" relative h-full w-full overflow-hidden">
             <Image

@@ -37,7 +37,8 @@ const features = [
 const EmergencyOption = () => {
   const router = useRouter();
   const { toast } = useToast();
-  const { execute, isPending } = useServerAction(postEmergencyAction);
+  const { execute, isPending, isSuccess } =
+    useServerAction(postEmergencyAction);
   const { userPeerId, setActiveEmergency, gpsCoordinates, isOutsideCampus } =
     useContext(UserDataContext);
 
@@ -99,7 +100,7 @@ const EmergencyOption = () => {
           <div className=" absolute rounded-full bg-red-300 dark:bg-red-500 h-[12em] w-[12em] animate-pulse shadow-xl" />
           <button
             onClick={handleTapCounter}
-            disabled={isPending || !userPeerId || !gpsCoordinates}
+            disabled={isPending || !userPeerId || !gpsCoordinates || isSuccess}
             className="flex flex-col justify-center items-center rounded-full bg-red-500 dark:bg-red-700 disabled:bg-red-300  text-white h-[10em] w-[10em] z-20 shadow-xl hover:scale-105 duration-500 ease-out"
           >
             <span className="text-5xl font-bold">

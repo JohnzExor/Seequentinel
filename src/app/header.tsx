@@ -2,7 +2,7 @@
 
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { BringToFront } from "lucide-react";
+import { BringToFront, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { easeInOut, motion } from "framer-motion";
 
@@ -23,7 +23,10 @@ const Header = () => {
       </div>
       <div className=" flex items-center gap-2">
         <ModeToggle />
-        <Button onClick={() => router.push("/sign-in")}>Sign in</Button>
+        <Button onClick={() => router.push("/sign-in")} className="gap-1">
+          <UserRound size={20} />
+          Sign in
+        </Button>
       </div>
     </motion.header>
   );

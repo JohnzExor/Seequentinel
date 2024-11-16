@@ -12,7 +12,7 @@ import { UserDataContext } from "../data-provider";
 import EmergencyToggle from "./emergency-toggle";
 
 const EmergencyCall = () => {
-  const { activeEmergency, setActiveEmergency, peer, userPeerId } =
+  const { activeEmergency, setActiveEmergency, peer } =
     useContext(UserDataContext);
 
   const changeCallStatus = useServerAction(updateEmergencyStatusAction);
@@ -31,8 +31,8 @@ const EmergencyCall = () => {
   };
 
   return (
-    <div className=" absolute z-30 bottom-0 flex justify-center w-full p-4">
-      <div className="bg-background w-full max-w-[30em] p-2 flex flex-col items-center justify-center rounded-xl shadow-xl space-y-2">
+    <div className=" absolute z-30 bottom-0 flex justify-center w-full md:p-4">
+      <div className="bg-background w-full md:max-w-[30em] pb-6 md:pb-2 px-4 flex flex-col items-center justify-center rounded-t-xl md:rounded-xl shadow-xl space-y-2">
         <EmergencyToggle />
         {activeEmergency?.id ? (
           <>

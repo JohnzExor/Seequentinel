@@ -132,15 +132,13 @@ const PeerJSComponent = ({
 
   return (
     <div className="flex items-center justify-between w-full md:px-4 md:pb-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 md:gap-4">
         <VoiceDetailsUI isActive={remoteAudioActive} isAdmin={true} />
         <div>
           <h1 className="md:text-xl font-bold">
             {isRemoteConnected ? "Connected" : "Not connected"}
           </h1>
-          <span className="text-xs md:text-sm text-muted-foreground">
-            Emergency Team
-          </span>
+          <span className="text-sm text-muted-foreground">Emergency Team</span>
         </div>
       </div>
 

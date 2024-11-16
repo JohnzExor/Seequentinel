@@ -5,6 +5,7 @@ import React from "react";
 import { TypeAnimation } from "react-type-animation";
 import { easeInOut, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { FormInput, LibraryBig, QrCode } from "lucide-react";
 
 const texts = [
   "Real-time incident reporting",
@@ -16,6 +17,9 @@ const texts = [
   "Data-driven decision making",
   1000,
 ];
+
+const formLink =
+  "https://docs.google.com/forms/u/1/d/e/1FAIpQLSfSur2PW97HCwgCZ067dn1zl48BmwmVgM_BOQVgE7ja7B52Ww/viewform";
 
 const TitleSection = () => {
   const router = useRouter();
@@ -48,10 +52,21 @@ const TitleSection = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: [0, 1], y: [20, 0] }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="space-x-4"
+        className="gap-2 items-center flex flex-col justify-center w-full md:flex-row p-4"
       >
-        <Button onClick={() => router.push("#contact")}>Get Started</Button>
-        <Button onClick={() => router.push("#about")} variant="outline">
+        <Button
+          onClick={() => window.open(formLink, "_blank")}
+          className="gap-2 w-full md:w-fit"
+        >
+          <QrCode />
+          Answer our form
+        </Button>
+        <Button
+          onClick={() => router.push("#about")}
+          variant="outline"
+          className="gap-2 w-full md:w-fit"
+        >
+          <LibraryBig />
           Learn More
         </Button>
       </motion.div>

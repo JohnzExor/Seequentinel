@@ -91,8 +91,11 @@ const NavLinks = ({
               "flex items-center gap-3 rounded-lg p-3 text-sm duration-200",
               {
                 "bg-primary text-white shadow-lg font-medium":
-                  pathname === path,
-                " hover:bg-muted": pathname !== path,
+                  // Match exactly for `/home`
+                  (path === "/home" && pathname === "/home") ||
+                  // Match startsWith for other paths
+                  (path !== "/home" && pathname.startsWith(path)),
+                " hover:bg-muted": !pathname.startsWith(path),
               }
             )}
           >

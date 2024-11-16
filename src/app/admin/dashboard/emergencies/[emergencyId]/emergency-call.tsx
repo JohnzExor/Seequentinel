@@ -32,7 +32,7 @@ const EmergencyCall = () => {
       setEndPoint([0, 0]);
       await cancelCallAction.execute({
         id: emergencyId,
-        newStatus: "CANCELED",
+        newStatus: "COMPLETED",
       });
     } catch (error) {
       console.error(error);

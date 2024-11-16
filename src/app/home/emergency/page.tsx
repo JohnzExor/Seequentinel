@@ -2,7 +2,6 @@ import React from "react";
 import { LatLngExpression } from "leaflet";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
-import EmergencyToggle from "./emergency-toggle";
 import EmergencyCall from "./emergency-call";
 
 const LeafletMap = dynamic(() => import("./leaflet-map"), {
